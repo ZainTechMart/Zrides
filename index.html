@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="ur" dir="rtl" id="htmlTag">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zrides - آپ کی اپنی سواری اور ڈیلیوری سروس</title>
+    <title>Zrides - Ride & Delivery Service</title>
+
+    <!-- Leaflet CSS for Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
     <style>
         * {
             margin: 0;
@@ -33,17 +37,37 @@
             font-weight: bold;
         }
 
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         nav a {
             color: white;
             text-decoration: none;
-            margin-right: 15px;
             font-weight: 500;
+        }
+
+        .lang-btn {
+            background-color: white;
+            color: #10b981;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .lang-btn:hover {
+            background-color: #e2e8f0;
         }
 
         /* Hero Section */
         .hero {
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=1000') center/cover;
-            height: 350px;
+            height: 220px;
             color: white;
             display: flex;
             flex-direction: column;
@@ -54,65 +78,37 @@
         }
 
         .hero h1 {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-
-        .hero p {
-            font-size: 18px;
-        }
-
-        /* Services Section */
-        .container {
-            max-width: 1100px;
-            margin: -50px auto 40px auto;
-            padding: 0 20px;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-
-        .card h3 {
-            color: #10b981;
+            font-size: 32px;
             margin-bottom: 8px;
         }
 
-        /* Booking Form */
-        .booking-section {
+        /* Main Layout */
+        .booking-container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .booking-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .booking-card {
             background: white;
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 30px;
+            padding: 25px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
-        .booking-section h2 {
-            text-align: center;
-            margin-bottom: 20px;
+        .booking-card h2 {
             color: #10b981;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         .form-group {
@@ -133,6 +129,21 @@
             font-size: 16px;
         }
 
+        /* Price Box */
+        .price-box {
+            background-color: #ecfdf5;
+            border: 2px dashed #10b981;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .price-box h3 {
+            color: #059669;
+            font-size: 22px;
+        }
+
         .btn {
             width: 100%;
             background-color: #10b981;
@@ -143,10 +154,19 @@
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
+            transition: 0.3s;
         }
 
         .btn:hover {
             background-color: #059669;
+        }
+
+        /* Map */
+        #map {
+            height: 100%;
+            min-height: 400px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
         /* Footer */
@@ -165,77 +185,207 @@
     <header>
         <div class="logo">Zrides</div>
         <nav>
-            <a href="#">ہوم</a>
-            <a href="#">سروسز</a>
-            <a href="#">رابطہ کریں</a>
+            <a href="#" id="navHome">ہوم</a>
+            <a href="#" id="navServices">سروسز</a>
+            <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">English</button>
         </nav>
     </header>
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1>Zrides میں خوش آمدید</h1>
-        <p>آپ کی سواری، پارسل اور شاپنگ کا سب سے آسان اور محفوظ حل</p>
+        <h1 id="heroTitle">Zrides - فاسٹ اور محفوظ سروس</h1>
+        <p id="heroSubtitle">اپنی لوکیشن منتخب کریں اور منٹوں میں سواری یا ڈیلیوری حاصل کریں</p>
     </section>
 
-    <!-- Services Grid -->
-    <div class="container">
-        <div class="services-grid">
-            <div class="card">
-                <div class="card-icon">🏍️</div>
-                <h3>سواری (Ride)</h3>
-                <p>شہر میں کہیں بھی جلدی اور سستے کرائے میں پہنچیں</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">📦</div>
-                <h3>ڈیلیوری (Delivery)</h3>
-                <p>کوئی بھی سامان یا فائلز ایک جگہ سے دوسری جگہ بھیجیں</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">🛒</div>
-                <h3>خریدو (Buy)</h3>
-                <p>کسی بھی دکان سے سامان گھر بیٹھے منگوائیں</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">💵</div>
-                <h3>کیش ٹرانسفر (Cash)</h3>
-                <p>شہر کے اندر نقد رقم کی محفوظ ترسیل</p>
-            </div>
-        </div>
-    </div>
+    <!-- Booking & Map Section -->
+    <div class="booking-container">
+        
+        <!-- Left Column: Form -->
+        <div class="booking-card">
+            <h2 id="formTitle">بکنگ اور کرایہ کا حساب</h2>
+            <form id="rideForm">
+                <div class="form-group">
+                    <label id="lblService">سروس کی قسم:</label>
+                    <select id="serviceType" onchange="calculateFare()">
+                        <option value="bike" id="optBike">🏍️ بائیک سواری (Bike Ride)</option>
+                        <option value="rickshaw" id="optRickshaw">🛺 آٹو رکشہ (Rickshaw)</option>
+                        <option value="delivery" id="optDelivery">📦 پارسل ڈیلیوری (Delivery)</option>
+                        <option value="buy" id="optBuy">🛒 خریدو (Buy Service)</option>
+                    </select>
+                </div>
 
-    <!-- Booking Form -->
-    <div class="booking-section">
-        <h2>سواری / سروس بک کریں</h2>
-        <form>
-            <div class="form-group">
-                <label>سروس منتخب کریں:</label>
-                <select>
-                    <option>بائیک سواری (Bike Ride)</option>
-                    <option>رکشہ (Rickshaw)</option>
-                    <option>پارسل ڈیلیوری (Delivery)</option>
-                    <option>خریدو (Buy for me)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>پک اپ لوکیشن (جہاں سے جانا ہے):</label>
-                <input type="text" placeholder="مثلاً: گلبرگ، لاہور">
-            </div>
-            <div class="form-group">
-                <label>ڈراپ آف لوکیشن (جہاں پہنچنا ہے):</label>
-                <input type="text" placeholder="مثلاً: ڈی ایچ اے، لاہور">
-            </div>
-            <div class="form-group">
-                <label>موبائل نمبر:</label>
-                <input type="tel" placeholder="03001234567">
-            </div>
-            <button type="submit" class="btn">بکنگ کی درخواست بھیجیں</button>
-        </form>
+                <div class="form-group">
+                    <label id="lblPickup">پک اپ لوکیشن (Pickup):</label>
+                    <input type="text" id="pickup" placeholder="مثلاً: کلمہ چوک، لاہور" required>
+                </div>
+
+                <div class="form-group">
+                    <label id="lblDropoff">ڈراپ آف لوکیشن (Dropoff):</label>
+                    <input type="text" id="dropoff" placeholder="مثلاً: مال روڈ، لاہور" required>
+                </div>
+
+                <div class="form-group">
+                    <label id="lblDistance">اندازاً فاصلہ (کلومیٹر میں):</label>
+                    <input type="number" id="distance" value="5" min="1" max="100" oninput="calculateFare()">
+                </div>
+
+                <!-- Price Box -->
+                <div class="price-box">
+                    <p id="lblTotalFare">کل تخمینہ شدہ کرایہ:</p>
+                    <h3 id="estimatedFare">150 روپے</h3>
+                </div>
+
+                <div class="form-group">
+                    <label id="lblPhone">موبائل نمبر:</label>
+                    <input type="tel" id="phone" placeholder="03001234567" required>
+                </div>
+
+                <button type="submit" class="btn" id="btnSubmit">بکنگ کی تصدیق کریں</button>
+            </form>
+        </div>
+
+        <!-- Right Column: Map -->
+        <div>
+            <div id="map"></div>
+        </div>
+
     </div>
 
     <!-- Footer -->
     <footer>
-        <p>© 2026 Zrides - جملہ حقوق محفوظ ہیں</p>
+        <p id="footerText">© 2026 Zrides - جملہ حقوق محفوظ ہیں</p>
     </footer>
 
+    <!-- Leaflet Map JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Custom Logic Javascript -->
+    <script>
+        var currentLang = 'ur';
+
+        // Translation Dictionary
+        var translations = {
+            ur: {
+                navHome: "ہوم",
+                navServices: "سروسز",
+                langBtn: "English",
+                heroTitle: "Zrides - فاسٹ اور محفوظ سروس",
+                heroSubtitle: "اپنی لوکیشن منتخب کریں اور منٹوں میں سواری یا ڈیلیوری حاصل کریں",
+                formTitle: "بکنگ اور کرایہ کا حساب",
+                lblService: "سروس کی قسم:",
+                optBike: "🏍️ بائیک سواری (Bike Ride)",
+                optRickshaw: "🛺 آٹو رکشہ (Rickshaw)",
+                optDelivery: "📦 پارسل ڈیلیوری (Delivery)",
+                optBuy: "🛒 خریدو (Buy Service)",
+                lblPickup: "پک اپ لوکیشن (Pickup):",
+                phPickup: "مثلاً: کلمہ چوک، لاہور",
+                lblDropoff: "ڈراپ آف لوکیشن (Dropoff):",
+                phDropoff: "مثلاً: مال روڈ، لاہور",
+                lblDistance: "اندازاً فاصلہ (کلومیٹر میں):",
+                lblTotalFare: "کل تخمینہ شدہ کرایہ:",
+                currency: "روپے",
+                lblPhone: "موبائل نمبر:",
+                btnSubmit: "بکنگ کی تصدیق کریں",
+                footerText: "© 2026 Zrides - جملہ حقوق محفوظ ہیں",
+                alertMsg: "شکریہ! آپ کی بکنگ وصول ہو گئی ہے۔\nکل کرایہ: "
+            },
+            en: {
+                navHome: "Home",
+                navServices: "Services",
+                langBtn: "اردو",
+                heroTitle: "Zrides - Fast & Secure Ride Service",
+                heroSubtitle: "Select your location and get a ride or delivery in minutes",
+                formTitle: "Booking & Fare Estimation",
+                lblService: "Service Type:",
+                optBike: "🏍️ Bike Ride",
+                optRickshaw: "🛺 Auto Rickshaw",
+                optDelivery: "📦 Parcel Delivery",
+                optBuy: "🛒 Buy Service",
+                lblPickup: "Pickup Location:",
+                phPickup: "e.g. Kalma Chowk, Lahore",
+                lblDropoff: "Dropoff Location:",
+                phDropoff: "e.g. Mall Road, Lahore",
+                lblDistance: "Estimated Distance (in KM):",
+                lblTotalFare: "Total Estimated Fare:",
+                currency: "PKR",
+                lblPhone: "Phone Number:",
+                btnSubmit: "Confirm Booking",
+                footerText: "© 2026 Zrides - All rights reserved",
+                alertMsg: "Thank you! Your booking request has been received.\nTotal Fare: "
+            }
+        };
+
+        // Switch Language Function
+        function toggleLanguage() {
+            var html = document.getElementById('htmlTag');
+            
+            if (currentLang === 'ur') {
+                currentLang = 'en';
+                html.setAttribute('dir', 'ltr');
+                html.setAttribute('lang', 'en');
+            } else {
+                currentLang = 'ur';
+                html.setAttribute('dir', 'rtl');
+                html.setAttribute('lang', 'ur');
+            }
+
+            var t = translations[currentLang];
+
+            document.getElementById('navHome').innerText = t.navHome;
+            document.getElementById('navServices').innerText = t.navServices;
+            document.getElementById('langBtn').innerText = t.langBtn;
+            document.getElementById('heroTitle').innerText = t.heroTitle;
+            document.getElementById('heroSubtitle').innerText = t.heroSubtitle;
+            document.getElementById('formTitle').innerText = t.formTitle;
+            document.getElementById('lblService').innerText = t.lblService;
+            document.getElementById('optBike').innerText = t.optBike;
+            document.getElementById('optRickshaw').innerText = t.optRickshaw;
+            document.getElementById('optDelivery').innerText = t.optDelivery;
+            document.getElementById('optBuy').innerText = t.optBuy;
+            document.getElementById('lblPickup').innerText = t.lblPickup;
+            document.getElementById('pickup').placeholder = t.phPickup;
+            document.getElementById('lblDropoff').innerText = t.lblDropoff;
+            document.getElementById('dropoff').placeholder = t.phDropoff;
+            document.getElementById('lblDistance').innerText = t.lblDistance;
+            document.getElementById('lblTotalFare').innerText = t.lblTotalFare;
+            document.getElementById('lblPhone').innerText = t.lblPhone;
+            document.getElementById('btnSubmit').innerText = t.btnSubmit;
+            document.getElementById('footerText').innerText = t.footerText;
+
+            calculateFare();
+        }
+
+        // Initialize Map
+        var map = L.map('map').setView([31.5204, 74.3587], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        L.marker([31.5204, 74.3587]).addTo(map).bindPopup('Zrides').openPopup();
+
+        // Calculate Fare
+        function calculateFare() {
+            var service = document.getElementById('serviceType').value;
+            var distance = parseFloat(document.getElementById('distance').value) || 0;
+            var fare = 0;
+
+            if (service === 'bike') fare = 50 + (distance * 20);
+            else if (service === 'rickshaw') fare = 80 + (distance * 35);
+            else if (service === 'delivery') fare = 60 + (distance * 25);
+            else if (service === 'buy') fare = 100 + (distance * 20);
+
+            var curr = translations[currentLang].currency;
+            document.getElementById('estimatedFare').innerText = Math.round(fare) + " " + curr;
+        }
+
+        // Form Submit Event
+        document.getElementById('rideForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var phone = document.getElementById('phone').value;
+            var fare = document.getElementById('estimatedFare').innerText;
+            var alertText = translations[currentLang].alertMsg + fare;
+            alert(alertText);
+        });
+    </script>
 </body>
 </html>
