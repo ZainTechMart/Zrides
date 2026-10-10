@@ -5,212 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zrides - Ride & Delivery Service</title>
 
-    <!-- Leaflet CSS for Maps -->
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f4f6f9;
-            color: #333;
-        }
-
-        /* Header */
-        header {
-            background-color: #10b981;
-            color: white;
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        header .logo {
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        nav {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .lang-btn {
-            background-color: white;
-            color: #10b981;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .lang-btn:hover {
-            background-color: #e2e8f0;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=1000') center/cover;
-            height: 220px;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .hero h1 {
-            font-size: 32px;
-            margin-bottom: 8px;
-        }
-
-        /* Main Layout */
-        .booking-container {
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-        }
-
-        @media (max-width: 768px) {
-            .booking-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .booking-card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-
-        .booking-card h2 {
-            color: #10b981;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-        }
-
-        /* Price Box */
-        .price-box {
-            background-color: #ecfdf5;
-            border: 2px dashed #10b981;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .price-box h3 {
-            color: #059669;
-            font-size: 22px;
-        }
-
-        .btn {
-            width: 100%;
-            background-color: #10b981;
-            color: white;
-            border: none;
-            padding: 14px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #059669;
-        }
-
-        /* Map */
-        #map {
-            height: 100%;
-            min-height: 400px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-
-        /* Footer */
-        footer {
-            background-color: #1f2937;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            margin-top: 40px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f6f9; color: #333; }
+        header { background-color: #10b981; color: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .logo { font-size: 28px; font-weight: bold; }
+        nav { display: flex; align-items: center; gap: 15px; }
+        nav a { color: white; text-decoration: none; font-weight: 500; }
+        .lang-btn, .partner-btn { background-color: white; color: #10b981; border: none; padding: 6px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; text-decoration: none; }
+        .hero { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=1000') center/cover; height: 220px; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
+        .hero h1 { font-size: 32px; margin-bottom: 8px; }
+        .booking-container { max-width: 1100px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        @media (max-width: 768px) { .booking-container { grid-template-columns: 1fr; } }
+        .booking-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .booking-card h2 { color: #10b981; margin-bottom: 20px; text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
+        .price-box { background-color: #ecfdf5; border: 2px dashed #10b981; border-radius: 8px; padding: 15px; text-align: center; margin: 20px 0; }
+        .price-box h3 { color: #059669; font-size: 22px; }
+        .btn { width: 100%; background-color: #10b981; color: white; border: none; padding: 14px; font-size: 18px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+        .btn:hover { background-color: #059669; }
+        #map { height: 100%; min-height: 400px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        footer { background-color: #1f2937; color: white; text-align: center; padding: 20px; margin-top: 40px; }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <header>
         <div class="logo">Zrides</div>
         <nav>
-            <a href="#" id="navHome">ہوم</a>
-            <a href="#" id="navServices">سروسز</a>
+            <a href="driver.html" class="partner-btn">ڈرائیور پورٹل (Partner)</a>
             <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">English</button>
         </nav>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero">
         <h1 id="heroTitle">Zrides - فاسٹ اور محفوظ سروس</h1>
         <p id="heroSubtitle">اپنی لوکیشن منتخب کریں اور منٹوں میں سواری یا ڈیلیوری حاصل کریں</p>
     </section>
 
-    <!-- Booking & Map Section -->
     <div class="booking-container">
-        
-        <!-- Left Column: Form -->
         <div class="booking-card">
             <h2 id="formTitle">بکنگ اور کرایہ کا حساب</h2>
             <form id="rideForm">
                 <div class="form-group">
                     <label id="lblService">سروس کی قسم:</label>
                     <select id="serviceType" onchange="calculateFare()">
-                        <option value="bike" id="optBike">🏍️ بائیک سواری (Bike Ride)</option>
-                        <option value="rickshaw" id="optRickshaw">🛺 آٹو رکشہ (Rickshaw)</option>
-                        <option value="delivery" id="optDelivery">📦 پارسل ڈیلیوری (Delivery)</option>
-                        <option value="buy" id="optBuy">🛒 خریدو (Buy Service)</option>
+                        <option value="بائیک سواری (Bike Ride)">🏍️ بائیک سواری (Bike Ride)</option>
+                        <option value="آٹو رکشہ (Rickshaw)">🛺 آٹو رکشہ (Rickshaw)</option>
+                        <option value="پارسل ڈیلیوری (Delivery)">📦 پارسل ڈیلیوری (Delivery)</option>
+                        <option value="خریدو سروس (Buy Service)">🛒 خریدو (Buy Service)</option>
                     </select>
                 </div>
 
@@ -229,7 +77,6 @@
                     <input type="number" id="distance" value="5" min="1" max="100" oninput="calculateFare()">
                 </div>
 
-                <!-- Price Box -->
                 <div class="price-box">
                     <p id="lblTotalFare">کل تخمینہ شدہ کرایہ:</p>
                     <h3 id="estimatedFare">150 روپے</h3>
@@ -244,14 +91,11 @@
             </form>
         </div>
 
-        <!-- Right Column: Map -->
         <div>
             <div id="map"></div>
         </div>
-
     </div>
 
-    <!-- Footer -->
     <footer>
         <p id="footerText">© 2026 Zrides - جملہ حقوق محفوظ ہیں</p>
     </footer>
@@ -259,132 +103,85 @@
     <!-- Leaflet Map JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- Custom Logic Javascript -->
-    <script>
-        var currentLang = 'ur';
+    <!-- Firebase SDK (Compat version for easy browser usage) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
-        // Translation Dictionary
+    <script>
+        // Firebase Configuration (آپ یہاں اپنی Firebase کلیدیں ڈالیں گے)
+        const firebaseConfig = {
+            databaseURL: "https://zrides-default-rtdb.firebaseio.com/" // یہاں آپ اپنا مفت رئیল ٹائم ڈیٹا بیس کا لنک ڈالیں گے
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        var currentLang = 'ur';
         var translations = {
-            ur: {
-                navHome: "ہوم",
-                navServices: "سروسز",
-                langBtn: "English",
-                heroTitle: "Zrides - فاسٹ اور محفوظ سروس",
-                heroSubtitle: "اپنی لوکیشن منتخب کریں اور منٹوں میں سواری یا ڈیلیوری حاصل کریں",
-                formTitle: "بکنگ اور کرایہ کا حساب",
-                lblService: "سروس کی قسم:",
-                optBike: "🏍️ بائیک سواری (Bike Ride)",
-                optRickshaw: "🛺 آٹو رکشہ (Rickshaw)",
-                optDelivery: "📦 پارسل ڈیلیوری (Delivery)",
-                optBuy: "🛒 خریدو (Buy Service)",
-                lblPickup: "پک اپ لوکیشن (Pickup):",
-                phPickup: "مثلاً: کلمہ چوک، لاہور",
-                lblDropoff: "ڈراپ آف لوکیشن (Dropoff):",
-                phDropoff: "مثلاً: مال روڈ، لاہور",
-                lblDistance: "اندازاً فاصلہ (کلومیٹر میں):",
-                lblTotalFare: "کل تخمینہ شدہ کرایہ:",
-                currency: "روپے",
-                lblPhone: "موبائل نمبر:",
-                btnSubmit: "بکنگ کی تصدیق کریں",
-                footerText: "© 2026 Zrides - جملہ حقوق محفوظ ہیں",
-                alertMsg: "شکریہ! آپ کی بکنگ وصول ہو گئی ہے۔\nکل کرایہ: "
-            },
-            en: {
-                navHome: "Home",
-                navServices: "Services",
-                langBtn: "اردو",
-                heroTitle: "Zrides - Fast & Secure Ride Service",
-                heroSubtitle: "Select your location and get a ride or delivery in minutes",
-                formTitle: "Booking & Fare Estimation",
-                lblService: "Service Type:",
-                optBike: "🏍️ Bike Ride",
-                optRickshaw: "🛺 Auto Rickshaw",
-                optDelivery: "📦 Parcel Delivery",
-                optBuy: "🛒 Buy Service",
-                lblPickup: "Pickup Location:",
-                phPickup: "e.g. Kalma Chowk, Lahore",
-                lblDropoff: "Dropoff Location:",
-                phDropoff: "e.g. Mall Road, Lahore",
-                lblDistance: "Estimated Distance (in KM):",
-                lblTotalFare: "Total Estimated Fare:",
-                currency: "PKR",
-                lblPhone: "Phone Number:",
-                btnSubmit: "Confirm Booking",
-                footerText: "© 2026 Zrides - All rights reserved",
-                alertMsg: "Thank you! Your booking request has been received.\nTotal Fare: "
-            }
+            ur: { langBtn: "English", heroTitle: "Zrides - فاسٹ اور محفوظ سروس", heroSubtitle: "اپنی لوکیشن منتخب کریں اور منٹوں میں سواری یا ڈیلیوری حاصل کریں", formTitle: "بکنگ اور کرایہ کا حساب", lblService: "سروس کی قسم:", lblPickup: "پک اپ لوکیشن (Pickup):", lblDropoff: "ڈراپ آف لوکیشن (Dropoff):", lblDistance: "اندازاً فاصلہ (کلومیٹر میں):", lblTotalFare: "کل تخمینہ شدہ کرایہ:", currency: "روپے", lblPhone: "موبائل نمبر:", btnSubmit: "بکنگ کی تصدیق کریں", footerText: "© 2026 Zrides - جملہ حقوق محفوظ ہیں" },
+            en: { langBtn: "اردو", heroTitle: "Zrides - Fast & Secure Ride Service", heroSubtitle: "Select your location and get a ride or delivery in minutes", formTitle: "Booking & Fare Estimation", lblService: "Service Type:", lblPickup: "Pickup Location:", lblDropoff: "Dropoff Location:", lblDistance: "Estimated Distance (in KM):", lblTotalFare: "Total Estimated Fare:", currency: "PKR", lblPhone: "Phone Number:", btnSubmit: "Confirm Booking", footerText: "© 2026 Zrides - All rights reserved" }
         };
 
-        // Switch Language Function
         function toggleLanguage() {
+            currentLang = (currentLang === 'ur') ? 'en' : 'ur';
             var html = document.getElementById('htmlTag');
-            
-            if (currentLang === 'ur') {
-                currentLang = 'en';
-                html.setAttribute('dir', 'ltr');
-                html.setAttribute('lang', 'en');
-            } else {
-                currentLang = 'ur';
-                html.setAttribute('dir', 'rtl');
-                html.setAttribute('lang', 'ur');
-            }
-
+            html.setAttribute('dir', currentLang === 'ur' ? 'rtl' : 'ltr');
+            html.setAttribute('lang', currentLang);
             var t = translations[currentLang];
-
-            document.getElementById('navHome').innerText = t.navHome;
-            document.getElementById('navServices').innerText = t.navServices;
             document.getElementById('langBtn').innerText = t.langBtn;
             document.getElementById('heroTitle').innerText = t.heroTitle;
             document.getElementById('heroSubtitle').innerText = t.heroSubtitle;
             document.getElementById('formTitle').innerText = t.formTitle;
             document.getElementById('lblService').innerText = t.lblService;
-            document.getElementById('optBike').innerText = t.optBike;
-            document.getElementById('optRickshaw').innerText = t.optRickshaw;
-            document.getElementById('optDelivery').innerText = t.optDelivery;
-            document.getElementById('optBuy').innerText = t.optBuy;
             document.getElementById('lblPickup').innerText = t.lblPickup;
-            document.getElementById('pickup').placeholder = t.phPickup;
             document.getElementById('lblDropoff').innerText = t.lblDropoff;
-            document.getElementById('dropoff').placeholder = t.phDropoff;
             document.getElementById('lblDistance').innerText = t.lblDistance;
             document.getElementById('lblTotalFare').innerText = t.lblTotalFare;
             document.getElementById('lblPhone').innerText = t.lblPhone;
             document.getElementById('btnSubmit').innerText = t.btnSubmit;
             document.getElementById('footerText').innerText = t.footerText;
-
             calculateFare();
         }
 
-        // Initialize Map
         var map = L.map('map').setView([31.5204, 74.3587], 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
-
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
         L.marker([31.5204, 74.3587]).addTo(map).bindPopup('Zrides').openPopup();
 
-        // Calculate Fare
         function calculateFare() {
             var service = document.getElementById('serviceType').value;
             var distance = parseFloat(document.getElementById('distance').value) || 0;
-            var fare = 0;
-
-            if (service === 'bike') fare = 50 + (distance * 20);
-            else if (service === 'rickshaw') fare = 80 + (distance * 35);
-            else if (service === 'delivery') fare = 60 + (distance * 25);
-            else if (service === 'buy') fare = 100 + (distance * 20);
-
-            var curr = translations[currentLang].currency;
-            document.getElementById('estimatedFare').innerText = Math.round(fare) + " " + curr;
+            var fare = service.includes('Rickshaw') ? 80 + (distance * 35) : service.includes('Delivery') ? 60 + (distance * 25) : 50 + (distance * 20);
+            document.getElementById('estimatedFare').innerText = Math.round(fare) + " " + translations[currentLang].currency;
         }
 
-        // Form Submit Event
+        // Handle Form Submission & Push to Firebase
         document.getElementById('rideForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            var service = document.getElementById('serviceType').value;
+            var pickup = document.getElementById('pickup').value;
+            var dropoff = document.getElementById('dropoff').value;
+            var distance = document.getElementById('distance').value;
             var phone = document.getElementById('phone').value;
             var fare = document.getElementById('estimatedFare').innerText;
-            var alertText = translations[currentLang].alertMsg + fare;
-            alert(alertText);
+
+            // Push data to Firebase Realtime Database
+            db.ref('orders/').push({
+                service: service,
+                pickup: pickup,
+                dropoff: dropoff,
+                distance: distance,
+                phone: phone,
+                fare: fare,
+                status: 'pending',
+                time: new Date().toLocaleTimeString()
+            }, function(error) {
+                if (error) {
+                    alert("بکنگ میں خرابی پیش آئی۔ دوبارہ کوشش کریں۔");
+                } else {
+                    alert("شکریہ! آپ کی بکنگ کامیاب ہو گئی ہے۔ قریبی ڈرائیور کو الرٹ بھیج دیا گیا ہے۔");
+                    document.getElementById('rideForm').reset();
+                    calculateFare();
+                }
+            });
         });
     </script>
 </body>
