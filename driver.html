@@ -1,372 +1,148 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl" id="htmlTag">
+<html lang="ur" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zrides Partner - ڈرائیور پورٹل</title>
-    
-    <!-- Leaflet Map CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f1f5f9;
-            color: #333;
-        }
-
-        /* Top Header */
-        header {
-            background-color: #1e293b;
-            color: white;
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #10b981;
-        }
-
-        .driver-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Toggle Online/Offline Switch */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 26px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: #10b981;
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(24px);
-        }
-
-        /* Stats Bar */
-        .stats-bar {
-            max-width: 1100px;
-            margin: 20px auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .stat-card h4 {
-            color: #64748b;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .stat-card h2 {
-            color: #0f172a;
-            font-size: 24px;
-        }
-
-        /* Main Container */
-        .dashboard-container {
-            max-width: 1100px;
-            margin: 20px auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .dashboard-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Orders Panel */
-        .panel {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 12px;
-            margin-bottom: 15px;
-        }
-
-        .panel-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #0f172a;
-        }
-
-        /* Order Cards */
-        .order-card {
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background-color: #fafafa;
-            transition: 0.3s;
-        }
-
-        .order-card.new {
-            border-right: 5px solid #10b981;
-            background-color: #f0fdf4;
-        }
-
-        .order-type {
-            display: inline-block;
-            background-color: #10b981;
-            color: white;
-            font-size: 12px;
-            padding: 3px 8px;
-            border-radius: 4px;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-
-        .order-info {
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 12px;
-        }
-
-        .order-fare {
-            font-size: 18px;
-            font-weight: bold;
-            color: #059669;
-            margin-bottom: 10px;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-accept {
-            flex: 1;
-            background-color: #10b981;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .btn-accept:hover {
-            background-color: #059669;
-        }
-
-        .btn-reject {
-            flex: 1;
-            background-color: #ef4444;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .btn-reject:hover {
-            background-color: #dc2626;
-        }
-
-        /* Map */
-        #driverMap {
-            height: 450px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f1f5f9; color: #333; }
+        header { background-color: #1e293b; color: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .logo { font-size: 24px; font-weight: bold; color: #10b981; }
+        .back-btn { background-color: #10b981; color: white; padding: 6px 14px; border-radius: 20px; text-decoration: none; font-weight: bold; }
+        .stats-bar { max-width: 1100px; margin: 20px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .stat-card { background: white; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .stat-card h4 { color: #64748b; font-size: 14px; margin-bottom: 5px; }
+        .stat-card h2 { color: #0f172a; font-size: 24px; }
+        .dashboard-container { max-width: 1100px; margin: 20px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .dashboard-container { grid-template-columns: 1fr; } }
+        .panel { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 15px; }
+        .panel-title { font-size: 18px; font-weight: bold; color: #0f172a; }
+        .order-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 15px; background-color: #f0fdf4; border-right: 5px solid #10b981; }
+        .order-type { display: inline-block; background-color: #10b981; color: white; font-size: 12px; padding: 3px 8px; border-radius: 4px; margin-bottom: 8px; font-weight: bold; }
+        .order-info { font-size: 14px; line-height: 1.6; margin-bottom: 12px; }
+        .order-fare { font-size: 18px; font-weight: bold; color: #059669; margin-bottom: 10px; }
+        .btn-group { display: flex; gap: 10px; }
+        .btn-accept { flex: 1; background-color: #10b981; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .btn-accept:hover { background-color: #059669; }
+        .btn-reject { flex: 1; background-color: #ef4444; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        #driverMap { height: 450px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <header>
         <div class="logo">Zrides Partner 🏍️</div>
-        <div class="driver-status">
-            <span id="statusLabel" style="font-weight: bold;">آن لائن (Online)</span>
-            <label class="switch">
-                <input type="checkbox" id="onlineToggle" checked onchange="toggleOnlineStatus()">
-                <span class="slider"></span>
-            </label>
-        </div>
+        <a href="index.html" class="back-btn">کسٹمر سائٹ (Website)</a>
     </header>
 
-    <!-- Stats Bar -->
     <div class="stats-bar">
         <div class="stat-card">
-            <h4>آج کی کمائی (Today Earnings)</h4>
-            <h2 id="totalEarnings">Rs. 1,450</h2>
+            <h4>آج کی کمائی (Earnings)</h4>
+            <h2 id="totalEarnings">Rs. 0</h2>
         </div>
         <div class="stat-card">
-            <h4>مکمل سواریاں (Completed Rides)</h4>
-            <h2 id="totalRides">6</h2>
-        </div>
-        <div class="stat-card">
-            <h4>والٹ بیلنس (Wallet Balance)</h4>
-            <h2 id="walletBalance">Rs. 520</h2>
+            <h4>مکمل سواریاں (Rides)</h4>
+            <h2 id="totalRides">0</h2>
         </div>
     </div>
 
-    <!-- Dashboard Container -->
     <div class="dashboard-container">
-        
-        <!-- Orders List -->
         <div class="panel">
             <div class="panel-header">
-                <span class="panel-title">نئے موصول شدہ آرڈرز (Live Requests)</span>
-                <span style="font-size: 12px; color: #64748b;" id="liveCount">1 نیا آرڈر</span>
+                <span class="panel-title">لائیو آرڈرز (Live Requests)</span>
+                <span style="font-size: 12px; color: #64748b;" id="liveCount">آرڈرز کا انتظار ہے...</span>
             </div>
-
             <div id="ordersContainer">
-                <!-- Live Order Card Example -->
-                <div class="order-card new" id="order1">
-                    <span class="order-type">🏍️ بائیک سواری (Bike Ride)</span>
-                    <div class="order-info">
-                        <p><strong>پک اپ (Pickup):</strong> کلمہ چوک، لاہور</p>
-                        <p><strong>ڈراپ (Dropoff):</strong> ڈی ایچ اے فیز 5، لاہور</p>
-                        <p><strong>فاصلہ (Distance):</strong> 6.5 کلومیٹر</p>
-                        <p><strong>کسٹمر فون:</strong> 0300-1234567</p>
-                    </div>
-                    <div class="order-fare">کرایہ: Rs. 180</div>
-                    <div class="btn-group">
-                        <button class="btn-accept" onclick="acceptOrder('order1', 180)">قبول کریں (Accept)</button>
-                        <button class="btn-reject" onclick="rejectOrder('order1')">مسترد کریں (Reject)</button>
-                    </div>
-                </div>
+                <p style="text-align: center; color: #888; padding: 20px;">کوئی نیا آرڈر موجود نہیں ہے۔ جب کسٹمر بک کرے گا تو یہاں ظاہر ہوگا۔</p>
             </div>
         </div>
-
-        <!-- Live Map -->
         <div>
             <div id="driverMap"></div>
         </div>
-
     </div>
 
     <!-- Leaflet Map JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
     <script>
-        var isOnline = true;
-        var earnings = 1450;
-        var rides = 6;
+        const firebaseConfig = {
+            databaseURL: "https://zrides-default-rtdb.firebaseio.com/" // وہی ڈیٹا بیس لنک جو اوپر استعمال کیا
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
-        // Initialize Map
+        var earnings = 0;
+        var ridesCount = 0;
+
         var map = L.map('driverMap').setView([31.5204, 74.3587], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+        L.marker([31.5204, 74.3587]).addTo(map).bindPopup('آپ کی لوکیشن').openPopup();
 
-        // Add Driver Icon Location
-        var driverMarker = L.marker([31.5204, 74.3587]).addTo(map)
-            .bindPopup('آپ کی لوکیشن (Driver Location)')
-            .openPopup();
-
-        // Toggle Online Status
-        function toggleOnlineStatus() {
-            var toggle = document.getElementById('onlineToggle');
-            var label = document.getElementById('statusLabel');
+        // Listen for live orders from Firebase database
+        db.ref('orders/').on('value', function(snapshot) {
             var container = document.getElementById('ordersContainer');
-
-            isOnline = toggle.checked;
-
-            if (isOnline) {
-                label.innerText = "آن لائن (Online)";
-                label.style.color = "#ffffff";
-                container.style.opacity = "1";
-            } else {
-                label.innerText = "آف لائن (Offline)";
-                label.style.color = "#ef4444";
-                container.style.opacity = "0.4";
-                alert("آپ آف لائن ہو چکے ہیں۔ اب آرڈرز موصول نہیں ہوں گے۔");
-            }
-        }
-
-        // Accept Order Function
-        function acceptOrder(orderId, fare) {
-            if (!isOnline) {
-                alert("براہِ کرم پہلے آن لائن ہوں۔");
+            container.innerHTML = "";
+            var data = snapshot.val();
+            
+            if (!data) {
+                container.innerHTML = '<p style="text-align: center; color: #888; padding: 20px;">کوئی نیا آرڈر موجود نہیں ہے۔</p>';
+                document.getElementById('liveCount').innerText = "0 آرڈر";
                 return;
             }
 
-            alert("مبارک ہو! آپ نے آرڈر قبول کر لیا ہے۔ کسٹمر کی لوکیشن نیویگیٹ کی جا رہی ہے۔");
+            var count = 0;
+            Object.keys(data).forEach(function(key) {
+                var order = data[key];
+                if (order.status === 'pending') {
+                    count++;
+                    var cardHTML = `
+                        <div class="order-card" id="card-${key}">
+                            <span class="order-type">${order.service}</span>
+                            <div class="order-info">
+                                <p><strong>پک اپ:</strong> ${order.pickup}</p>
+                                <p><strong>ڈراپ:</strong> ${order.dropoff}</p>
+                                <p><strong>فاصلہ:</strong> ${order.distance} کلومیٹر</p>
+                                <p><strong>فون:</strong> ${order.phone}</p>
+                                <p><strong>وقت:</strong> ${order.time}</p>
+                            </div>
+                            <div class="order-fare">کرایہ: ${order.fare}</div>
+                            <div class="btn-group">
+                                <button class="btn-accept" onclick="acceptOrder('${key}', '${order.fare}')">قبول کریں (Accept)</button>
+                                <button class="btn-reject" onclick="rejectOrder('${key}')">مسترد کریں</button>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += cardHTML;
+                }
+            });
+
+            document.getElementById('liveCount').innerText = count + " نئے آرڈرز";
+        });
+
+        function acceptOrder(orderKey, fareStr) {
+            // Update order status in Firebase
+            db.ref('orders/' + orderKey).update({ status: 'accepted' });
             
-            // Update Stats
-            earnings += fare;
-            rides += 1;
+            alert("مبارک ہو! آپ نے آرڈر قبول کر لیا ہے۔");
+            
+            // Add earnings (Extract numeric value from fare string)
+            var numericFare = parseInt(fareStr.replace(/[^0-9]/g, '')) || 150;
+            earnings += numericFare;
+            ridesCount += 1;
 
             document.getElementById('totalEarnings').innerText = "Rs. " + earnings;
-            document.getElementById('totalRides').innerText = rides;
-
-            // Remove Order Card
-            document.getElementById(orderId).remove();
-            document.getElementById('liveCount').innerText = "0 نیا آرڈر";
+            document.getElementById('totalRides').innerText = ridesCount;
         }
 
-        // Reject Order Function
-        function rejectOrder(orderId) {
-            document.getElementById(orderId).remove();
-            document.getElementById('liveCount').innerText = "0 نیا آرڈر";
+        function rejectOrder(orderKey) {
+            db.ref('orders/' + orderKey).update({ status: 'rejected' });
         }
     </script>
 </body>
