@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zrides - Professional Ride & Delivery Platform</title>
+    <title>Zrides - Ride & Delivery Platform</title>
 
-    <!-- Leaflet Map CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
 
@@ -17,9 +16,9 @@
         .logo { font-size: 26px; font-weight: bold; color: #10b981; letter-spacing: 1px; }
         nav { display: flex; align-items: center; gap: 15px; }
         nav a { color: white; text-decoration: none; font-weight: 500; font-size: 15px; }
-        .btn-nav { background: #10b981; padding: 8px 16px; border-radius: 6px; transition: 0.3s; }
-        .btn-nav:hover { background: #059669; }
+        .btn-nav { background: #10b981; padding: 8px 16px; border-radius: 6px; }
         .btn-outline { border: 1px solid #475569; padding: 7px 15px; border-radius: 6px; }
+        .btn-logout { background: #ef4444; border: none; color: white; padding: 7px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
         .hero { background: linear-gradient(rgba(15,23,42,0.85), rgba(15,23,42,0.85)), url('https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=1000') center/cover; height: 160px; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
         .hero h1 { font-size: 24px; margin-bottom: 5px; color: #34d399; }
@@ -43,7 +42,6 @@
         #map { height: 100%; min-height: 420px; border-radius: 8px; border: 1px solid #cbd5e1; }
         .map-hint { font-size: 13px; color: #10b981; text-align: center; margin-bottom: 10px; font-weight: bold; background: #ecfdf5; padding: 8px; border-radius: 6px; border: 1px solid #a7f3d0; }
         
-        /* Bidding Box Style */
         .bidding-box { background: #fef3c7; border: 1px solid #fde047; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: none; }
         .bidding-actions { display: flex; gap: 10px; margin-top: 10px; }
         .btn-accept { background: #10b981; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 50%; }
@@ -51,7 +49,6 @@
 
         .notification-box { background: #3b82f6; color: white; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 15px; display: none; }
 
-        /* Chat Box */
         .chat-container { border: 1px solid #cbd5e1; border-radius: 8px; background: #f8fafc; height: 220px; display: flex; flex-direction: column; margin-top: 15px; }
         .chat-messages { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
         .chat-msg { padding: 8px 12px; border-radius: 8px; font-size: 13px; max-width: 80%; }
@@ -72,6 +69,7 @@
         <nav>
             <a href="login.html" class="btn-outline" id="navLogin">لاگ ان / سائن اپ</a>
             <a href="driver.html" class="btn-nav" id="navPartner">ڈرائیور پورٹل</a>
+            <button class="btn-logout" onclick="logoutUser()" id="logoutBtn" style="display:none;">لاگ آؤٹ</button>
             <a href="#" onclick="toggleLanguage()" id="langBtn" style="color: #38bdf8;">English</a>
         </nav>
     </header>
@@ -83,17 +81,16 @@
 
     <div class="main-container">
         <div class="card">
-            <div id="statusNotification" class="notification-box">🔔 Order update notification</div>
+            <div id="statusNotification" class="notification-box">🔔 آرڈر اپ ڈیٹ الرٹ</div>
 
-            <!-- Driver Counter Offer Bidding Section -->
             <div id="biddingBox" class="bidding-box">
-                <p id="bidText">🚕 Driver ne naya fare offer kiya hai!</p>
+                <p id="bidText">🚕 ڈرائیور نے نیا کرایہ آفر کیا ہے!</p>
                 <div class="form-group" style="margin-top: 8px;">
-                    <input type="number" id="custReOfferInput" placeholder="Aapna Fare Re-Offer Karein (Optional)">
+                    <input type="number" id="custReOfferInput" placeholder="اپنا کرایہ دوبارہ آفر کریں (آپشنل)">
                 </div>
                 <div class="bidding-actions">
-                    <button class="btn-accept" onclick="acceptDriverOffer()">Accept Offer</button>
-                    <button class="btn-reoffer" onclick="sendCustomerCounterOffer()">Send Counter Offer</button>
+                    <button class="btn-accept" onclick="acceptDriverOffer()">آفر قبول کریں</button>
+                    <button class="btn-reoffer" onclick="sendCustomerCounterOffer()">جوابی آفر بھیجیں</button>
                 </div>
             </div>
 
@@ -139,14 +136,13 @@
                 <button type="submit" class="btn-submit" id="btnSubmit">بکنگ کنفرم کریں</button>
             </form>
 
-            <!-- Customer Live Chat Box -->
             <div id="chatSection" style="display: none;">
-                <h3 style="margin-top: 20px; font-size: 16px;">💬 Driver ke sath Live Chat</h3>
+                <h3 style="margin-top: 20px; font-size: 16px;">💬 ڈرائیور کے ساتھ لائیو چیٹ</h3>
                 <div class="chat-container">
                     <div class="chat-messages" id="chatMsgs"></div>
                     <div class="chat-input">
-                        <input type="text" id="chatText" placeholder="Message likhein...">
-                        <button type="button" onclick="sendChatMessage()">Send</button>
+                        <input type="text" id="chatText" placeholder="پیغام لکھیں...">
+                        <button type="button" onclick="sendChatMessage()">بھیجیں</button>
                     </div>
                 </div>
             </div>
@@ -168,6 +164,7 @@
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <script>
@@ -178,31 +175,40 @@
             projectId: "zrides-9f2da",
             storageBucket: "zrides-9f2da.firebasestorage.app",
             messagingSenderId: "93898388224",
-            appId: "1:93898388224:web:2e4f78e5b31dec26f839e5",
-            measurementId: "G-XCGVR3L9YV"
+            appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
         };
-        
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.database();
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                if (!user.emailVerified) {
+                    alert("پہلے ای میل کی تصدیق کریں۔");
+                    auth.signOut();
+                    window.location.href = "login.html";
+                } else {
+                    document.getElementById('logoutBtn').style.display = 'block';
+                    document.getElementById('navLogin').style.display = 'none';
+                }
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        function logoutUser() {
+            auth.signOut().then(() => window.location.href = "login.html");
+        }
 
         var map = L.map('map').setView([31.5204, 74.3587], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-        var pickupCoord = null;
-        var dropoffCoord = null;
-        var routingControl = null;
-        var driverLiveMarker = null;
-        var currentOrderId = null;
-        var selectionStep = 'pickup';
-        var currentDriverFare = 0;
+        var pickupCoord = null, dropoffCoord = null, routingControl = null, driverLiveMarker = null, currentOrderId = null;
+        var selectionStep = 'pickup', currentDriverFare = 0;
 
         function setActiveSelection(step) {
             selectionStep = step;
-            if(step === 'pickup') {
-                document.getElementById('mapHint').innerText = "💡 نقشے پر نیا پک اپ (Pickup) مقام منتخب کریں";
-            } else {
-                document.getElementById('mapHint').innerText = "💡 نقشے پر نیا ڈراپ آف (Dropoff) مقام منتخب کریں";
-            }
+            document.getElementById('mapHint').innerText = (step === 'pickup') ? "💡 نقشے پر نیا پک اپ مقام منتخب کریں" : "💡 نقشے پر نیا ڈراپ آف مقام منتخب کریں";
         }
 
         map.on('click', function(e) {
@@ -210,28 +216,18 @@
                 pickupCoord = e.latlng;
                 document.getElementById('pickup').value = "Lat: " + pickupCoord.lat.toFixed(4) + ", Lng: " + pickupCoord.lng.toFixed(4);
                 selectionStep = 'dropoff';
-                document.getElementById('mapHint').innerText = "💡 اب نقشے پر کلک کر کے ڈراپ آف (Dropoff) مقام منتخب کریں";
-                
-                if (routingControl) {
-                    map.removeControl(routingControl);
-                    routingControl = null;
-                }
+                document.getElementById('mapHint').innerText = "💡 اب نقشے پر کلک کر کے ڈراپ آف مقام منتخب کریں";
+                if (routingControl) { map.removeControl(routingControl); routingControl = null; }
             } else {
                 dropoffCoord = e.latlng;
                 document.getElementById('dropoff').value = "Lat: " + dropoffCoord.lat.toFixed(4) + ", Lng: " + dropoffCoord.lng.toFixed(4);
                 selectionStep = 'pickup';
-                document.getElementById('mapHint').innerText = "💡 لوکیشن تبدیل کرنے کے لیے خانے پر کلک کریں";
 
                 if (pickupCoord && dropoffCoord) {
-                    if (routingControl) {
-                        map.removeControl(routingControl);
-                    }
+                    if (routingControl) map.removeControl(routingControl);
 
                     routingControl = L.Routing.control({
-                        waypoints: [
-                            L.latLng(pickupCoord.lat, pickupCoord.lng),
-                            L.latLng(dropoffCoord.lat, dropoffCoord.lng)
-                        ],
+                        waypoints: [L.latLng(pickupCoord.lat, pickupCoord.lng), L.latLng(dropoffCoord.lat, dropoffCoord.lng)],
                         routeWhileDragging: false,
                         addWaypoints: false,
                         createMarker: function(i, wp, nWps) {
@@ -246,10 +242,8 @@
                     }).addTo(map);
 
                     routingControl.on('routesfound', function(e) {
-                        var routes = e.routes;
-                        var summary = routes[0].summary;
-                        var distanceInKm = (summary.totalDistance / 1000).toFixed(1);
-                        document.getElementById('distance').value = distanceInKm;
+                        var summary = e.routes[0].summary;
+                        document.getElementById('distance').value = (summary.totalDistance / 1000).toFixed(1);
                         calculateFare();
                     });
                 }
@@ -259,9 +253,7 @@
         function calculateFare() {
             var service = document.getElementById('serviceType').value;
             var distance = parseFloat(document.getElementById('distance').value) || 1;
-            
-            var baseFare = 30; 
-            var perKmRate = 15;
+            var baseFare = 30, perKmRate = 15;
 
             if (service.includes('Rickshaw')) { baseFare = 50; perKmRate = 30; }
             else if (service.includes('Car Mini')) { baseFare = 80; perKmRate = 45; }
@@ -269,43 +261,30 @@
             else if (service.includes('Parcel')) { baseFare = 40; perKmRate = 18; }
             else if (service.includes('Buy')) { baseFare = 50; perKmRate = 20; }
 
-            var total = baseFare + (distance * perKmRate);
-            document.getElementById('estimatedFare').innerText = "Rs. " + Math.round(total);
+            document.getElementById('estimatedFare').innerText = "Rs. " + Math.round(baseFare + (distance * perKmRate));
         }
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            var service = document.getElementById('serviceType').value;
             var pickup = document.getElementById('pickup').value.trim();
             var dropoff = document.getElementById('dropoff').value.trim();
-            var distance = document.getElementById('distance').value;
-            var phone = document.getElementById('phone').value.trim();
-            var fare = document.getElementById('estimatedFare').innerText;
 
-            if(!pickup || !dropoff) {
-                alert("براہ کرم نقشے سے پک اپ اور ڈراپ آف لوکیشن منتخب کریں۔");
-                return;
-            }
+            if(!pickup || !dropoff) { alert("نقشے سے مقامات منتخب کریں۔"); return; }
 
             var newOrderRef = db.ref('orders/').push();
             currentOrderId = newOrderRef.key;
 
             newOrderRef.set({
-                service: service,
-                pickup: pickup,
-                dropoff: dropoff,
-                distance: distance + " کلومیٹر",
-                phone: phone,
-                fare: fare,
-                offeredFare: fare,
-                status: 'pending',
-                timestamp: new Date().toLocaleString()
+                service: document.getElementById('serviceType').value,
+                pickup: pickup, dropoff: dropoff,
+                distance: document.getElementById('distance').value + " کلومیٹر",
+                phone: document.getElementById('phone').value.trim(),
+                fare: document.getElementById('estimatedFare').innerText,
+                offeredFare: document.getElementById('estimatedFare').innerText,
+                status: 'pending', timestamp: new Date().toLocaleString()
             }, function(error) {
-                if (error) {
-                    alert("بکنگ میں خرابی: " + error.message);
-                } else {
-                    alert("Mubarak ho! Aap ka order drivers ko bhej diya gaya hai.");
+                if (!error) {
+                    alert("آرڈر ڈرائیورز کو بھیج دیا گیا ہے!");
                     listenToOrderUpdates(currentOrderId);
                 }
             });
@@ -319,104 +298,63 @@
                 const notifBox = document.getElementById('statusNotification');
                 const biddingBox = document.getElementById('biddingBox');
 
-                // Driver Counter Offer Notification
                 if (order.status === 'driver_counter_offer') {
                     currentDriverFare = order.offeredFare;
                     biddingBox.style.display = 'block';
-                    document.getElementById('bidText').innerText = `🚕 Driver (${order.driverName || 'Driver'}) ne Naya Fare Offer Kiya: ${order.offeredFare}`;
+                    document.getElementById('bidText').innerText = `🚕 ڈرائیور (${order.driverName || 'Driver'}) کی آفر: ${order.offeredFare}`;
                 }
 
-                // Final Ride Confirmation by Driver
                 if (order.status === 'confirmed_by_driver') {
                     biddingBox.style.display = 'none';
                     notifBox.style.display = 'block';
                     notifBox.style.background = '#10b981';
-                    notifBox.innerText = `🎉 Ride Confirmed! Driver (${order.driverName}) aap ki taraf aa raha hai. Total Fare: ${order.fare}`;
+                    notifBox.innerText = `🎉 رائیڈ کنفرم! ڈرائیور آ رہا ہے۔ کرایہ: ${order.fare}`;
                     document.getElementById('chatSection').style.display = 'block';
                 }
 
-                // Driver Arrived Notification
                 if (order.status === 'arrived') {
-                    notifBox.style.display = 'block';
-                    notifBox.style.background = '#10b981';
-                    notifBox.innerText = "🎉 Driver Aap Ki Pickup Location Par Pahunch Gaya Hai!";
+                    notifBox.innerText = "🎉 ڈرائیور آپ کی لوکیشن پر پہنچ گیا ہے!";
                 }
 
-                // Trip In Progress Notification
                 if (order.status === 'in_progress') {
-                    notifBox.style.display = 'block';
-                    notifBox.style.background = '#059669';
-                    notifBox.innerText = "🚀 Aap Ka Safar Shuru Ho Chuka Hai!";
+                    notifBox.innerText = "🚀 سفر شروع ہو چکا ہے!";
                 }
 
-                // Live Driver GPS Tracking
                 if (order.driverLocation) {
-                    const lat = order.driverLocation.lat;
-                    const lng = order.driverLocation.lng;
-
                     if (driverLiveMarker) map.removeLayer(driverLiveMarker);
-                    driverLiveMarker = L.marker([lat, lng]).addTo(map).bindPopup("🚗 Driver Live Position").openPopup();
+                    driverLiveMarker = L.marker([order.driverLocation.lat, order.driverLocation.lng]).addTo(map).bindPopup("🚗 ڈرائیور کی لائیو لوکیشن").openPopup();
                 }
             });
 
-            // Listen for Realtime Chat
             db.ref(`chats/${orderId}`).on('child_added', snapshot => {
                 const msg = snapshot.val();
                 const chatMsgs = document.getElementById('chatMsgs');
                 const msgDiv = document.createElement('div');
                 msgDiv.className = `chat-msg ${msg.sender}`;
-                msgDiv.innerText = `${msg.sender === 'customer' ? 'Aap' : 'Driver'}: ${msg.text}`;
+                msgDiv.innerText = `${msg.sender === 'customer' ? 'آپ' : 'ڈرائیور'}: ${msg.text}`;
                 chatMsgs.appendChild(msgDiv);
                 chatMsgs.scrollTop = chatMsgs.scrollHeight;
             });
         }
 
-        // Accept Driver Counter Offer
         function acceptDriverOffer() {
-            db.ref(`orders/${currentOrderId}`).update({
-                fare: currentDriverFare,
-                status: 'accepted_by_customer'
-            });
+            db.ref(`orders/${currentOrderId}`).update({ fare: currentDriverFare, status: 'accepted_by_customer' });
             document.getElementById('biddingBox').style.display = 'none';
-            alert("Aap ne Driver ka Fare accept kar liya hai! Driver ki final confirmation ka intezar karein.");
         }
 
-        // Send Re-Offer to Driver
         function sendCustomerCounterOffer() {
             const newFare = document.getElementById('custReOfferInput').value;
-            if(!newFare) {
-                alert("Kripya naya fare likhein!");
-                return;
-            }
-
-            db.ref(`orders/${currentOrderId}`).update({
-                offeredFare: "Rs. " + newFare,
-                status: 'customer_counter_offer'
-            });
+            if(!newFare) return alert("نیا کرایہ درج کریں!");
+            db.ref(`orders/${currentOrderId}`).update({ offeredFare: "Rs. " + newFare, status: 'customer_counter_offer' });
             document.getElementById('biddingBox').style.display = 'none';
-                alert("Aap ka naya fare offer driver ko bhej diya gaya hai!");
         }
 
-        // Send Chat Message to Driver
         function sendChatMessage() {
             const input = document.getElementById('chatText');
             if (input.value.trim() !== '' && currentOrderId) {
-                db.ref(`chats/${currentOrderId}`).push({
-                    sender: 'customer',
-                    text: input.value,
-                    time: new Date().toLocaleTimeString()
-                });
+                db.ref(`chats/${currentOrderId}`).push({ sender: 'customer', text: input.value, time: new Date().toLocaleTimeString() });
                 input.value = '';
             }
-        }
-
-        let isUrdu = true;
-        function toggleLanguage() {
-            isUrdu = !isUrdu;
-            const htmlTag = document.getElementById('htmlTag');
-            htmlTag.setAttribute('dir', isUrdu ? 'rtl' : 'ltr');
-            htmlTag.setAttribute('lang', isUrdu ? 'ur' : 'en');
-            document.getElementById('langBtn').innerText = isUrdu ? "English" : "اردو";
         }
     </script>
 </body>
