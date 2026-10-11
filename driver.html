@@ -1,891 +1,566 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zrides — Driver Portal</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>Zrides | Driver Dashboard</title>
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, Tahoma, sans-serif;
-}
-
-body {
-    background: #f1f5f9;
-    color: #1e293b;
-    padding-bottom: 30px;
-}
-
-header {
-    background: #0f172a;
-    color: white;
-    padding: 15px 5%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.logo {
-    color: #10b981;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-#driverStatus {
-    font-weight: bold;
-    color: #f59e0b;
-}
-
-.btn-logout {
-    background: #ef4444;
-    border: none;
-    color: white;
-    padding: 8px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.container {
-    max-width: 900px;
-    margin: 22px auto;
-    padding: 0 15px;
-}
-
-.card {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px -1px #0002;
-    margin-bottom: 20px;
-}
-
-.card h2 {
-    font-size: 19px;
-    margin-bottom: 16px;
-    color: #0f172a;
-    border-bottom: 2px solid #e2e8f0;
-    padding-bottom: 10px;
-}
-
-.form-group {
-    margin-bottom: 14px;
-}
-
-.form-group label {
-    display: block;
-    font-size: 14px;
-    font-weight: bold;
-    color: #475569;
-    margin-bottom: 6px;
-}
-
-.form-group input,
-.form-group select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    font-size: 15px;
-    background: white;
-}
-
-.btn {
-    background: #10b981;
-    color: white;
-    border: none;
-    padding: 12px 18px;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
-    width: 100%;
-}
-
-.btn:disabled {
-    opacity: .6;
-    cursor: not-allowed;
-}
-
-.btn-whatsapp {
-    background: #25d366;
-    margin-top: 12px;
-    display: block;
-    text-align: center;
-    text-decoration: none;
-}
-
-.wallet-box {
-    background: #f0fdf4;
-    border: 1px solid #bbf7d0;
-    padding: 15px;
-    border-radius: 8px;
-    text-align: center;
-    margin-bottom: 15px;
-}
-
-.wallet-box h3 {
-    color: #15803d;
-    font-size: 25px;
-    margin-top: 8px;
-}
-
-.order-card {
-    background: white;
-    border: 1px solid #cbd5e1;
-    border-right: 5px solid #10b981;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    line-height: 1.9;
-}
-
-.notice {
-    display: none;
-    padding: 12px;
-    margin-bottom: 15px;
-    border-radius: 7px;
-    line-height: 1.7;
-    overflow-wrap: anywhere;
-}
-
-.notice.success {
-    display: block;
-    color: #065f46;
-    background: #d1fae5;
-}
-
-.notice.error {
-    display: block;
-    color: #991b1b;
-    background: #fee2e2;
-}
-
-.notice.info {
-    display: block;
-    color: #1e40af;
-    background: #dbeafe;
-}
-
-.muted {
-    color: #64748b;
-    font-size: 13px;
-    line-height: 1.8;
-}
-
-.hidden {
-    display: none !important;
-}
-
-@media(max-width: 480px) {
-    header {
-        align-items: flex-start;
-    }
-
-    .card {
-        padding: 16px;
-    }
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f4f6;color:#111827}
+header{background:#111827;color:white;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{font-size:25px;font-weight:bold;color:#4ade80}
+select,input{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;font-size:15px;background:white}
+header select{width:auto}
+button{padding:11px 14px;border:0;border-radius:8px;background:#16a34a;color:white;font-weight:bold;cursor:pointer}
+main{max-width:900px;margin:24px auto;padding:0 15px}
+.card{background:white;padding:20px;border-radius:14px;margin-bottom:18px;box-shadow:0 4px 18px #0001}
+.field{margin:14px 0}
+label{display:block;font-weight:bold;margin-bottom:7px}
+.muted{color:#6b7280;font-size:14px;line-height:1.5}
+.message{display:none;padding:12px;border-radius:8px;margin-bottom:15px;overflow-wrap:anywhere}
+.success{display:block;background:#dcfce7;color:#166534}
+.error{display:block;background:#fee2e2;color:#991b1b}
+.info{display:block;background:#dbeafe;color:#1e40af}
+.ride{border:1px solid #e5e7eb;border-radius:10px;padding:14px;margin:12px 0}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1}
+.hidden{display:none!important}
+.chatMessages{height:170px;overflow:auto;background:#f9fafb;border:1px solid #e5e7eb;padding:10px;margin:10px 0}
+.chatMessage{padding:8px;margin:6px 0;background:#e5e7eb;border-radius:8px;overflow-wrap:anywhere}
 </style>
 </head>
-
 <body>
-
 <header>
-    <div class="logo">Zrides Driver</div>
-
-    <div class="header-actions">
-        <span id="driverStatus">اسٹیٹس: چیک ہو رہا ہے...</span>
-
-        <button
-            class="btn-logout hidden"
-            id="logoutBtn"
-            type="button">
-            لاگ آؤٹ
-        </button>
-    </div>
+  <div class="logo">Zrides Driver</div>
+  <div class="row" style="flex:0;align-items:center">
+    <select id="language" aria-label="Language">
+      <option value="en">English</option>
+      <option value="ur">اردو</option>
+    </select>
+    <button id="logoutBtn">Logout</button>
+  </div>
 </header>
 
-<div class="container">
+<main>
+  <div class="card">
+    <h2 id="heading">Driver Dashboard</h2>
+    <p id="intro" class="muted">Register your vehicle and wait for approval.</p>
+    <div id="message" class="message" role="status" aria-live="polite"></div>
+  </div>
 
-    <div id="pageNotice" class="notice" role="status"
-         aria-live="polite"></div>
+  <div class="card" id="registrationCard">
+    <h2 id="registrationHeading">Driver Registration</h2>
+    <form id="registrationForm">
+      <div class="field">
+        <label id="nameLabel" for="name">Full Name</label>
+        <input id="name" maxlength="80" required>
+      </div>
+      <div class="field">
+        <label id="phoneLabel" for="phone">Phone Number</label>
+        <input id="phone" type="tel" maxlength="25" required>
+      </div>
+      <div class="field">
+        <label id="vehicleLabel" for="vehicle">Vehicle Type</label>
+        <select id="vehicle">
+          <option value="bike">Bike</option>
+          <option value="car">Car</option>
+          <option value="rickshaw">Rickshaw</option>
+        </select>
+      </div>
+      <div class="field">
+        <label id="plateLabel" for="plate">Vehicle Registration Number</label>
+        <input id="plate" maxlength="30" required>
+      </div>
+      <button id="registerBtn" type="submit">Submit Registration</button>
+    </form>
+  </div>
 
-    <!-- Driver profile registration -->
-    <section class="card hidden" id="regCard">
-        <h2>🚗 ڈرائیور رجسٹریشن مکمل کریں</h2>
+  <div class="card">
+    <h2 id="approvalHeading">Approval Status</h2>
+    <p id="approvalStatus" class="muted">Loading status...</p>
+  </div>
 
-        <p class="muted" style="margin-bottom:15px;">
-            آپ کا اکاؤنٹ بن چکا ہے۔ ڈرائیور کی درخواست مکمل کرنے کے
-            لیے اپنی تفصیلات درج کریں۔ منظوری کے بعد آپ سواریاں قبول
-            کر سکیں گے۔
-        </p>
+  <div class="card">
+    <h2 id="queueHeading">Available Rides</h2>
+    <div id="queue"><p class="muted">Loading rides...</p></div>
+  </div>
 
-        <form id="driverRegForm">
+  <div class="card">
+    <h2 id="activeHeading">My Assigned Rides</h2>
+    <div id="activeRides"><p class="muted">Loading rides...</p></div>
+  </div>
 
-            <div class="form-group">
-                <label for="dName">پورا نام</label>
-                <input id="dName" type="text"
-                       maxlength="100" required>
-            </div>
-
-            <div class="form-group">
-                <label>ای میل ایڈریس</label>
-                <input id="dEmail" type="email" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="dPhone">موبائل نمبر</label>
-                <input
-                    id="dPhone"
-                    type="tel"
-                    inputmode="numeric"
-                    placeholder="03001234567"
-                    maxlength="20"
-                    required>
-            </div>
-
-            <div class="form-group">
-                <label for="dVehicle">گاڑی کی قسم</label>
-
-                <select id="dVehicle" required>
-                    <option value="Bike">🏍️ Bike</option>
-                    <option value="Rickshaw">🛺 Rickshaw</option>
-                    <option value="Car Mini">🚗 Car Mini</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="dPlate">گاڑی کا نمبر</label>
-                <input
-                    id="dPlate"
-                    type="text"
-                    maxlength="30"
-                    placeholder="LEA-1234"
-                    required>
-            </div>
-
-            <button class="btn" id="registerBtn" type="submit">
-                ڈرائیور کی درخواست جمع کریں
-            </button>
-        </form>
-    </section>
-
-    <!-- Approval status -->
-    <section class="card hidden" id="pendingCard">
-        <h2>⏳ درخواست کی منظوری</h2>
-
-        <p id="approvalMessage" style="line-height:1.9;">
-            آپ کی درخواست ایڈمن کی منظوری کی منتظر ہے۔
-        </p>
-    </section>
-
-    <!-- Wallet -->
-    <section class="card hidden" id="paymentCard">
-        <h2>💳 جیز کیش ریچارج اور والٹ</h2>
-
-        <div class="wallet-box">
-            <p>آپ کا دستیاب بیلنس</p>
-            <h3 id="walletBal">Rs. 0</h3>
-        </div>
-
-        <p class="muted">
-            1. جیز کیش اکاؤنٹ 03077237059 پر رقم منتقل کریں۔<br>
-            2. ادائیگی کی رسید یا TID ایڈمن کو واٹس ایپ کریں۔<br>
-            3. ایڈمن کی تصدیق اور والٹ اپڈیٹ ہونے کے بعد دستیاب
-            سواریاں قبول کی جا سکتی ہیں۔
-        </p>
-
-        <a
-            href="https://wa.me/923303118422"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn btn-whatsapp">
-            📱 ادائیگی کی تفصیلات ایڈمن کو بھیجیں
-        </a>
-    </section>
-
-    <!-- Available rides -->
-    <section class="card hidden" id="ordersCard">
-        <h2>📦 دستیاب سواریاں</h2>
-        <div id="ordersList">سواریاں تلاش کی جا رہی ہیں...</div>
-    </section>
-
-</div>
+  <div class="card hidden" id="chatCard">
+    <h2 id="chatHeading">Ride Chat</h2>
+    <div id="chatMessages" class="chatMessages"></div>
+    <form id="chatForm">
+      <div class="row">
+        <input id="chatInput" maxlength="1000" required>
+        <button id="sendBtn" type="submit">Send</button>
+      </div>
+    </form>
+  </div>
+</main>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
 <script>
 "use strict";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
-    authDomain: "zrides-9f2da.firebaseapp.com",
-    databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
-    projectId: "zrides-9f2da",
-    storageBucket: "zrides-9f2da.firebasestorage.app",
-    messagingSenderId: "93898388224",
-    appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
+const firebaseConfig={
+  apiKey:"AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
+  authDomain:"zrides-9f2da.firebaseapp.com",
+  databaseURL:"https://zrides-9f2da-default-rtdb.firebaseio.com",
+  projectId:"zrides-9f2da",
+  storageBucket:"zrides-9f2da.firebasestorage.app",
+  messagingSenderId:"93898388224",
+  appId:"1:93898388224:web:2e4f78e5b31dec26f839e5"
 };
 
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(),db=firebase.database();
+const $=id=>document.getElementById(id);
+
+const words={
+ en:{
+  heading:"Driver Dashboard",intro:"Register your vehicle and wait for approval.",
+  registration:"Driver Registration",name:"Full Name",phone:"Phone Number",
+  vehicle:"Vehicle Type",plate:"Vehicle Registration Number",
+  register:"Submit Registration",approval:"Approval Status",
+  queue:"Available Rides",active:"My Assigned Rides",chat:"Ride Chat",
+  send:"Send",logout:"Logout",loading:"Loading...",
+  pendingApproval:"Your application is waiting for admin approval.",
+  approved:"Your driver account is approved.",
+  rejected:"Your application was rejected. Contact support.",
+  submit:"Registration submitted. Wait for admin approval.",
+  registerError:"Unable to submit registration.",
+  noRides:"No rides are available right now.",
+  noActive:"You have no assigned rides.",
+  accept:"Accept Ride",pickup:"Pickup",dropoff:"Destination",
+  service:"Vehicle",fare:"Fare",status:"Status",
+  accepted:"Accepted",arrived:"Driver Arrived",started:"Start Ride",
+  complete:"Complete Ride",pending:"Pending",completed:"Completed",
+  cancelled:"Cancelled",acceptedSuccess:"Ride accepted.",
+  acceptError:"Unable to accept this ride. It may have been taken.",
+  updateError:"Unable to update ride status.",
+  chatOpen:"Chat with Customer",chatError:"Unable to load chat.",
+  message:"Type your message",sendError:"Unable to send message.",
+  nameRequired:"Enter your name.",phoneRequired:"Enter your phone number.",
+  plateRequired:"Enter the vehicle registration number.",
+  verify:"Verify your email before using the driver portal.",
+  profileError:"Driver profile could not be verified.",
+  noRegistration:"Complete driver registration first.",
+  queueError:"Unable to load rides. Check database permissions.",
+  unauthorized:"This account is not registered as a driver.",
+  bike:"Bike",car:"Car",rickshaw:"Rickshaw",notAssigned:"Not assigned"
+ },
+ ur:{
+  heading:"Driver Dashboard",intro:"Vehicle register karein aur admin approval ka intezar karein.",
+  registration:"Driver Registration",name:"Poora Naam",phone:"Phone Number",
+  vehicle:"Vehicle ki Qisam",plate:"Vehicle Registration Number",
+  register:"Registration Jama Karein",approval:"Approval Status",
+  queue:"Available Rides",active:"Meri Assigned Rides",chat:"Ride Chat",
+  send:"Bhejein",logout:"Logout",loading:"Load ho raha hai...",
+  pendingApproval:"Aapki application admin approval ki muntazir hai.",
+  approved:"Aapka driver account approve ho gaya hai.",
+  rejected:"Application reject hui. Support se rabta karein.",
+  submit:"Registration jama ho gayi. Admin approval ka intezar karein.",
+  registerError:"Registration jama nahi ho saki.",
+  noRides:"Filhaal koi ride available nahi.",
+  noActive:"Aapko koi ride assign nahi hui.",
+  accept:"Ride Accept Karein",pickup:"Pickup",dropoff:"Manzil",
+  service:"Vehicle",fare:"Kiraya",status:"Status",
+  accepted:"Accept ho gayi",arrived:"Driver Pohanch Gaya",started:"Ride Shuru Karein",
+  complete:"Ride Mukammal Karein",pending:"Pending",completed:"Mukammal",
+  cancelled:"Cancel",acceptedSuccess:"Ride accept ho gayi.",
+  acceptError:"Ride accept nahi hui. Mumkin hai kisi aur driver ne le li ho.",
+  updateError:"Ride status update nahi ho saka.",
+  chatOpen:"Customer se Chat",chatError:"Chat load nahi hui.",
+  message:"Message likhein",sendError:"Message nahi bheja ja saka.",
+  nameRequired:"Apna naam likhein.",phoneRequired:"Phone number likhein.",
+  plateRequired:"Vehicle registration number likhein.",
+  verify:"Driver portal se pehle email verify karein.",
+  profileError:"Driver profile verify nahi ho saki.",
+  noRegistration:"Pehle driver registration mukammal karein.",
+  queueError:"Rides load nahi hui. Database permissions check karein.",
+  unauthorized:"Yeh account driver ke taur par registered nahi.",
+  bike:"Bike",car:"Car",rickshaw:"Rickshaw",notAssigned:"Abhi assign nahi"
+ }
+};
+
+let lang=localStorage.getItem("zridesLanguage")||"en";
+let user=null,driver=null,queueRef=null,chatRef=null,activeChatOrder=null;
+let ordersCache={};
+
+function t(k){return words[lang][k]||words.en[k]||k;}
+function msg(text,type="info"){
+  $("message").textContent=text;
+  $("message").className="message "+type;
+}
+function applyLanguage(){
+  document.documentElement.lang=lang;
+  document.documentElement.dir=lang==="ur"?"rtl":"ltr";
+  $("language").value=lang;
+  const map={
+   heading:"heading",intro:"intro",registrationHeading:"registration",
+   nameLabel:"name",phoneLabel:"phone",vehicleLabel:"vehicle",
+   plateLabel:"plate",registerBtn:"register",approvalHeading:"approval",
+   queueHeading:"queue",activeHeading:"active",chatHeading:"chat",
+   sendBtn:"send",logoutBtn:"logout"
+  };
+  Object.entries(map).forEach(([id,key])=>$(id).textContent=t(key));
+  [...$("vehicle").options].forEach(o=>o.textContent=t(o.value));
+  $("chatInput").placeholder=t("message");
+  renderQueue();
+  renderActive();
+}
+$("language").onchange=e=>{
+ lang=e.target.value;
+ localStorage.setItem("zridesLanguage",lang);
+ applyLanguage();
+};
+
+function makeText(tag,text){
+ const el=document.createElement(tag);
+ el.textContent=String(text??"");
+ return el;
 }
 
-const auth = firebase.auth();
-const db = firebase.database();
+function renderQueue(){
+ const box=$("queue");
+ if(!driver||driver.approvalStatus!=="approved"||!driver.uid){
+  box.replaceChildren(makeText("p",t("pendingApproval")));
+  return;
+ }
+ box.replaceChildren();
 
-const el = id => document.getElementById(id);
+ db.ref("rideQueue").orderByChild("status").equalTo("pending").once("value")
+ .then(snap=>{
+  box.replaceChildren();
+  let count=0;
+  snap.forEach(child=>{
+   const ride={id:child.key,...child.val()};
+   if(!ride.orderId)return;
+   count++;
 
-let currentUser = null;
-let currentDriverKey = null;
-let currentDriver = null;
-let ordersListener = null;
-let driverListener = null;
-let ridesStarted = false;
-let submitting = false;
+   const card=document.createElement("div");
+   card.className="ride";
+   card.appendChild(makeText("h3",ride.pickup+" → "+ride.dropoff));
+   card.appendChild(makeText("p",t("service")+": "+t(ride.service||"bike")));
+   card.appendChild(makeText("p",t("fare")+": "+(ride.fare??"—")));
 
-function showMessage(message, type = "info") {
-    el("pageNotice").textContent = message;
-    el("pageNotice").className = "notice " + type;
+   const btn=makeText("button",t("accept"));
+   btn.onclick=()=>acceptRide(ride.orderId);
+   card.appendChild(btn);
+   box.appendChild(card);
+  });
+  if(!count)box.appendChild(makeText("p",t("noRides")));
+ })
+ .catch(error=>{
+  console.error(error);
+  msg(t("queueError"),"error");
+ });
 }
 
-function hideMessage() {
-    el("pageNotice").textContent = "";
-    el("pageNotice").className = "notice";
+async function acceptRide(orderId){
+ if(!driver||driver.approvalStatus!=="approved")return;
+
+ try{
+  const result=await db.ref("orders/"+orderId).transaction(order=>{
+   if(!order||order.status!=="pending"||order.driverUid)return;
+   order.driverUid=user.uid;
+   order.driverName=driver.name;
+   order.status="accepted";
+   order.updatedAt=firebase.database.ServerValue.TIMESTAMP;
+   return order;
+  });
+
+  if(!result.committed){
+   msg(t("acceptError"),"error");
+   return;
+  }
+
+  await db.ref("rideQueue/"+orderId).update({
+   status:"accepted",
+   driverUid:user.uid,
+   updatedAt:firebase.database.ServerValue.TIMESTAMP
+  });
+
+  msg(t("acceptedSuccess"),"success");
+  loadActive();
+  renderQueue();
+ }catch(error){
+  console.error(error);
+  msg(t("acceptError"),"error");
+ }
 }
 
-function show(id, visible = true) {
-    el(id).classList.toggle("hidden", !visible);
+function loadActive(){
+ if(!user)return;
+
+ db.ref("orders").orderByChild("driverUid").equalTo(user.uid).on("value",snap=>{
+  ordersCache={};
+  snap.forEach(child=>ordersCache[child.key]={id:child.key,...child.val()});
+  renderActive();
+ },error=>{
+  console.error(error);
+  msg(t("queueError"),"error");
+ });
 }
 
-function setStatus(message, color = "#f59e0b") {
-    el("driverStatus").textContent = message;
-    el("driverStatus").style.color = color;
+function renderActive(){
+ const box=$("activeRides");
+ if(!driver){box.replaceChildren(makeText("p",t("loading")));return;}
+ box.replaceChildren();
+
+ const list=Object.values(ordersCache);
+ if(!list.length){
+  box.appendChild(makeText("p",t("noActive")));
+  return;
+ }
+
+ list.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+
+ list.forEach(ride=>{
+  const card=document.createElement("div");
+  card.className="ride";
+  card.appendChild(makeText("h3",ride.pickup+" → "+ride.dropoff));
+  card.appendChild(makeText("p",t("status")+": "+ride.status));
+  card.appendChild(makeText("p",t("fare")+": "+(ride.fare??"—")));
+
+  const row=document.createElement("div");
+  row.className="row";
+
+  if(ride.status==="accepted"){
+   const arrived=makeText("button",t("arrived"));
+   arrived.onclick=()=>updateStatus(ride.id,"arrived");
+   row.appendChild(arrived);
+  }
+
+  if(ride.status==="arrived"){
+   const start=makeText("button",t("started"));
+   start.onclick=()=>updateStatus(ride.id,"started");
+   row.appendChild(start);
+  }
+
+  if(ride.status==="started"){
+   const complete=makeText("button",t("complete"));
+   complete.onclick=()=>updateStatus(ride.id,"completed");
+   row.appendChild(complete);
+  }
+
+  if(!["completed","cancelled"].includes(ride.status)){
+   const chat=makeText("button",t("chatOpen"));
+   chat.onclick=()=>openChat(ride.id);
+   row.appendChild(chat);
+  }
+
+  card.appendChild(row);
+  box.appendChild(card);
+ });
 }
 
-function stopOrderListener() {
-    if (ordersListener) {
-        db.ref("orders").off("value", ordersListener);
-        ordersListener = null;
-    }
+async function updateStatus(orderId,newStatus){
+ const allowed={accepted:"arrived",arrived:"started",started:"completed"};
 
-    ridesStarted = false;
+ try{
+  const result=await db.ref("orders/"+orderId).transaction(order=>{
+   if(!order||order.driverUid!==user.uid)return;
+   if(allowed[order.status]!==newStatus)return;
+   order.status=newStatus;
+   order.updatedAt=firebase.database.ServerValue.TIMESTAMP;
+   return order;
+  });
+
+  if(!result.committed){
+   msg(t("updateError"),"error");
+   return;
+  }
+
+  await db.ref("rideQueue/"+orderId).update({
+   status:newStatus,
+   updatedAt:firebase.database.ServerValue.TIMESTAMP
+  });
+
+  loadActive();
+  renderQueue();
+ }catch(error){
+  console.error(error);
+  msg(t("updateError"),"error");
+ }
 }
 
-function stopDriverListener() {
-    if (driverListener) {
-        db.ref("drivers/" + driverListener.key)
-            .off("value", driverListener.callback);
+function openChat(orderId){
+ if(chatRef)chatRef.off();
+ activeChatOrder=orderId;
+ $("chatCard").classList.remove("hidden");
 
-        driverListener = null;
-    }
-
-    stopOrderListener();
+ chatRef=db.ref("chats/"+orderId+"/messages").limitToLast(100);
+ chatRef.on("value",snap=>{
+  const box=$("chatMessages");
+  box.replaceChildren();
+  snap.forEach(child=>{
+   const item=child.val()||{};
+   const div=document.createElement("div");
+   div.className="chatMessage";
+   div.appendChild(makeText("strong",
+    item.senderUid===user.uid?"You":(item.senderName||"Customer")));
+   div.appendChild(makeText("div",item.text||""));
+   box.appendChild(div);
+  });
+  box.scrollTop=box.scrollHeight;
+ },error=>{
+  console.error(error);
+  msg(t("chatError"),"error");
+ });
 }
 
-function normalizePhone(phone) {
-    return phone.replace(/\D/g, "");
-}
+$("chatForm").onsubmit=async e=>{
+ e.preventDefault();
+ const text=$("chatInput").value.trim();
+ if(!text||!activeChatOrder)return;
 
-/*
- * Authentication:
- * Driver must have a verified Firebase email and a driver role.
- */
-auth.onAuthStateChanged(async function(user) {
-    stopDriverListener();
+ try{
+  const snap=await db.ref("orders/"+activeChatOrder).once("value");
+  const order=snap.val();
+  if(!order||order.driverUid!==user.uid)throw new Error("Not assigned");
 
-    if (!user) {
-        setStatus("لاگ ان ضروری ہے", "#ef4444");
-        show("regCard", false);
-        show("pendingCard", false);
-        show("paymentCard", false);
-        show("ordersCard", false);
+  await db.ref("chats/"+activeChatOrder+"/messages").push().set({
+   senderUid:user.uid,
+   senderName:driver.name||"Driver",
+   text:text,
+   createdAt:firebase.database.ServerValue.TIMESTAMP
+  });
+  $("chatInput").value="";
+ }catch(error){
+  console.error(error);
+  msg(t("sendError"),"error");
+ }
+};
 
-        window.location.replace("login.html");
-        return;
-    }
+$("registrationForm").onsubmit=async e=>{
+ e.preventDefault();
+ if(!user||!user.emailVerified){
+  msg(t("verify"),"error");
+  return;
+ }
 
-    try {
-        await user.reload();
+ const name=$("name").value.trim();
+ const phone=$("phone").value.trim();
+ const vehicle=$("vehicle").value;
+ const plate=$("plate").value.trim();
 
-        if (!user.emailVerified) {
-            await auth.signOut();
-            window.location.replace("login.html");
-            return;
-        }
+ if(name.length<2){msg(t("nameRequired"),"error");return;}
+ if(!phone){msg(t("phoneRequired"),"error");return;}
+ if(!plate){msg(t("plateRequired"),"error");return;}
 
-        currentUser = auth.currentUser;
+ $("registerBtn").disabled=true;
 
-        const profileSnap = await db.ref("users/" + user.uid).once("value");
-        const profile = profileSnap.val();
+ try{
+  const profileSnap=await db.ref("users/"+user.uid).once("value");
+  const profile=profileSnap.val();
 
-        if (!profile || profile.role !== "driver") {
-            showMessage(
-                "یہ ڈرائیور اکاؤنٹ نہیں ہے۔ ڈرائیور رجسٹریشن کے لیے login.html پر Driver منتخب کریں۔",
-                "error"
-            );
+  if(!profile||profile.uid!==user.uid||profile.role!=="driver"){
+   throw new Error(t("unauthorized"));
+  }
 
-            setStatus("غلط اکاؤنٹ", "#ef4444");
-            await auth.signOut();
-            return;
-        }
+  const driverRef=db.ref("drivers/"+user.uid);
+  const existing=await driverRef.once("value");
+  const old=existing.val()||{};
 
-        el("logoutBtn").classList.remove("hidden");
-        el("dEmail").value = user.email || "";
-        el("dName").value = profile.name || user.displayName || "";
+  const data={
+   uid:user.uid,
+   name:name,
+   email:user.email,
+   phone:phone,
+   vehicle:vehicle,
+   plate:plate,
+   approvalStatus:old.approvalStatus==="approved"?"approved":
+                  old.approvalStatus==="rejected"?"rejected":"pending",
+   walletBalance:Number(old.walletBalance)||0,
+   createdAt:old.createdAt||Date.now(),
+   updatedAt:firebase.database.ServerValue.TIMESTAMP
+  };
 
-        await findDriverProfile(user, profile);
+  await driverRef.set(data);
+  driver=data;
+  $("registrationCard").classList.add("hidden");
+  $("approvalStatus").textContent=
+    driver.approvalStatus==="approved"?t("approved"):
+    driver.approvalStatus==="rejected"?t("rejected"):t("pendingApproval");
+  msg(t("submit"),"success");
+  renderQueue();
+  loadActive();
 
-    } catch (error) {
-        console.error(error);
+ }catch(error){
+  console.error(error);
+  msg(error.message||t("registerError"),"error");
+ }finally{
+  $("registerBtn").disabled=false;
+ }
+};
 
-        showMessage(
-            "اکاؤنٹ کی معلومات حاصل نہیں ہو سکیں۔ Firebase Database Rules اور انٹرنیٹ کنکشن چیک کریں۔",
-            "error"
-        );
+$("logoutBtn").onclick=async()=>{
+ if(queueRef)queueRef.off();
+ if(chatRef)chatRef.off();
+ await auth.signOut();
+ location.replace("login.html");
+};
 
-        setStatus("خرابی", "#ef4444");
-    }
+auth.onAuthStateChanged(async current=>{
+ if(!current){location.replace("login.html");return;}
+ user=current;
+
+ try{
+  await current.reload();
+  user=auth.currentUser;
+
+  if(!user.emailVerified){
+   msg(t("verify"),"error");
+   return;
+  }
+
+  const profileSnap=await db.ref("users/"+user.uid).once("value");
+  const profile=profileSnap.val();
+
+  if(!profile||profile.uid!==user.uid||profile.role!=="driver"){
+   msg(t("unauthorized"),"error");
+   return;
+  }
+
+  const driverRef=db.ref("drivers/"+user.uid);
+  driverRef.on("value",snap=>{
+   driver=snap.val();
+
+   if(!driver){
+    $("registrationCard").classList.remove("hidden");
+    $("approvalStatus").textContent=t("noRegistration");
+    $("queue").replaceChildren(makeText("p",t("noRegistration")));
+    return;
+   }
+
+   $("registrationCard").classList.add("hidden");
+
+   $("approvalStatus").textContent=
+    driver.approvalStatus==="approved"?t("approved"):
+    driver.approvalStatus==="rejected"?t("rejected"):t("pendingApproval");
+
+   renderQueue();
+  },error=>{
+   console.error(error);
+   msg(t("profileError"),"error");
+  });
+
+  loadActive();
+ }catch(error){
+  console.error(error);
+  msg(t("profileError"),"error");
+ }
 });
 
-/*
- * Find an existing driver profile by email.
- * If no profile exists, show the driver-details form.
- */
-async function findDriverProfile(user, profile) {
-    const snapshot = await db.ref("drivers")
-        .orderByChild("email")
-        .equalTo(user.email)
-        .once("value");
-
-    const records = snapshot.val();
-
-    if (!records) {
-        show("regCard", true);
-        show("pendingCard", false);
-        show("paymentCard", false);
-        show("ordersCard", false);
-
-        setStatus("رجسٹریشن مکمل کریں", "#f59e0b");
-
-        showMessage(
-            "اپنا موبائل نمبر اور گاڑی کی تفصیلات درج کرکے درخواست جمع کریں۔",
-            "info"
-        );
-
-        return;
-    }
-
-    const keys = Object.keys(records);
-
-    currentDriverKey = keys[0];
-    currentDriver = records[currentDriverKey];
-
-    show("regCard", false);
-
-    startDriverListener(currentDriverKey);
-
-    /*
-     * Update the basic profile name only when needed.
-     */
-    if (profile.name !== currentDriver.name) {
-        await db.ref("users/" + user.uid).update({
-            name: currentDriver.name || profile.name || ""
-        });
-    }
-}
-
-/*
- * Save driver details for the already authenticated driver.
- * Do not create another Firebase Auth account here.
- */
-el("driverRegForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
-
-    if (submitting) return;
-
-    if (!currentUser || !currentUser.emailVerified) {
-        showMessage("پہلے تصدیق شدہ اکاؤنٹ سے لاگ ان کریں۔", "error");
-        return;
-    }
-
-    const name = el("dName").value.trim();
-    const phone = normalizePhone(el("dPhone").value);
-    const vehicle = el("dVehicle").value;
-    const plate = el("dPlate").value.trim().toUpperCase();
-
-    if (name.length < 2) {
-        showMessage("براہ کرم اپنا پورا نام درج کریں۔", "error");
-        return;
-    }
-
-    if (phone.length < 10 || phone.length > 15) {
-        showMessage("درست موبائل نمبر درج کریں۔", "error");
-        return;
-    }
-
-    if (!["Bike", "Rickshaw", "Car Mini"].includes(vehicle)) {
-        showMessage("درست گاڑی کی قسم منتخب کریں۔", "error");
-        return;
-    }
-
-    if (!plate) {
-        showMessage("گاڑی کا نمبر درج کریں۔", "error");
-        return;
-    }
-
-    submitting = true;
-    el("registerBtn").disabled = true;
-    el("registerBtn").textContent = "درخواست جمع ہو رہی ہے...";
-
-    try {
-        const phoneRef = db.ref("drivers/" + phone);
-        const phoneSnap = await phoneRef.once("value");
-        const existing = phoneSnap.val();
-
-        if (existing && existing.email !== currentUser.email) {
-            showMessage(
-                "یہ موبائل نمبر پہلے کسی دوسرے ڈرائیور کے ساتھ رجسٹر ہے۔",
-                "error"
-            );
-            return;
-        }
-
-        const driverData = {
-            uid: currentUser.uid,
-            name: name,
-            email: currentUser.email,
-            phone: phone,
-            vehicle: vehicle,
-            plate: plate,
-            approvalStatus: existing && existing.approvalStatus
-                ? existing.approvalStatus
-                : "pending",
-            walletBalance: existing &&
-                Number.isFinite(Number(existing.walletBalance))
-                ? Number(existing.walletBalance)
-                : 0,
-            updatedAt: firebase.database.ServerValue.TIMESTAMP
-        };
-
-        if (!existing) {
-            driverData.createdAt =
-                firebase.database.ServerValue.TIMESTAMP;
-        }
-
-        await phoneRef.update(driverData);
-
-        await db.ref("users/" + currentUser.uid).update({
-            name: name,
-            email: currentUser.email,
-            role: "driver",
-            emailVerified: true
-        });
-
-        currentDriverKey = phone;
-        currentDriver = {
-            ...driverData,
-            walletBalance: driverData.walletBalance
-        };
-
-        show("regCard", false);
-        startDriverListener(phone);
-
-        showMessage(
-            "آپ کی درخواست جمع ہو گئی ہے۔ ایڈمن کی منظوری کا انتظار کریں۔",
-            "success"
-        );
-
-    } catch (error) {
-        console.error(error);
-
-        showMessage(
-            "رجسٹریشن محفوظ نہیں ہو سکی۔ Firebase Database Rules چیک کریں۔ " +
-            (error.message || ""),
-            "error"
-        );
-
-    } finally {
-        submitting = false;
-        el("registerBtn").disabled = false;
-        el("registerBtn").textContent = "ڈرائیور کی درخواست جمع کریں";
-    }
-});
-
-/*
- * Listen for admin approval and wallet changes.
- */
-function startDriverListener(driverKey) {
-    stopDriverListener();
-
-    const ref = db.ref("drivers/" + driverKey);
-
-    const callback = snapshot => {
-        const driver = snapshot.val();
-
-        if (!driver) {
-            currentDriver = null;
-            show("paymentCard", false);
-            show("ordersCard", false);
-            show("pendingCard", false);
-            show("regCard", true);
-
-            setStatus("رجسٹریشن مکمل کریں", "#f59e0b");
-            return;
-        }
-
-        currentDriverKey = driverKey;
-        currentDriver = driver;
-
-        const status = driver.approvalStatus || "pending";
-        const balance = Number(driver.walletBalance) || 0;
-
-        el("walletBal").textContent =
-            "Rs. " + balance.toLocaleString("en-PK");
-
-        show("regCard", false);
-
-        if (status === "approved") {
-            show("pendingCard", false);
-            show("paymentCard", true);
-
-            setStatus("منظور شدہ (Approved) ✅", "#059669");
-
-            if (balance > 0) {
-                show("ordersCard", true);
-                listenForOrders();
-            } else {
-                show("ordersCard", false);
-                stopOrderListener();
-
-                showMessage(
-                    "آپ کا والٹ بیلنس صفر ہے۔ ریچارج کی تفصیلات ایڈمن کو بھیجیں۔",
-                    "info"
-                );
-            }
-
-        } else if (status === "rejected") {
-            show("pendingCard", true);
-            show("paymentCard", false);
-            show("ordersCard", false);
-
-            el("approvalMessage").textContent =
-                "آپ کی درخواست مسترد کر دی گئی ہے۔ مزید معلومات کے لیے ایڈمن سے رابطہ کریں۔";
-
-            setStatus("مسترد شدہ (Rejected) ❌", "#dc2626");
-            stopOrderListener();
-
-        } else {
-            show("pendingCard", true);
-            show("paymentCard", false);
-            show("ordersCard", false);
-
-            el("approvalMessage").textContent =
-                "آپ کی درخواست ایڈمن کی منظوری کی منتظر ہے۔";
-
-            setStatus("منظوری کی منتظر ⏳", "#d97706");
-            stopOrderListener();
-        }
-    };
-
-    driverListener = {
-        key: driverKey,
-        callback: callback
-    };
-
-    ref.on("value", callback);
-}
-
-/*
- * Render ride details safely without inserting customer text as HTML.
- */
-function listenForOrders() {
-    if (ridesStarted) return;
-
-    ridesStarted = true;
-
-    ordersListener = snapshot => {
-        const list = el("ordersList");
-        list.replaceChildren();
-
-        const data = snapshot.val();
-
-        if (!data) {
-            list.textContent = "اس وقت کوئی سواری دستیاب نہیں۔";
-            return;
-        }
-
-        let found = false;
-
-        Object.entries(data).forEach(([orderId, order]) => {
-            if (!order || order.status !== "pending") return;
-
-            found = true;
-
-            const card = document.createElement("div");
-            card.className = "order-card";
-
-            const title = document.createElement("strong");
-            title.textContent =
-                String(order.service || "سواری") +
-                " — کرایہ: " +
-                String(order.fare || "معلوم نہیں");
-
-            const route = document.createElement("p");
-            route.textContent =
-                String(order.pickup || "مقام دستیاب نہیں") +
-                " ➜ " +
-                String(order.dropoff || "مقام دستیاب نہیں");
-
-            const button = document.createElement("button");
-            button.className = "btn";
-            button.style.marginTop = "10px";
-            button.textContent = "سواری قبول کریں (5% کمیشن)";
-
-            button.addEventListener("click", function() {
-                acceptRide(orderId, order.fare, button);
-            });
-
-            card.append(title, route, button);
-            list.appendChild(card);
-        });
-
-        if (!found) {
-            list.textContent = "اس وقت کوئی سواری دستیاب نہیں۔";
-        }
-    };
-
-    db.ref("orders").on("value", ordersListener);
-}
-
-/*
- * Legacy-compatible client-side ride acceptance.
- *
- * IMPORTANT: Commission and ride assignment must ultimately
- * be enforced by a trusted server/Cloud Function and secure
- * database rules. This client-side check is not tamper-proof.
- */
-async function acceptRide(orderId, fareValue, button) {
-    if (!currentUser || !currentDriver || !currentDriverKey) {
-        showMessage("ڈرائیور کی معلومات دستیاب نہیں۔", "error");
-        return;
-    }
-
-    if (currentDriver.approvalStatus !== "approved") {
-        showMessage("آپ کا اکاؤنٹ ابھی منظور نہیں ہوا۔", "error");
-        return;
-    }
-
-    const fareText = String(fareValue || "").replace(/,/g, "");
-    const fareMatch = fareText.match(/\d+(\.\d+)?/);
-    const fare = fareMatch ? Number(fareMatch[0]) : NaN;
-
-    if (!Number.isFinite(fare) || fare <= 0) {
-        showMessage("اس سواری کا کرایہ درست نہیں ہے۔", "error");
-        return;
-    }
-
-    const commission = Math.round(fare * 0.05);
-
-    button.disabled = true;
-    button.textContent = "قبول ہو رہی ہے...";
-
-    try {
-        const orderRef = db.ref("orders/" + orderId);
-        const driverRef = db.ref("drivers/" + currentDriverKey);
-
-        const orderSnap = await orderRef.once("value");
-        const order = orderSnap.val();
-
-        if (!order || order.status !== "pending") {
-            showMessage(
-                "یہ سواری اب دستیاب نہیں ہے۔ فہرست دوبارہ چیک کریں۔",
-                "error"
-            );
-            return;
-        }
-
-        const driverSnap = await driverRef.once("value");
-        const driver = driverSnap.val();
-
-        if (!driver || driver.approvalStatus !== "approved") {
-            showMessage("آپ کا ڈرائیور اکاؤنٹ منظور نہیں ہے۔", "error");
-            return;
-        }
-
-        const balance = Number(driver.walletBalance) || 0;
-
-        if (balance < commission) {
-            showMessage(
-                "والٹ میں کمیشن کے لیے رقم ناکافی ہے۔",
-                "error"
-            );
-            return;
-        }
-
-        /*
-         * These writes are retained for compatibility with
-         * the current database structure. They are not atomic.
-         */
-        await driverRef.update({
-            walletBalance: balance - commission
-        });
-
-        await orderRef.update({
-            status: "confirmed_by_driver",
-            driverId: currentDriverKey,
-            driverName: driver.name || "",
-            driverPhone: driver.phone || "",
-            commission: commission,
-            acceptedAt: firebase.database.ServerValue.TIMESTAMP
-        });
-
-        showMessage(
-            "سواری قبول ہو گئی۔ کمیشن: Rs. " + commission,
-            "success"
-        );
-
-    } catch (error) {
-        console.error(error);
-
-        showMessage(
-            "سواری قبول نہیں ہو سکی۔ دوبارہ کوشش کریں۔ " +
-            (error.message || ""),
-            "error"
-        );
-
-    } finally {
-        button.disabled = false;
-        button.textContent = "سواری قبول کریں (5% کمیشن)";
-    }
-}
-
-/*
- * Logout.
- */
-el("logoutBtn").addEventListener("click", async function() {
-    try {
-        stopDriverListener();
-        await auth.signOut();
-        window.location.replace("login.html");
-    } catch (error) {
-        showMessage("Logout نہیں ہو سکا۔ دوبارہ کوشش کریں۔", "error");
-    }
-});
+applyLanguage();
 </script>
-
 </body>
     </html>
