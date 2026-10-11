@@ -1,717 +1,322 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Zrides Admin Dashboard</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>Zrides | Admin Dashboard</title>
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-    background: #10131c;
-    color: #f1f5f9;
-    padding: 16px;
-}
-
-header {
-    background: #1b2230;
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    border: 1px solid #30394b;
-}
-
-header h1 {
-    color: #38bdf8;
-    margin-bottom: 8px;
-}
-
-header p {
-    color: #cbd5e1;
-    overflow-wrap: anywhere;
-}
-
-button {
-    border: none;
-    padding: 10px 14px;
-    margin: 4px;
-    border-radius: 7px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.logout {
-    background: #dc2626;
-    color: white;
-    margin-top: 12px;
-}
-
-.approve {
-    background: #16a34a;
-    color: white;
-}
-
-.reject {
-    background: #dc2626;
-    color: white;
-}
-
-.balance {
-    background: #2563eb;
-    color: white;
-}
-
-.delete {
-    background: #b91c1c;
-    color: white;
-}
-
-section {
-    background: #1b2230;
-    border: 1px solid #30394b;
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 22px;
-}
-
-h2 {
-    color: #38bdf8;
-    margin-bottom: 15px;
-}
-
-.table-container {
-    width: 100%;
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 750px;
-}
-
-th, td {
-    border-bottom: 1px solid #30394b;
-    padding: 12px;
-    text-align: right;
-    vertical-align: middle;
-}
-
-th {
-    background: #252e40;
-    color: #7dd3fc;
-}
-
-td {
-    color: #e2e8f0;
-    overflow-wrap: anywhere;
-}
-
-input {
-    width: 100px;
-    padding: 9px;
-    border-radius: 6px;
-    border: 1px solid #475569;
-    background: #0f172a;
-    color: white;
-}
-
-.status {
-    font-weight: bold;
-}
-
-.message {
-    padding: 12px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    background: #263449;
-    color: #e2e8f0;
-    overflow-wrap: anywhere;
-}
-
-.hidden {
-    display: none !important;
-}
-
-#loginError {
-    color: #fca5a5;
-}
-
-@media (max-width: 600px) {
-    body {
-        padding: 8px;
-    }
-
-    header, section {
-        padding: 12px;
-    }
-
-    h1 {
-        font-size: 23px;
-    }
-
-    h2 {
-        font-size: 19px;
-    }
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f4f6;color:#111827}
+header{background:#111827;color:white;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{font-size:25px;font-weight:bold;color:#4ade80}
+header select{width:auto;padding:10px}
+button,select{cursor:pointer}
+button{padding:10px 13px;border:0;border-radius:8px;background:#16a34a;color:white;font-weight:bold}
+main{max-width:1100px;margin:24px auto;padding:0 15px}
+.card{background:white;padding:20px;border-radius:14px;margin-bottom:18px;box-shadow:0 4px 18px #0001}
+.message{display:none;padding:12px;border-radius:8px;margin-bottom:15px;overflow-wrap:anywhere}
+.success{display:block;background:#dcfce7;color:#166534}
+.error{display:block;background:#fee2e2;color:#991b1b}
+.info{display:block;background:#dbeafe;color:#1e40af}
+.muted{color:#6b7280;font-size:14px;line-height:1.5}
+.item{border:1px solid #e5e7eb;border-radius:10px;padding:14px;margin:12px 0;overflow-wrap:anywhere}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.row>*{flex:1}
+.reject{background:#dc2626}
+.hidden{display:none!important}
 </style>
 </head>
-
 <body>
-
 <header>
-    <h1>🚖 Zrides Admin Dashboard</h1>
-
-    <p id="adminInfo">Admin account verify ho raha hai...</p>
-
-    <button id="logoutBtn" class="logout hidden">
-        لاگ آؤٹ
-    </button>
+  <div class="logo">Zrides Admin</div>
+  <div class="row" style="flex:0;align-items:center;margin:0">
+    <select id="language" aria-label="Language">
+      <option value="en">English</option>
+      <option value="ur">اردو</option>
+    </select>
+    <button id="logoutBtn">Logout</button>
+  </div>
 </header>
 
-<div id="message" class="message">
-    Dashboard load ho raha hai...
-</div>
+<main>
+  <div class="card">
+    <h2 id="heading">Admin Dashboard</h2>
+    <p id="intro" class="muted">Manage driver applications and ride requests.</p>
+    <div id="message" class="message" role="status" aria-live="polite"></div>
+  </div>
 
-<div id="loginError" class="message hidden"></div>
+  <div class="card">
+    <h2 id="driversHeading">Driver Applications</h2>
+    <div id="drivers"><p class="muted">Loading drivers...</p></div>
+  </div>
 
-<main id="dashboard" class="hidden">
-
-    <section>
-        <h2>🚗 ڈرائیورز کی درخواستیں</h2>
-
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>نام</th>
-                        <th>فون</th>
-                        <th>گاڑی</th>
-                        <th>نمبر پلیٹ</th>
-                        <th>منظوری</th>
-                        <th>والٹ بیلنس</th>
-                        <th>بیلنس شامل کریں</th>
-                        <th>ایکشن</th>
-                    </tr>
-                </thead>
-
-                <tbody id="driversTable">
-                    <tr>
-                        <td colspan="8">ڈرائیورز لوڈ ہو رہے ہیں...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <section>
-        <h2>📋 تمام رائیڈز</h2>
-
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>رائیڈ ID</th>
-                        <th>سروس</th>
-                        <th>پک اپ</th>
-                        <th>ڈراپ آف</th>
-                        <th>کرایہ</th>
-                        <th>ڈرائیور</th>
-                        <th>اسٹیٹس</th>
-                        <th>ایکشن</th>
-                    </tr>
-                </thead>
-
-                <tbody id="ridesTable">
-                    <tr>
-                        <td colspan="8">رائیڈز لوڈ ہو رہی ہیں...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-
+  <div class="card">
+    <h2 id="ordersHeading">Ride Orders</h2>
+    <div id="orders"><p class="muted">Loading orders...</p></div>
+  </div>
 </main>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
 <script>
 "use strict";
 
-/* Firebase Configuration */
-
-const firebaseConfig = {
-    apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
-    authDomain: "zrides-9f2da.firebaseapp.com",
-    databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
-    projectId: "zrides-9f2da",
-    storageBucket: "zrides-9f2da.firebasestorage.app",
-    messagingSenderId: "93898388224",
-    appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
+const firebaseConfig={
+  apiKey:"AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
+  authDomain:"zrides-9f2da.firebaseapp.com",
+  databaseURL:"https://zrides-9f2da-default-rtdb.firebaseio.com",
+  projectId:"zrides-9f2da",
+  storageBucket:"zrides-9f2da.firebasestorage.app",
+  messagingSenderId:"93898388224",
+  appId:"1:93898388224:web:2e4f78e5b31dec26f839e5"
 };
 
-/*
-  IMPORTANT:
-  Sirf is UID wale account ko Admin dashboard
-  use karne ki ijazat di jayegi.
-*/
+const ADMIN_UID="cmmo7x7k0CY8lkcev4Rq92t84wU2";
 
-const ADMIN_UID = "cmmo7x7k0CY8lkcev4Rq92t84wU2";
+if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(),db=firebase.database();
+const $=id=>document.getElementById(id);
 
-firebase.initializeApp(firebaseConfig);
+const words={
+ en:{
+  heading:"Admin Dashboard",intro:"Manage driver applications and ride requests.",
+  drivers:"Driver Applications",orders:"Ride Orders",
+  logout:"Logout",loadingDrivers:"Loading drivers...",
+  loadingOrders:"Loading orders...",noDrivers:"No driver applications found.",
+  noOrders:"No ride orders found.",approve:"Approve",reject:"Reject",
+  pending:"Pending",approved:"Approved",rejected:"Rejected",
+  driver:"Driver",name:"Name",email:"Email",phone:"Phone",
+  vehicle:"Vehicle",plate:"Registration",wallet:"Wallet balance",
+  pickup:"Pickup",dropoff:"Destination",customer:"Customer",
+  fare:"Fare",status:"Status",created:"Created",
+  approveSuccess:"Driver approved.",rejectSuccess:"Driver rejected.",
+  updateError:"Unable to update driver status.",
+  authError:"You are not authorized to access this page.",
+  verifyError:"Verify the admin email before continuing.",
+  loadError:"Unable to load data. Check database permissions.",
+  accepted:"Accepted",arrived:"Driver Arrived",started:"Started",
+  completed:"Completed",cancelled:"Cancelled",unknown:"Unknown"
+ },
+ ur:{
+  heading:"Admin Dashboard",intro:"Driver applications aur ride requests manage karein.",
+  drivers:"Driver Applications",orders:"Ride Orders",
+  logout:"Logout",loadingDrivers:"Drivers load ho rahe hain...",
+  loadingOrders:"Orders load ho rahe hain...",noDrivers:"Koi driver application nahi.",
+  noOrders:"Koi ride order nahi.",approve:"Approve Karein",reject:"Reject Karein",
+  pending:"Pending",approved:"Approve",rejected:"Reject",
+  driver:"Driver",name:"Naam",email:"Email",phone:"Phone",
+  vehicle:"Vehicle",plate:"Registration",wallet:"Wallet balance",
+  pickup:"Pickup",dropoff:"Manzil",customer:"Customer",
+  fare:"Kiraya",status:"Status",created:"Banaya gaya",
+  approveSuccess:"Driver approve ho gaya.",rejectSuccess:"Driver reject ho gaya.",
+  updateError:"Driver status update nahi ho saka.",
+  authError:"Aapko is page ka access nahi hai.",
+  verifyError:"Admin email verify karein.",
+  loadError:"Data load nahi hua. Database permissions check karein.",
+  accepted:"Accept ho gayi",arrived:"Driver Pohanch Gaya",started:"Shuru",
+  completed:"Mukammal",cancelled:"Cancel",unknown:"Maloom nahi"
+ }
+};
 
-const auth = firebase.auth();
-const db = firebase.database();
+let lang=localStorage.getItem("zridesLanguage")||"en";
+let driversRef=null,ordersRef=null;
 
-const messageEl = document.getElementById("message");
-const loginErrorEl = document.getElementById("loginError");
-const dashboardEl = document.getElementById("dashboard");
-const adminInfoEl = document.getElementById("adminInfo");
-const logoutBtn = document.getElementById("logoutBtn");
+function t(k){return words[lang][k]||words.en[k]||k;}
+function notify(text,type="info"){
+ $("message").textContent=text;
+ $("message").className="message "+type;
+}
+function applyLanguage(){
+ document.documentElement.lang=lang;
+ document.documentElement.dir=lang==="ur"?"rtl":"ltr";
+ $("language").value=lang;
+ $("heading").textContent=t("heading");
+ $("intro").textContent=t("intro");
+ $("driversHeading").textContent=t("drivers");
+ $("ordersHeading").textContent=t("orders");
+ $("logoutBtn").textContent=t("logout");
+ renderDrivers();
+ renderOrders();
+}
+$("language").onchange=e=>{
+ lang=e.target.value;
+ localStorage.setItem("zridesLanguage",lang);
+ applyLanguage();
+};
 
-let driversListener = null;
-let ridesListener = null;
-let dashboardStarted = false;
-
-/* Safe text output */
-
-function escapeHTML(value) {
-    return String(value ?? "").replace(/[&<>"']/g, function(char) {
-        const entities = {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#39;"
-        };
-
-        return entities[char];
-    });
+function el(tag,text){
+ const node=document.createElement(tag);
+ node.textContent=String(text??"");
+ return node;
 }
 
-function showMessage(text) {
-    messageEl.textContent = text;
-    messageEl.classList.remove("hidden");
+function showStatus(status){
+ return t(status||"pending");
 }
 
-function showError(text) {
-    loginErrorEl.textContent = text;
-    loginErrorEl.classList.remove("hidden");
+async function setDriverApproval(uid,status){
+ if(!["approved","rejected"].includes(status))return;
+
+ try{
+  /*
+    Admin UID and role are checked here. Firebase Database Rules must
+    independently enforce admin-only writes.
+  */
+  const result=await db.ref("drivers/"+uid).transaction(driver=>{
+   if(!driver||driver.uid!==uid)return;
+   driver.approvalStatus=status;
+   driver.updatedAt=firebase.database.ServerValue.TIMESTAMP;
+   return driver;
+  });
+
+  if(!result.committed){
+   notify(t("updateError"),"error");
+   return;
+  }
+
+  notify(t(status==="approved"?"approveSuccess":"rejectSuccess"),"success");
+ }catch(error){
+  console.error(error);
+  notify(t("updateError"),"error");
+ }
 }
 
-function hideError() {
-    loginErrorEl.textContent = "";
-    loginErrorEl.classList.add("hidden");
+let driverData={},orderData={};
+
+function renderDrivers(){
+ const box=$("drivers");
+ box.replaceChildren();
+
+ const list=Object.entries(driverData);
+
+ if(!list.length){
+  box.appendChild(el("p",t("noDrivers")));
+  return;
+ }
+
+ list.forEach(([uid,d])=>{
+  const card=document.createElement("div");
+  card.className="item";
+
+  card.appendChild(el("h3",d.name||t("unknown")));
+  card.appendChild(el("p",t("email")+": "+(d.email||"—")));
+  card.appendChild(el("p",t("phone")+": "+(d.phone||"—")));
+  card.appendChild(el("p",t("vehicle")+": "+t(d.vehicle||"unknown")));
+  card.appendChild(el("p",t("plate")+": "+(d.plate||"—")));
+  card.appendChild(el("p",t("status")+": "+showStatus(d.approvalStatus)));
+
+  const row=document.createElement("div");
+  row.className="row";
+
+  if(d.approvalStatus!=="approved"){
+   const approve=el("button",t("approve"));
+   approve.onclick=()=>setDriverApproval(uid,"approved");
+   row.appendChild(approve);
+  }
+
+  if(d.approvalStatus!=="rejected"){
+   const reject=el("button",t("reject"));
+   reject.className="reject";
+   reject.onclick=()=>setDriverApproval(uid,"rejected");
+   row.appendChild(reject);
+  }
+
+  card.appendChild(row);
+  box.appendChild(card);
+ });
 }
 
-function formatValue(value) {
-    return escapeHTML(value || "—");
+function renderOrders(){
+ const box=$("orders");
+ box.replaceChildren();
+
+ const list=Object.entries(orderData)
+   .map(([id,o])=>({id,...o}))
+   .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+
+ if(!list.length){
+  box.appendChild(el("p",t("noOrders")));
+  return;
+ }
+
+ list.forEach(o=>{
+  const card=document.createElement("div");
+  card.className="item";
+
+  card.appendChild(el("h3",o.pickup+" → "+o.dropoff));
+  card.appendChild(el("p",t("customer")+": "+(o.customerName||o.customerEmail||"—")));
+  card.appendChild(el("p",t("phone")+": "+(o.customerPhone||"—")));
+  card.appendChild(el("p",t("fare")+": "+(o.fare??"—")));
+  card.appendChild(el("p",t("status")+": "+showStatus(o.status)));
+  card.appendChild(el("p",t("driver")+": "+(o.driverName||"—")));
+  box.appendChild(card);
+ });
 }
 
-/* Stop database listeners */
+async function startAdmin(user){
+ if(user.uid!==ADMIN_UID){
+  notify(t("authError"),"error");
+  await auth.signOut();
+  return;
+ }
 
-function stopDashboardListeners() {
-    if (driversListener) {
-        db.ref("drivers").off("value", driversListener);
-        driversListener = null;
-    }
+ await user.reload();
+ user=auth.currentUser;
 
-    if (ridesListener) {
-        db.ref("orders").off("value", ridesListener);
-        ridesListener = null;
-    }
+ if(!user||!user.emailVerified){
+  notify(t("verifyError"),"error");
+  return;
+ }
 
-    dashboardStarted = false;
+ const profileSnap=await db.ref("users/"+user.uid).once("value");
+ const profile=profileSnap.val();
+
+ if(!profile||profile.uid!==user.uid||profile.role!=="admin"){
+  notify(t("authError"),"error");
+  return;
+ }
+
+ driversRef=db.ref("drivers");
+ driversRef.on("value",snap=>{
+  driverData=snap.val()||{};
+  renderDrivers();
+ },error=>{
+  console.error(error);
+  notify(t("loadError"),"error");
+ });
+
+ ordersRef=db.ref("orders");
+ ordersRef.on("value",snap=>{
+  orderData=snap.val()||{};
+  renderOrders();
+ },error=>{
+  console.error(error);
+  notify(t("loadError"),"error");
+ });
 }
 
-/* Admin authentication */
+$("logoutBtn").onclick=async()=>{
+ if(driversRef)driversRef.off();
+ if(ordersRef)ordersRef.off();
+ await auth.signOut();
+ location.replace("login.html");
+};
 
-auth.onAuthStateChanged(async function(user) {
-    stopDashboardListeners();
+auth.onAuthStateChanged(user=>{
+ if(!user){
+  location.replace("login.html");
+  return;
+ }
 
-    dashboardEl.classList.add("hidden");
-    logoutBtn.classList.add("hidden");
-    hideError();
-
-    if (!user) {
-        adminInfoEl.textContent = "Admin login required.";
-        showMessage("Login page par bheja ja raha hai...");
-
-        setTimeout(function() {
-            window.location.replace("login.html");
-        }, 800);
-
-        return;
-    }
-
-    /*
-      UID check is the primary client-side identity check.
-      Email verification is checked separately.
-    */
-
-    if (user.uid !== ADMIN_UID) {
-        showError("Access denied: yeh account Admin nahi hai.");
-        adminInfoEl.textContent = "Unauthorized account.";
-
-        try {
-            await auth.signOut();
-        } catch (error) {
-            console.error("Sign out error:", error);
-        }
-
-        setTimeout(function() {
-            window.location.replace("login.html");
-        }, 1500);
-
-        return;
-    }
-
-    if (!user.emailVerified) {
-        showError("Admin email verified nahi hai. Pehle email verify karein.");
-        adminInfoEl.textContent = "Email verification required.";
-
-        try {
-            await auth.signOut();
-        } catch (error) {
-            console.error("Sign out error:", error);
-        }
-
-        setTimeout(function() {
-            window.location.replace("login.html");
-        }, 1500);
-
-        return;
-    }
-
-    /*
-      Also confirm the admin profile in the database.
-      Database Rules must independently enforce admin permissions.
-    */
-
-    try {
-        const profileSnapshot = await db.ref("users/" + user.uid).once("value");
-
-        if (!auth.currentUser || auth.currentUser.uid !== ADMIN_UID) {
-            return;
-        }
-
-        const profile = profileSnapshot.val();
-
-        if (!profile || profile.role !== "admin") {
-            showError("Admin profile verify nahi hua. Access denied.");
-            adminInfoEl.textContent = "Admin profile not verified.";
-            return;
-        }
-
-        adminInfoEl.textContent = "Logged in: " + (user.email || "Admin");
-
-        logoutBtn.classList.remove("hidden");
-        dashboardEl.classList.remove("hidden");
-
-        showMessage("Admin Dashboard successfully load ho gaya.");
-
-        if (!dashboardStarted) {
-            dashboardStarted = true;
-            loadDrivers();
-            loadRides();
-        }
-
-    } catch (error) {
-        console.error("Admin verification error:", error);
-
-        showError(
-            "Admin verify nahi ho saka. Firebase Database Rules check karein."
-        );
-
-        adminInfoEl.textContent = "Verification failed.";
-    }
+ startAdmin(user).catch(error=>{
+  console.error(error);
+  notify(t("authError"),"error");
+ });
 });
 
-/* Logout */
-
-logoutBtn.addEventListener("click", async function() {
-    try {
-        stopDashboardListeners();
-        await auth.signOut();
-        window.location.replace("login.html");
-    } catch (error) {
-        console.error(error);
-        showError("Logout nahi ho saka: " + error.message);
-    }
-});
-
-/* Load drivers */
-
-function loadDrivers() {
-    const table = document.getElementById("driversTable");
-
-    driversListener = function(snapshot) {
-        table.replaceChildren();
-
-        if (!snapshot.exists()) {
-            const row = document.createElement("tr");
-            row.innerHTML = '<td colspan="8">Abhi koi driver registered nahi hai.</td>';
-            table.appendChild(row);
-            return;
-        }
-
-        snapshot.forEach(function(child) {
-            const driver = child.val() || {};
-            const driverId = child.key;
-            const status = driver.approvalStatus || "pending";
-
-            const row = document.createElement("tr");
-
-            row.innerHTML = `
-                <td>${formatValue(driver.name)}</td>
-                <td>${formatValue(driver.phone || driverId)}</td>
-                <td>${formatValue(driver.vehicle)}</td>
-                <td>${formatValue(driver.plate)}</td>
-                <td class="status">${formatValue(status)}</td>
-                <td>Rs. ${formatValue(driver.walletBalance ?? 0)}</td>
-
-                <td>
-                    <input
-                        type="number"
-                        id="balance-${escapeHTML(driverId)}"
-                        min="100"
-                        max="1000"
-                        step="100"
-                        placeholder="100–1000"
-                        aria-label="Balance amount"
-                    >
-
-                    <button
-                        class="balance"
-                        data-action="balance"
-                        data-id="${escapeHTML(driverId)}"
-                    >
-                        شامل کریں
-                    </button>
-                </td>
-
-                <td>
-                    <button
-                        class="approve"
-                        data-action="approve"
-                        data-id="${escapeHTML(driverId)}"
-                    >
-                        منظور
-                    </button>
-
-                    <button
-                        class="reject"
-                        data-action="reject"
-                        data-id="${escapeHTML(driverId)}"
-                    >
-                        مسترد
-                    </button>
-                </td>
-            `;
-
-            table.appendChild(row);
-        });
-    };
-
-    db.ref("drivers").on("value", driversListener, function(error) {
-        console.error("Drivers read error:", error);
-        showError("Drivers load nahi ho sake: " + error.message);
-    });
-}
-
-/* Driver actions */
-
-document.getElementById("driversTable").addEventListener("click", async function(event) {
-    const button = event.target.closest("button[data-action]");
-
-    if (!button) return;
-
-    if (!auth.currentUser || auth.currentUser.uid !== ADMIN_UID) {
-        showError("Admin session verify nahi hai.");
-        return;
-    }
-
-    const driverId = button.dataset.id;
-    const action = button.dataset.action;
-
-    if (!driverId) return;
-
-    button.disabled = true;
-
-    try {
-        const driverRef = db.ref("drivers").child(driverId);
-
-        if (action === "approve" || action === "reject") {
-            const newStatus = action === "approve" ? "approved" : "rejected";
-
-            const confirmation = confirm(
-                "Kya aap driver ko " + newStatus + " karna chahte hain?"
-            );
-
-            if (!confirmation) return;
-
-            await driverRef.update({
-                approvalStatus: newStatus
-            });
-
-            showMessage("Driver status update ho gaya: " + newStatus);
-        }
-
-        if (action === "balance") {
-            const input = document.getElementById("balance-" + driverId);
-            const amount = Number(input ? input.value : 0);
-
-            if (
-                !Number.isFinite(amount) ||
-                amount < 100 ||
-                amount > 1000 ||
-                !Number.isInteger(amount)
-            ) {
-                alert("Balance 100 se 1000 rupay ke darmiyan hona chahiye.");
-                return;
-            }
-
-            const confirmation = confirm(
-                "Driver wallet mein Rs. " + amount + " add karna hai?"
-            );
-
-            if (!confirmation) return;
-
-            /*
-              This is a client-side read/update.
-              Production wallet accounting should use a trusted backend.
-            */
-
-            const snapshot = await driverRef.once("value");
-            const driver = snapshot.val();
-
-            if (!driver) {
-                throw new Error("Driver record nahi mila.");
-            }
-
-            const currentBalance = Number(driver.walletBalance || 0);
-
-            if (!Number.isFinite(currentBalance) || currentBalance < 0) {
-                throw new Error("Existing wallet balance invalid hai.");
-            }
-
-            await driverRef.update({
-                walletBalance: currentBalance + amount
-            });
-
-            if (input) input.value = "";
-
-            showMessage("Driver wallet mein Rs. " + amount + " add ho gaye.");
-        }
-
-    } catch (error) {
-        console.error("Driver action error:", error);
-        showError("Action complete nahi hua: " + error.message);
-    } finally {
-        button.disabled = false;
-    }
-});
-
-/* Load rides */
-
-function loadRides() {
-    const table = document.getElementById("ridesTable");
-
-    ridesListener = function(snapshot) {
-        table.replaceChildren();
-
-        if (!snapshot.exists()) {
-            const row = document.createElement("tr");
-            row.innerHTML = '<td colspan="8">Abhi koi ride available nahi hai.</td>';
-            table.appendChild(row);
-            return;
-        }
-
-        snapshot.forEach(function(child) {
-            const ride = child.val() || {};
-            const rideId = child.key;
-
-            const row = document.createElement("tr");
-
-            row.innerHTML = `
-                <td>${formatValue(rideId)}</td>
-                <td>${formatValue(ride.service)}</td>
-                <td>${formatValue(ride.pickup)}</td>
-                <td>${formatValue(ride.dropoff)}</td>
-                <td>Rs. ${formatValue(ride.fare ?? ride.offeredFare ?? "—")}</td>
-                <td>${formatValue(ride.driverName)}</td>
-                <td>${formatValue(ride.status)}</td>
-
-                <td>
-                    <button
-                        class="delete"
-                        data-action="delete-ride"
-                        data-id="${escapeHTML(rideId)}"
-                    >
-                        Delete
-                    </button>
-                </td>
-            `;
-
-            table.appendChild(row);
-        });
-    };
-
-    db.ref("orders").on("value", ridesListener, function(error) {
-        console.error("Rides read error:", error);
-        showError("Rides load nahi ho sakin: " + error.message);
-    });
-}
-
-/* Delete ride */
-
-document.getElementById("ridesTable").addEventListener("click", async function(event) {
-    const button = event.target.closest('button[data-action="delete-ride"]');
-
-    if (!button) return;
-
-    if (!auth.currentUser || auth.currentUser.uid !== ADMIN_UID) {
-        showError("Admin session verify nahi hai.");
-        return;
-    }
-
-    const rideId = button.dataset.id;
-
-    if (!rideId) return;
-
-    const confirmation = confirm(
-        "Kya aap waqai is ride ko delete karna chahte hain? Yeh action wapas nahi hoga."
-    );
-
-    if (!confirmation) return;
-
-    button.disabled = true;
-
-    try {
-        await db.ref("orders").child(rideId).remove();
-        showMessage("Ride delete ho gayi.");
-    } catch (error) {
-        console.error("Ride delete error:", error);
-        showError("Ride delete nahi hui: " + error.message);
-    } finally {
-        button.disabled = false;
-    }
-});
+applyLanguage();
 </script>
-
 </body>
-    </html>
+</html>
