@@ -53,6 +53,11 @@
             font-size: 16px;
         }
 
+        .form-group input:focus {
+            border-color: #10b981;
+            outline: none;
+        }
+
         .btn {
             width: 100%;
             background-color: #10b981;
@@ -80,15 +85,38 @@
             color: #10b981;
             text-decoration: none;
             font-weight: bold;
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            display: block;
+            text-align: right;
+            margin-top: -8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+
+        .forgot-link a {
+            color: #64748b;
+            text-decoration: none;
+        }
+
+        .forgot-link a:hover {
+            color: #10b981;
+            text-decoration: underline;
         }
         
         .back-link {
             display: block;
             text-align: center;
-            margin-top: 10px;
+            margin-top: 15px;
             color: #64748b;
             text-decoration: none;
             font-size: 14px;
+        }
+
+        .back-link:hover {
+            color: #333;
         }
     </style>
 </head>
@@ -104,26 +132,48 @@
             </div>
 
             <div class="form-group">
-                <label>موبائل نمبر (Mobile Number):</label>
-                <input type="tel" id="userPhone" placeholder="03001234567" required>
+                <label>موبائل نمبر یا ای میل (Mobile / Email):</label>
+                <input type="text" id="userPhone" placeholder="03001234567 یا name@example.com" required>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="passwordGroup">
                 <label>پاس ورڈ (Password):</label>
                 <input type="password" id="userPassword" placeholder="******" required>
+            </div>
+
+            <div class="forgot-link" id="forgotBox">
+                <a onclick="forgotPassword()">پاس ورڈ بھول گئے؟</a>
             </div>
 
             <button type="submit" class="btn" id="submitBtn">لاگ ان کریں</button>
         </form>
 
         <div class="switch-text">
-            <span id="switchText">اکاؤنٹ نہیں ہے؟</span> <a href="#" id="switchBtn" onclick="toggleAuthMode()">سائن اپ (نیا اکاؤنٹ بنائیں)</a>
+            <span id="switchText">اکاؤنٹ نہیں ہے؟</span> <a id="switchBtn" onclick="toggleAuthMode()">سائن اپ (نیا اکاؤنٹ بنائیں)</a>
         </div>
 
         <a href="index.html" class="back-link">← ہوم پیج پر واپس جائیں</a>
     </div>
 
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+
     <script>
+        // آپ کی اصل فائر بیس کنفیگریشن
+        const firebaseConfig = {
+            apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
+            authDomain: "zrides-9f2da.firebaseapp.com",
+            databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
+            projectId: "zrides-9f2da",
+            storageBucket: "zrides-9f2da.firebasestorage.app",
+            messagingSenderId: "93898388224",
+            appId: "1:93898388224:web:2e4f78e5b31dec26f839e5",
+            measurementId: "G-XCGVR3L9YV"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
         var isLoginMode = true;
 
         function toggleAuthMode() {
@@ -133,6 +183,7 @@
             var submitBtn = document.getElementById('submitBtn');
             var switchText = document.getElementById('switchText');
             var switchBtn = document.getElementById('switchBtn');
+            var forgotBox = document.getElementById('forgotBox');
 
             if (isLoginMode) {
                 title.innerText = "Zrides میں لاگ ان کریں";
@@ -140,29 +191,69 @@
                 submitBtn.innerText = "لاگ ان کریں";
                 switchText.innerText = "اکاؤنٹ نہیں ہے؟";
                 switchBtn.innerText = "سائن اپ (نیا اکاؤنٹ بنائیں)";
+                forgotBox.style.display = "block";
             } else {
                 title.innerText = "Zrides پر سائن اپ کریں";
                 nameGroup.style.display = "block";
                 submitBtn.innerText = "اکاؤنٹ بنائیں";
                 switchText.innerText = "پہلے سے اکاؤنٹ ہے؟";
                 switchBtn.innerText = "لاگ ان کریں";
+                forgotBox.style.display = "none";
             }
         }
 
         document.getElementById('authForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            var phone = document.getElementById('userPhone').value;
-            
+            var userInput = document.getElementById('userPhone').value.trim();
+            var password = document.getElementById('userPassword').value;
+
+            // اگر صارف موبائل نمبر درج کرے تو اسے خودکار طور پر ای میل فارمیٹ میں تبدیل کریں تاکہ فائر بیس اتھینٹیکیشن میں مسئلہ نہ ہو
+            var email = userInput;
+            if (!email.includes('@')) {
+                email = userInput + "@zrides.pk";
+            }
+
             if (isLoginMode) {
-                alert("مبارک ہو! آپ کامیابی سے لاگ ان ہو گئے ہیں۔");
-                localStorage.setItem('zr_user', phone);
-                window.location.href = "index.html";
+                auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    alert("مبارک ہو! آپ کامیابی سے لاگ ان ہو گئے ہیں۔");
+                    window.location.href = "index.html";
+                })
+                .catch((error) => {
+                    alert("لاگ ان ناکام: " + error.message);
+                });
             } else {
                 var name = document.getElementById('fullName').value;
-                alert("مبارک ہو " + name + "! آپ کا اکاؤنٹ کامیابی سے بن گیا ہے۔ اب آپ لاگ ان کر سکتے ہیں۔");
-                toggleAuthMode();
+                auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    alert("مبارک ہو " + name + "! آپ کا اکاؤنٹ کامیابی سے بن گیا ہے۔ اب آپ لاگ ان کر سکتے ہیں۔");
+                    toggleAuthMode();
+                })
+                .catch((error) => {
+                    alert("رجسٹریشن میں خرابی: " + error.message);
+                });
             }
         });
+
+        function forgotPassword() {
+            var userInput = document.getElementById('userPhone').value.trim();
+            if (!userInput) {
+                alert("براہ کرم اوپر والے خانے میں اپنا موبائل نمبر یا ای میل درج کریں تاکہ پاس ورڈ ری سیٹ لنک بھیجا جا سکے۔");
+                return;
+            }
+            var email = userInput;
+            if (!email.includes('@')) {
+                email = userInput + "@zrides.pk";
+            }
+
+            auth.sendPasswordResetEmail(email)
+            .then(() => {
+                alert("پاس ورڈ ری سیٹ کرنے کی ہدایات آپ کو بھیج دی گئی ہیں۔");
+            })
+            .catch((error) => {
+                alert("خرابی: " + error.message);
+            });
+        }
     </script>
 </body>
 </html>
