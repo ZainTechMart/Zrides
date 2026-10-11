@@ -2,529 +2,1713 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#111827">
-<title>Zrides | Book a Ride</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101c2c">
+
+<title>Zrides | Book Your Ride</title>
+
+<!-- Leaflet Map CSS -->
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f4f6;color:#111827}
-header{background:#111827;color:white;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.logo{font-size:25px;font-weight:bold;color:#4ade80}
-select,input,textarea{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;font-size:15px;background:white}
-button{padding:11px 14px;border:0;border-radius:8px;background:#16a34a;color:white;font-weight:bold;cursor:pointer}
-button:disabled{opacity:.6}
-header select{width:auto}
-main{max-width:850px;margin:24px auto;padding:0 15px}
-.card{background:white;padding:20px;border-radius:14px;margin-bottom:18px;box-shadow:0 4px 18px #0001}
-.field{margin:14px 0}
-label{display:block;font-weight:bold;margin-bottom:7px}
-.muted{color:#6b7280;font-size:14px;line-height:1.5}
-.message{padding:12px;border-radius:8px;margin-bottom:15px;display:none;overflow-wrap:anywhere}
-.success{display:block;background:#dcfce7;color:#166534}
-.error{display:block;background:#fee2e2;color:#991b1b}
-.info{display:block;background:#dbeafe;color:#1e40af}
-.ride{border:1px solid #e5e7eb;border-radius:10px;padding:14px;margin:12px 0}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-.row>*{flex:1}
-.chatMessages{height:180px;overflow-y:auto;background:#f9fafb;border:1px solid #e5e7eb;padding:10px;margin:10px 0}
-.chatMessage{padding:8px;margin:6px 0;background:#e5e7eb;border-radius:8px;overflow-wrap:anywhere}
-.hidden{display:none!important}
+:root {
+    --navy: #101c2c;
+    --navy-light: #1b2c42;
+    --green: #20c997;
+    --green-dark: #0d9f78;
+    --background: #f3f6f9;
+    --white: #ffffff;
+    --text: #172333;
+    --muted: #6b7787;
+    --border: #e0e7ee;
+    --danger: #dc3545;
+    --shadow: 0 8px 28px rgba(16, 28, 44, .08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+header {
+    background: var(--navy);
+    color: white;
+    padding: 14px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.logo {
+    color: var(--green);
+    font-size: 27px;
+    font-weight: 900;
+    letter-spacing: -.7px;
+}
+
+.logo span {
+    color: white;
+}
+
+.header-actions {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+}
+
+header select {
+    width: auto;
+    min-width: 110px;
+    background: var(--navy-light);
+    color: white;
+    border: 1px solid #45566b;
+}
+
+.container {
+    max-width: 1150px;
+    margin: 25px auto;
+    padding: 0 16px;
+}
+
+.hero {
+    background: linear-gradient(130deg, #101c2c, #213b52);
+    color: white;
+    padding: 28px;
+    border-radius: 20px;
+    margin-bottom: 22px;
+    box-shadow: var(--shadow);
+}
+
+.hero h1 {
+    margin: 0 0 10px;
+    font-size: clamp(25px, 4vw, 36px);
+}
+
+.hero p {
+    margin: 0;
+    color: #d3dce5;
+    line-height: 1.6;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: minmax(300px, .85fr) minmax(300px, 1.15fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    min-width: 0;
+}
+
+.card h2 {
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 20px;
+}
+
+.field {
+    margin: 15px 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #d6dee7;
+    border-radius: 10px;
+    background: white;
+    color: var(--text);
+    outline: none;
+    min-width: 0;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--green-dark);
+    box-shadow: 0 0 0 3px rgba(32, 201, 151, .12);
+}
+
+.location-box {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.location-box input {
+    flex: 1;
+    width: 0;
+}
+
+.btn {
+    border: 0;
+    border-radius: 10px;
+    padding: 12px 15px;
+    background: var(--green);
+    color: #09251e;
+    font-weight: 800;
+    transition: .15s;
+}
+
+.btn:hover {
+    background: #37d9aa;
+}
+
+.btn-dark {
+    background: var(--navy);
+    color: white;
+}
+
+.btn-dark:hover {
+    background: var(--navy-light);
+}
+
+.btn-light {
+    background: #e9f8f3;
+    color: #087857;
+}
+
+.btn-danger {
+    background: #feecee;
+    color: #b42332;
+}
+
+.btn-small {
+    padding: 10px 12px;
+    font-size: 13px;
+}
+
+.full-width {
+    width: 100%;
+}
+  .map-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 15px 0 10px;
+}
+.map-toolbar .btn {
+    flex: 1;
+    min-width: 130px;
+}
+.map-hint {
+    background: #edf9f5;
+    color: #087857;
+    border-radius: 9px;
+    padding: 11px;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+#tripMap {
+    height: 390px;
+    width: 100%;
+    border-radius: 13px;
+    border: 1px solid var(--border);
+    z-index: 1;
+    background: #e8eef1;
+}
+.map-attribution {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 8px;
+    line-height: 1.5;
+}
+.map-attribution a { color: #087857; }
+.route-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+}
+.stat {
+    background: #f3f8f7;
+    padding: 14px;
+    border-radius: 11px;
+}
+.stat-label {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 7px;
+}
+.stat strong {
+    font-size: 19px;
+    color: var(--navy);
+}
+.service-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px;
+}
+.service-option {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 6px;
+    text-align: center;
+    cursor: pointer;
+    background: white;
+}
+.service-option.active {
+    border: 2px solid var(--green-dark);
+    background: #effbf7;
+}
+.service-option .icon {
+    font-size: 27px;
+    display: block;
+    margin-bottom: 8px;
+}
+.service-option strong {
+    display: block;
+    font-size: 14px;
+}
+.service-option small {
+    display: block;
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 11px;
+}
+.fare-box {
+    background: var(--navy);
+    color: white;
+    border-radius: 13px;
+    padding: 18px;
+    margin: 18px 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+}
+.fare-box small {
+    color: #c7d2df;
+    display: block;
+    margin-bottom: 7px;
+}
+.fare-box strong {
+    color: var(--green);
+    font-size: 27px;
+}
+.message {
+    display: none;
+    padding: 13px;
+    margin: 0 0 16px;
+    border-radius: 10px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+.message.success {
+    display: block;
+    background: #dcfce7;
+    color: #166534;
+}
+.message.error {
+    display: block;
+    background: #fee2e2;
+    color: #991b1b;
+}
+.message.info {
+    display: block;
+    background: #dbeafe;
+    color: #1e40af;
+}
+.ride {
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 16px;
+    margin: 13px 0;
+    overflow-wrap: anywhere;
+}
+.ride h3 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+.ride-details {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.8;
+}
+.status-badge {
+    display: inline-block;
+    background: #fff3cd;
+    color: #795900;
+    border-radius: 20px;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 6px 0 10px;
+}
+.ride-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+.ride-actions button {
+    flex: 1;
+    min-width: 100px;
+}
+.chat-messages {
+    height: 190px;
+    overflow-y: auto;
+    background: #f5f8fa;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 12px 0;
+}
+.chat-message {
+    background: #e7f6f0;
+    border-radius: 9px;
+    padding: 10px;
+    margin: 7px 0;
+    overflow-wrap: anywhere;
+}
+.chat-message strong {
+    display: block;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+.muted {
+    color: var(--muted);
+    line-height: 1.6;
+}
+.hidden {
+    display: none !important;
+}
+footer {
+    text-align: center;
+    color: var(--muted);
+    padding: 25px 15px;
+    font-size: 13px;
+}
+[dir="rtl"] body {
+    font-family: Arial, Tahoma, sans-serif;
+}
+[dir="rtl"] .fare-box,
+[dir="rtl"] .location-box {
+    direction: rtl;
+}
+@media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; }
+    .container { margin-top: 16px; }
+    .hero { padding: 23px; }
+    #tripMap { height: 330px; }
+}
+@media (max-width: 430px) {
+    header { padding: 13px 15px; }
+    .logo { font-size: 23px; }
+    .card { padding: 16px; }
+    .location-box { flex-wrap: wrap; }
+    .location-box input { width: 100%; flex-basis: 100%; }
+    .location-box .btn { flex: 1; }
+    #tripMap { height: 300px; }
+}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="logo">Zrides</div>
-  <div class="row" style="flex:0;align-items:center">
-    <select id="language" aria-label="Language">
-      <option value="en">English</option>
-      <option value="ur">اردو</option>
-    </select>
-    <button id="logoutBtn">Logout</button>
-  </div>
+    <div class="logo">Z<span>rides</span></div>
+    <div class="header-actions">
+        <select id="language" aria-label="Language">
+            <option value="en">English</option>
+            <option value="ur">اردو</option>
+        </select>
+        <button id="logoutBtn" class="btn btn-dark">Logout</button>
+    </div>
 </header>
 
-<main>
-  <div class="card">
-    <h2 id="welcome">Book Your Ride</h2>
-    <p id="intro" class="muted">Enter your trip details to request a ride.</p>
+<main class="container">
+    <section class="hero">
+        <h1 id="heroTitle">Your Ride, Your Way.</h1>
+        <p id="heroText">Choose your locations, see your route, and book your next ride.</p>
+    </section>
+
     <div id="message" class="message" role="status" aria-live="polite"></div>
 
-    <form id="bookingForm">
-      <div class="field">
-        <label id="pickupLabel" for="pickup">Pickup Location</label>
-        <input id="pickup" maxlength="200" required>
-      </div>
+    <div class="layout">
+        <section>
+            <div class="card">
+                <h2 id="bookingTitle">Book a Ride</h2>
+                <p class="subtitle" id="bookingSubtitle">Enter your pickup and destination to get started.</p>
 
-      <div class="field">
-        <label id="dropoffLabel" for="dropoff">Destination</label>
-        <input id="dropoff" maxlength="200" required>
-      </div>
+                <form id="bookingForm">
+                    <div class="field">
+                        <label id="pickupLabel" for="pickup">Pickup Location</label>
+                        <div class="location-box">
+                            <input id="pickup" maxlength="200" autocomplete="off"
+                                placeholder="Where should we pick you up?" required>
+                            <button type="button" class="btn btn-light btn-small" id="findPickupBtn">Find</button>
+                        </div>
+                    </div>
 
-      <div class="field">
-        <label id="phoneLabel" for="phone">Contact Phone</label>
-        <input id="phone" type="tel" maxlength="25" required>
-      </div>
+                    <div class="field">
+                        <label id="dropoffLabel" for="dropoff">Destination</label>
+                        <div class="location-box">
+                            <input id="dropoff" maxlength="200" autocomplete="off"
+                                placeholder="Where are you going?" required>
+                            <button type="button" class="btn btn-light btn-small" id="findDropoffBtn">Find</button>
+                        </div>
+                    </div>
 
-      <div class="field">
-        <label id="serviceLabel" for="service">Ride Type</label>
-        <select id="service">
-          <option value="bike">Bike</option>
-          <option value="car">Car</option>
-          <option value="rickshaw">Rickshaw</option>
-        </select>
-      </div>
+                    <div class="field">
+                        <label id="phoneLabel" for="phone">Contact Phone</label>
+                        <input id="phone" type="tel" maxlength="25" autocomplete="tel"
+                            placeholder="Your contact number" required>
+                    </div>
 
-      <button id="bookBtn" type="submit">Request Ride</button>
-    </form>
-  </div>
+                    <div class="field">
+                        <label id="serviceLabel">Choose Your Ride</label>
+                        <div class="service-options">
+                            <button type="button" class="service-option active" data-service="bike">
+                                <span class="icon">🏍️</span>
+                                <strong id="bikeName">Bike</strong>
+                                <small id="bikePrice">From Rs. 150</small>
+                            </button>
+                            <button type="button" class="service-option" data-service="rickshaw">
+                                <span class="icon">🛺</span>
+                                <strong id="rickshawName">Rickshaw</strong>
+                                <small id="rickshawPrice">From Rs. 200</small>
+                            </button>
+                            <button type="button" class="service-option" data-service="car">
+                                <span class="icon">🚗</span>
+                                <strong id="carName">Car</strong>
+                                <small id="carPrice">From Rs. 350</small>
+                            </button>
+                        </div>
+                        <input type="hidden" id="service" value="bike">
+                    </div>
 
-  <div class="card">
-    <h2 id="ridesHeading">My Rides</h2>
-    <div id="rides"><p class="muted">Loading rides...</p></div>
-  </div>
+                    <div class="fare-box">
+                        <div>
+                            <small id="fareLabel">Estimated Fare</small>
+                            <strong id="fareAmount">Rs. 150</strong>
+                        </div>
+                        <div style="text-align:end">
+                            <small id="distanceFareLabel">Route Distance</small>
+                            <strong id="distanceFare">—</strong>
+                        </div>
+                    </div>
 
-  <div class="card hidden" id="chatCard">
-    <h2 id="chatHeading">Ride Chat</h2>
-    <p id="chatInfo" class="muted">Messages for your selected ride.</p>
-    <div id="chatMessages" class="chatMessages"></div>
-    <form id="chatForm">
-      <div class="row">
-        <input id="chatInput" maxlength="1000" required>
-        <button id="sendBtn" type="submit">Send</button>
-      </div>
-    </form>
-  </div>
+                    <button type="submit" id="bookBtn" class="btn full-width">Request Ride</button>
+                    <p class="muted" id="fareNote" style="font-size:12px;margin:12px 0 0">
+                        Fare is an estimate and may change. The route must be calculated before booking.
+                    </p>
+                </form>
+            </div>
+        </section>
+
+        <section>
+            <div class="card">
+                <h2 id="mapTitle">Choose Your Locations</h2>
+                <p class="subtitle" id="mapSubtitle">Search for an address or tap the map to select a location.</p>
+                <div class="map-hint" id="mapHint">
+                    First select Pickup, then select Destination. Use the buttons below to choose which location you are setting.
+                </div>
+                <div class="map-toolbar">
+                    <button type="button" class="btn btn-dark" id="choosePickupBtn">Select Pickup</button>
+                    <button type="button" class="btn btn-light" id="chooseDropoffBtn">Select Destination</button>
+                    <button type="button" class="btn btn-light" id="myLocationBtn">My Location</button>
+                    <button type="button" class="btn btn-light" id="resetMapBtn">Reset</button>
+                </div>
+                <div id="tripMap" aria-label="Map for selecting pickup and destination"></div>
+                <div class="route-summary">
+                    <div class="stat">
+                        <span class="stat-label" id="distanceLabel">Distance</span>
+                        <strong id="routeDistance">—</strong>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label" id="durationLabel">Estimated Time</span>
+                        <strong id="routeDuration">—</strong>
+                    </div>
+                </div>
+                <p class="map-attribution" id="mapAttribution">
+                    Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors. Routing provided by OSRM.
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <section class="card">
+        <h2 id="ridesHeading">My Rides</h2>
+        <p class="subtitle" id="ridesSubtitle">View the status of your ride requests.</p>
+        <div id="rides"><p class="muted" id="loadingRides">Loading rides...</p></div>
+    </section>
+
+    <section class="card hidden" id="chatCard">
+        <h2 id="chatHeading">Ride Chat</h2>
+        <p class="subtitle" id="chatInfo">Messages for your selected ride.</p>
+        <div id="chatMessages" class="chat-messages"></div>
+        <form id="chatForm">
+            <div class="location-box">
+                <input id="chatInput" maxlength="1000" placeholder="Type your message" required>
+                <button type="submit" class="btn" id="sendBtn">Send</button>
+            </div>
+        </form>
+    </section>
 </main>
+
+<footer>© <span id="year"></span> Zrides. <span id="footerText">Your journey, our priority.</span></footer>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 "use strict";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
-  authDomain: "zrides-9f2da.firebaseapp.com",
-  databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
-  projectId: "zrides-9f2da",
-  storageBucket: "zrides-9f2da.firebasestorage.app",
-  messagingSenderId: "93898388224",
-  appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
+  const firebaseConfig = {
+    apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
+    authDomain: "zrides-9f2da.firebaseapp.com",
+    databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
+    projectId: "zrides-9f2da",
+    storageBucket: "zrides-9f2da.firebasestorage.app",
+    messagingSenderId: "93898388224",
+    appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
 };
 
-if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 
 const auth = firebase.auth();
 const db = firebase.database();
 const $ = id => document.getElementById(id);
 
 const words = {
-  en:{
-    welcome:"Book Your Ride",intro:"Enter your trip details to request a ride.",
-    pickup:"Pickup Location",dropoff:"Destination",phone:"Contact Phone",
-    service:"Ride Type",book:"Request Ride",wait:"Please wait...",
-    rides:"My Rides",loading:"Loading rides...",noRides:"You have no rides yet.",
-    logout:"Logout",chat:"Ride Chat",chatInfo:"Messages for your selected ride.",
-    send:"Send",bike:"Bike",car:"Car",rickshaw:"Rickshaw",
-    pending:"Pending",accepted:"Accepted",arrived:"Driver Arrived",
-    started:"Ride Started",completed:"Completed",cancelled:"Cancelled",
-    booked:"Ride request submitted.",bookError:"Unable to request a ride.",
-    needLogin:"Please log in to continue.",verify:"Verify your email before booking.",
-    profile:"Your customer profile could not be verified.",
-    selectRide:"Select Chat on one of your rides to open its chat.",
-    chatError:"Unable to load chat. Check your connection and permissions.",
-    messageRequired:"Please enter a message.",noPhone:"Please enter a contact phone number.",
-    cancelledMsg:"Ride cancelled.",cancelError:"Unable to cancel this ride.",
-    pickupRequired:"Enter pickup and destination.",
-    fare:"Estimated fare",status:"Status",driver:"Driver",
-    cancel:"Cancel Ride",openChat:"Chat",noDriver:"Not assigned",
-    sendError:"Unable to send message.",unknown:"Unknown",
-    unauthorized:"This account is not authorized as a customer."
-  },
-  ur:{
-    welcome:"Apni Ride Book Karein",intro:"Ride request karne ke liye safar ki maloomat likhein.",
-    pickup:"Pickup Location",dropoff:"Manzil",phone:"Rabtay ka Phone",
-    service:"Ride ki Qisam",book:"Ride Request Karein",wait:"Barah-e-karam intezar karein...",
-    rides:"Meri Rides",loading:"Rides load ho rahi hain...",noRides:"Abhi aapki koi ride nahi.",
-    logout:"Logout",chat:"Ride Chat",chatInfo:"Apni selected ride ke messages.",
-    send:"Bhejein",bike:"Bike",car:"Car",rickshaw:"Rickshaw",
-    pending:"Pending",accepted:"Accept ho gayi",arrived:"Driver Pohanch Gaya",
-    started:"Ride Shuru",completed:"Mukammal",cancelled:"Cancel",
-    booked:"Ride request bhej di gayi.",bookError:"Ride request nahi bheji ja saki.",
-    needLogin:"Jari rakhne ke liye login karein.",verify:"Booking se pehle email verify karein.",
-    profile:"Customer profile verify nahi ho saki.",
-    selectRide:"Chat kholne ke liye apni kisi ride par Chat dabayein.",
-    chatError:"Chat load nahi hui. Internet aur permissions check karein.",
-    messageRequired:"Message likhein.",noPhone:"Contact phone number likhein.",
-    cancelledMsg:"Ride cancel kar di gayi.",cancelError:"Ride cancel nahi ho saki.",
-    pickupRequired:"Pickup aur destination likhein.",
-    fare:"Andazati kiraya",status:"Status",driver:"Driver",
-    cancel:"Ride Cancel",openChat:"Chat",noDriver:"Abhi assign nahi",
-    sendError:"Message nahi bheja ja saka.",unknown:"Maloom nahi",
-    unauthorized:"Yeh account customer ke taur par authorized nahi."
-  }
+    en: {
+        heroTitle: "Your Ride, Your Way.",
+        heroText: "Choose your locations, see your route, and book your next ride.",
+        bookingTitle: "Book a Ride",
+        bookingSubtitle: "Enter your pickup and destination to get started.",
+        pickupLabel: "Pickup Location",
+        dropoffLabel: "Destination",
+        phoneLabel: "Contact Phone",
+        serviceLabel: "Choose Your Ride",
+        bikeName: "Bike",
+        rickshawName: "Rickshaw",
+        carName: "Car",
+        fareLabel: "Estimated Fare",
+        distanceFareLabel: "Route Distance",
+        bookBtn: "Request Ride",
+        fareNote: "Fare is an estimate and may change. The route must be calculated before booking.",
+        mapTitle: "Choose Your Locations",
+        mapSubtitle: "Search for an address or tap the map to select a location.",
+        mapHint: "First select Pickup, then select Destination. Use the buttons below to choose which location you are setting.",
+        choosePickupBtn: "Select Pickup",
+        chooseDropoffBtn: "Select Destination",
+        myLocationBtn: "My Location",
+        resetMapBtn: "Reset",
+        distanceLabel: "Distance",
+        durationLabel: "Estimated Time",
+        ridesHeading: "My Rides",
+        ridesSubtitle: "View the status of your ride requests.",
+        loadingRides: "Loading rides...",
+        chatHeading: "Ride Chat",
+        chatInfo: "Messages for your selected ride.",
+        sendBtn: "Send",
+        footerText: "Your journey, our priority.",
+        logoutBtn: "Logout",
+        find: "Find",
+        selectPickupFirst: "Select Pickup on the map first.",
+        selectDestinationFirst: "Select Destination on the map first.",
+        geocodeFailed: "Could not find that address. Please try a more specific address.",
+        locationFailed: "Unable to get your location. Check browser location permission.",
+        routeFailed: "Could not calculate a route. Select valid locations and try again.",
+        selectBoth: "Please select both pickup and destination and calculate the route.",
+        loginRequired: "Please log in before booking a ride.",
+        verifyEmail: "Please verify your email address before booking.",
+        profileMissing: "Your customer profile could not be found. Please log in again.",
+        customerOnly: "Only customer accounts can book rides here.",
+        phoneRequired: "Please enter a valid contact phone number.",
+        bookingFailed: "Ride request failed. Please try again.",
+        bookingSuccess: "Your ride request has been submitted successfully.",
+        noRides: "You have no rides yet.",
+        loadFailed: "Could not load rides. Please refresh the page.",
+        pending: "Pending",
+        accepted: "Accepted",
+        arrived: "Driver arrived",
+        ongoing: "In progress",
+        completed: "Completed",
+        cancelled: "Cancelled",
+        rejected: "Rejected",
+        unknown: "Unknown",
+        pickup: "Pickup",
+        destination: "Destination",
+        vehicle: "Ride type",
+        fare: "Estimated fare",
+        distance: "Distance",
+        duration: "Estimated time",
+        driver: "Driver",
+        rideId: "Ride ID",
+        chat: "Chat",
+        cancel: "Cancel Ride",
+        cancelConfirm: "Are you sure you want to cancel this pending ride?",
+        cancelSuccess: "Ride cancelled.",
+        cancelFailed: "Unable to cancel this ride.",
+        cancelNotAllowed: "Only your pending ride can be cancelled.",
+        typeMessage: "Type your message",
+        messageRequired: "Please enter a message.",
+        chatUnavailable: "Chat is not available for this ride yet.",
+        sendFailed: "Message could not be sent.",
+        locationSet: "Location selected.",
+        pickupSelected: "Pickup location selected.",
+        destinationSelected: "Destination selected.",
+        routeReady: "Route calculated successfully.",
+        calculating: "Calculating route...",
+        finding: "Searching for address...",
+        locateMe: "Finding your location...",
+        km: "km",
+        min: "min",
+        minutes: "minutes",
+        rs: "Rs.",
+        chooseLocation: "Tap the map to choose a location.",
+        rideNotFound: "Ride not found.",
+        authError: "Unable to verify your login. Please log in again.",
+        bookingInProgress: "Your ride request is being submitted..."
+    },
+    ur: {
+        heroTitle: "Aap Ki Sawari, Aap Ka Andaaz",
+        heroText: "Apni pickup aur manzil chunein, route dekhein aur ride book karein.",
+        bookingTitle: "Ride Book Karein",
+        bookingSubtitle: "Shuru karne ke liye pickup aur manzil likhein.",
+        pickupLabel: "Pickup Ki Jagah",
+        dropoffLabel: "Manzil",
+        phoneLabel: "Rabtay Ka Phone",
+        serviceLabel: "Sawari Chunein",
+        bikeName: "Bike",
+        rickshawName: "Rickshaw",
+        carName: "Car",
+        fareLabel: "Andazati Kiraya",
+        distanceFareLabel: "Route Ka Fasla",
+        bookBtn: "Ride Ki Darkhwast",
+        fareNote: "Kiraya andazati hai aur badal sakta hai. Booking se pehle route calculate hona zaroori hai.",
+        mapTitle: "Apni Jagah Chunein",
+        mapSubtitle: "Address search karein ya map par tap karke jagah chunein.",
+        mapHint: "Pehle pickup chunein, phir manzil. Neeche diye gaye buttons se jagah select karein.",
+        choosePickupBtn: "Pickup Chunein",
+        chooseDropoffBtn: "Manzil Chunein",
+        myLocationBtn: "Meri Jagah",
+        resetMapBtn: "Reset",
+        distanceLabel: "Fasla",
+        durationLabel: "Andazati Waqt",
+        ridesHeading: "Meri Rides",
+        ridesSubtitle: "Apni ride requests ka status dekhein.",
+        loadingRides: "Rides load ho rahi hain...",
+        chatHeading: "Ride Chat",
+        chatInfo: "Apni select ki hui ride ke paighamaat.",
+        sendBtn: "Bhejein",
+        footerText: "Aap ka safar, hamari zimmedari.",
+        logoutBtn: "Logout",
+        find: "Dhoondein",
+        selectPickupFirst: "Pehle map par pickup select karein.",
+        selectDestinationFirst: "Pehle map par manzil select karein.",
+        geocodeFailed: "Yeh address nahi mila. Zyada mukammal address likhein.",
+        locationFailed: "Aap ki location nahi mil saki. Browser ki location permission check karein.",
+        routeFailed: "Route calculate nahi hua. Jagah dobara select karein.",
+        selectBoth: "Pickup aur manzil select karke route calculate karein.",
+        loginRequired: "Ride book karne se pehle login karein.",
+        verifyEmail: "Ride book karne se pehle apna email verify karein.",
+        profileMissing: "Customer profile nahi mili. Dobara login karein.",
+        customerOnly: "Sirf customer account se ride book ho sakti hai.",
+        phoneRequired: "Durust contact phone number likhein.",
+        bookingFailed: "Ride request nahi bheji ja saki. Dobara koshish karein.",
+        bookingSuccess: "Aap ki ride request kamyabi se bhej di gayi.",
+        noRides: "Abhi aap ki koi ride nahi hai.",
+        loadFailed: "Rides load nahi ho sakin. Page refresh karein.",
+        pending: "Manzoori ka intezar",
+        accepted: "Driver ne qabool kar li",
+        arrived: "Driver pohanch gaya",
+        ongoing: "Safar jari hai",
+        completed: "Mukammal",
+        cancelled: "Cancel",
+        rejected: "Reject",
+        unknown: "Maloom nahi",
+        pickup: "Pickup",
+        destination: "Manzil",
+        vehicle: "Sawari",
+        fare: "Andazati kiraya",
+        distance: "Fasla",
+        duration: "Andazati waqt",
+        driver: "Driver",
+        rideId: "Ride ID",
+        chat: "Chat",
+        cancel: "Ride Cancel Karein",
+        cancelConfirm: "Kya aap pending ride cancel karna chahte hain?",
+        cancelSuccess: "Ride cancel kar di gayi.",
+        cancelFailed: "Ride cancel nahi ho saki.",
+        cancelNotAllowed: "Sirf apni pending ride cancel kar sakte hain.",
+        typeMessage: "Paigham likhein",
+        messageRequired: "Paigham likhna zaroori hai.",
+        chatUnavailable: "Is ride ki chat abhi dastiyab nahi.",
+        sendFailed: "Paigham nahi bheja ja saka.",
+        locationSet: "Jagah select ho gayi.",
+        pickupSelected: "Pickup select ho gaya.",
+        destinationSelected: "Manzil select ho gayi.",
+        routeReady: "Route calculate ho gaya.",
+        calculating: "Route calculate ho raha hai...",
+        finding: "Address dhoonda ja raha hai...",
+        locateMe: "Aap ki location dhoondi ja rahi hai...",
+        km: "km",
+        min: "min",
+        minutes: "minute",
+        rs: "Rs.",
+        chooseLocation: "Jagah chunne ke liye map par tap karein.",
+        rideNotFound: "Ride nahi mili.",
+        authError: "Login verify nahi ho saka. Dobara login karein.",
+        bookingInProgress: "Ride request bheji ja rahi hai..."
+    }
 };
-
-let lang = localStorage.getItem("zridesLanguage") || "en";
+  let lang = localStorage.getItem("zridesLanguage") || "en";
 let currentUser = null;
-let myOrdersRef = null;
-let chatRef = null;
 let activeChatOrder = null;
+let chatRef = null;
 let bookingBusy = false;
 
-function t(k){return words[lang][k] || words.en[k] || k;}
-function notify(text,type="info"){
-  $("message").textContent=text;
-  $("message").className="message "+type;
-}
-function applyLanguage(){
-  document.documentElement.lang=lang;
-  document.documentElement.dir=lang==="ur"?"rtl":"ltr";
-  $("language").value=lang;
-  const map={
-    welcome:"welcome",intro:"intro",pickupLabel:"pickup",
-    dropoffLabel:"dropoff",phoneLabel:"phone",serviceLabel:"service",
-    bookBtn:"book",ridesHeading:"rides",logoutBtn:"logout",
-    chatHeading:"chat",chatInfo:"chatInfo",sendBtn:"send"
-  };
-  Object.entries(map).forEach(([id,key])=>$(id).textContent=t(key));
-  $("pickup").placeholder=t("pickup");
-  $("dropoff").placeholder=t("dropoff");
-  $("phone").placeholder=t("phone");
-  $("chatInput").placeholder=lang==="ur"?"Apna message likhein":"Type your message";
-  [...$("service").options].forEach(o=>o.textContent=t(o.value));
-  renderRides();
+let pickupPoint = null;
+let dropoffPoint = null;
+let pickupMarker = null;
+let dropoffMarker = null;
+let routeLayer = null;
+let map = null;
+let mapTarget = "pickup";
+let routeDistanceKm = null;
+let routeDurationMin = null;
+let routeRequestNumber = 0;
+
+function t(key) {
+    return (words[lang] && words[lang][key]) ||
+           (words.en && words.en[key]) ||
+           key;
 }
 
-$("language").onchange=e=>{
-  lang=e.target.value;
-  localStorage.setItem("zridesLanguage",lang);
-  applyLanguage();
-};
-
-function safeText(value){
-  return String(value ?? "");
+function notify(message, type = "info") {
+    const box = $("message");
+    box.textContent = message;
+    box.className = "message " + type;
+    box.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
-function statusLabel(status){
-  const key=({
-    pending:"pending",accepted:"accepted",arrived:"arrived",
-    started:"started",completed:"completed",cancelled:"cancelled"
-  })[status] || status || "pending";
-  return t(key);
+function clearMessage() {
+    const box = $("message");
+    box.textContent = "";
+    box.className = "message";
 }
 
-function renderRides(){
-  if(!currentUser)return;
-  const container=$("rides");
-  const ordersRef=db.ref("orders");
-
-  ordersRef.orderByChild("customerUid").equalTo(currentUser.uid)
-    .once("value")
-    .then(snap=>{
-      const list=[];
-      snap.forEach(child=>list.push({id:child.key,...child.val()}));
-      list.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-
-      container.replaceChildren();
-
-      if(!list.length){
-        const p=document.createElement("p");
-        p.className="muted";
-        p.textContent=t("noRides");
-        container.appendChild(p);
-        return;
-      }
-
-      list.forEach(order=>{
-        const box=document.createElement("div");
-        box.className="ride";
-
-        const title=document.createElement("h3");
-        title.textContent=safeText(order.pickup)+" → "+safeText(order.dropoff);
-        box.appendChild(title);
-
-        const details=document.createElement("p");
-        details.className="muted";
-        details.textContent=
-          t("status")+": "+statusLabel(order.status)+
-          " | "+t("fare")+": "+(order.fare ?? "—");
-        box.appendChild(details);
-
-        if(order.driverUid){
-          const driver=document.createElement("p");
-          driver.className="muted";
-          driver.textContent=t("driver")+": "+safeText(order.driverName||t("noDriver"));
-          box.appendChild(driver);
-        }
-
-        if(!["completed","cancelled"].includes(order.status)){
-          const row=document.createElement("div");
-          row.className="row";
-          row.style.marginTop="10px";
-
-          const chatBtn=document.createElement("button");
-          chatBtn.textContent=t("openChat");
-          chatBtn.onclick=()=>openChat(order.id);
-          row.appendChild(chatBtn);
-
-          const cancelBtn=document.createElement("button");
-          cancelBtn.textContent=t("cancel");
-          cancelBtn.style.background="#dc2626";
-          cancelBtn.onclick=()=>cancelRide(order.id);
-          if(order.status!=="pending")cancelBtn.disabled=true;
-          row.appendChild(cancelBtn);
-
-          box.appendChild(row);
-        }
-
-        container.appendChild(box);
-      });
-    })
-    .catch(error=>{
-      console.error(error);
-      notify(t("chatError"),"error");
-    });
+function safeText(value) {
+    return String(value == null ? "" : value);
 }
 
-async function cancelRide(orderId){
-  try{
-    const ref=db.ref("orders/"+orderId);
-    const result=await ref.transaction(order=>{
-      if(!order)return;
-      if(order.customerUid!==currentUser.uid)return;
-      if(order.status!=="pending")return;
-      order.status="cancelled";
-      order.updatedAt=firebase.database.ServerValue.TIMESTAMP;
-      return order;
-    });
-
-    if(!result.committed){
-      notify(t("cancelError"),"error");
-      return;
-    }
-
-    await db.ref("rideQueue/"+orderId).update({
-      status:"cancelled",
-      updatedAt:firebase.database.ServerValue.TIMESTAMP
-    });
-
-    notify(t("cancelledMsg"),"success");
-    renderRides();
-  }catch(error){
-    console.error(error);
-    notify(t("cancelError"),"error");
-  }
+function formatMoney(amount) {
+    const number = Number(amount);
+    if (!Number.isFinite(number)) return t("rs") + " —";
+    return t("rs") + " " + Math.round(number).toLocaleString("en-PK");
 }
 
-$("bookingForm").addEventListener("submit",async e=>{
-  e.preventDefault();
-  if(bookingBusy)return;
-
-  if(!currentUser){
-    notify(t("needLogin"),"error");
-    return;
-  }
-  if(!currentUser.emailVerified){
-    notify(t("verify"),"error");
-    return;
-  }
-
-  const pickup=$("pickup").value.trim();
-  const dropoff=$("dropoff").value.trim();
-  const phone=$("phone").value.trim();
-  const service=$("service").value;
-
-  if(!pickup||!dropoff){
-    notify(t("pickupRequired"),"error");
-    return;
-  }
-  if(!phone){
-    notify(t("noPhone"),"error");
-    return;
-  }
-
-  bookingBusy=true;
-  $("bookBtn").disabled=true;
-  $("bookBtn").textContent=t("wait");
-
-  try{
-    const profileSnap=await db.ref("users/"+currentUser.uid).once("value");
-    const profile=profileSnap.val();
-
-    if(!profile||profile.uid!==currentUser.uid||profile.role!=="customer"){
-      throw new Error(t("unauthorized"));
-    }
-
-    /*
-      This is a provisional fare estimate, not a live distance calculation.
-      A production fare must be calculated and validated by a trusted backend.
-    */
-    const fareEstimate=service==="bike"?150:service==="car"?350:200;
-
-    const orderRef=db.ref("orders").push();
-    const orderId=orderRef.key;
-    const timestamp=firebase.database.ServerValue.TIMESTAMP;
-
-    const order={
-      id:orderId,
-      customerUid:currentUser.uid,
-      customerEmail:currentUser.email,
-      customerName:profile.name||"",
-      customerPhone:phone,
-      pickup:pickup,
-      dropoff:dropoff,
-      service:service,
-      fare:fareEstimate,
-      status:"pending",
-      driverUid:null,
-      createdAt:Date.now(),
-      updatedAt:timestamp
+function statusLabel(status) {
+    const keyMap = {
+        pending: "pending",
+        requested: "pending",
+        accepted: "accepted",
+        driver_accepted: "accepted",
+        arrived: "arrived",
+        driver_arrived: "arrived",
+        ongoing: "ongoing",
+        in_progress: "ongoing",
+        started: "ongoing",
+        completed: "completed",
+        cancelled: "cancelled",
+        rejected: "rejected"
     };
-
-    /*
-      Queue contains only basic ride details. Do not put customer phone/email
-      into rideQueue. Access still depends on correctly configured RTDB rules.
-    */
-    const updates={};
-    updates["orders/"+orderId]=order;
-    updates["rideQueue/"+orderId]={
-      orderId:orderId,
-      pickup:pickup,
-      dropoff:dropoff,
-      service:service,
-      fare:fareEstimate,
-      status:"pending",
-      createdAt:Date.now()
-    };
-
-    await db.ref().update(updates);
-
-    $("bookingForm").reset();
-    notify(t("booked"),"success");
-    renderRides();
-
-  }catch(error){
-    console.error(error);
-    notify(error.message||t("bookError"),"error");
-  }finally{
-    bookingBusy=false;
-    $("bookBtn").disabled=false;
-    $("bookBtn").textContent=t("book");
-  }
-});
-
-function openChat(orderId){
-  if(chatRef)chatRef.off();
-  activeChatOrder=orderId;
-  $("chatCard").classList.remove("hidden");
-  $("chatMessages").replaceChildren();
-
-  chatRef=db.ref("chats/"+orderId+"/messages");
-  chatRef.limitToLast(100).on("value",snap=>{
-    const box=$("chatMessages");
-    box.replaceChildren();
-
-    snap.forEach(child=>{
-      const msg=child.val()||{};
-      const p=document.createElement("div");
-      p.className="chatMessage";
-
-      const name=document.createElement("strong");
-      name.textContent=msg.senderUid===currentUser.uid
-        ?(lang==="ur"?"Aap":"You")
-        :(msg.senderName||t("driver"));
-
-      const body=document.createElement("div");
-      body.textContent=safeText(msg.text);
-
-      p.append(name,body);
-      box.appendChild(p);
-    });
-
-    box.scrollTop=box.scrollHeight;
-  },error=>{
-    console.error(error);
-    notify(t("chatError"),"error");
-  });
-
-  $("chatCard").scrollIntoView({behavior:"smooth"});
+    return t(keyMap[String(status || "").toLowerCase()] || "unknown");
 }
 
-$("chatForm").addEventListener("submit",async e=>{
-  e.preventDefault();
-  const text=$("chatInput").value.trim();
-  if(!text){
-    notify(t("messageRequired"),"error");
-    return;
-  }
-  if(!activeChatOrder)return;
+function applyLanguage() {
+    const selected = words[lang] ? lang : "en";
+    lang = selected;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
+    $("language").value = lang;
+    localStorage.setItem("zridesLanguage", lang);
 
-  try{
-    const orderSnap=await db.ref("orders/"+activeChatOrder).once("value");
-    const order=orderSnap.val();
+    const ids = [
+        "heroTitle", "heroText", "bookingTitle", "bookingSubtitle",
+        "pickupLabel", "dropoffLabel", "phoneLabel", "serviceLabel",
+        "bikeName", "rickshawName", "carName", "fareLabel",
+        "distanceFareLabel", "bookBtn", "fareNote", "mapTitle",
+        "mapSubtitle", "mapHint", "choosePickupBtn", "chooseDropoffBtn",
+        "myLocationBtn", "resetMapBtn", "distanceLabel", "durationLabel",
+        "ridesHeading", "ridesSubtitle", "loadingRides", "chatHeading",
+        "chatInfo", "sendBtn", "footerText", "logoutBtn"
+    ];
 
-    if(!order||order.customerUid!==currentUser.uid){
-      throw new Error(t("chatError"));
-    }
-
-    const msgRef=db.ref("chats/"+activeChatOrder+"/messages").push();
-    await msgRef.set({
-      senderUid:currentUser.uid,
-      senderName:"Customer",
-      text:text,
-      createdAt:firebase.database.ServerValue.TIMESTAMP
+    ids.forEach(id => {
+        const el = $(id);
+        if (el && words[lang][id]) el.textContent = words[lang][id];
     });
 
-    $("chatInput").value="";
-  }catch(error){
-    console.error(error);
-    notify(t("sendError"),"error");
-  }
-});
+    $("pickup").placeholder = lang === "ur" ?
+        "Pickup ki jagah likhein" : "Where should we pick you up?";
+    $("dropoff").placeholder = lang === "ur" ?
+        "Apni manzil likhein" : "Where are you going?";
+    $("phone").placeholder = lang === "ur" ?
+        "Contact number" : "Your contact number";
+    $("chatInput").placeholder = t("typeMessage");
 
-$("logoutBtn").onclick=async()=>{
-  if(chatRef)chatRef.off();
-  await auth.signOut();
-  location.replace("login.html");
-};
+    document.querySelectorAll("[data-service]").forEach(button => {
+        const service = button.dataset.service;
+        const nameId = service + "Name";
+        const priceId = service + "Price";
+        const priceStart = { bike: 150, rickshaw: 200, car: 350 }[service];
 
-auth.onAuthStateChanged(async user=>{
-  if(!user){
-    location.replace("login.html");
-    return;
-  }
+        $(nameId).textContent = t(nameId);
+        $(priceId).textContent =
+            (lang === "ur" ? "Shuru " : "From ") + formatMoney(priceStart);
+    });
 
-  currentUser=user;
-
-  try{
-    await user.reload();
-    currentUser=auth.currentUser;
-
-    if(!currentUser.emailVerified){
-      notify(t("verify"),"error");
-      return;
-    }
-
-    const profileSnap=await db.ref("users/"+currentUser.uid).once("value");
-    const profile=profileSnap.val();
-
-    if(!profile||profile.role!=="customer"){
-      notify(t("unauthorized"),"error");
-      return;
+    if (pickupPoint && dropoffPoint) {
+        updateFareDisplay();
     }
 
     renderRides();
+}
+
+$("language").addEventListener("change", event => {
+    lang = event.target.value === "ur" ? "ur" : "en";
     applyLanguage();
-  }catch(error){
-    console.error(error);
-    notify(t("profile"),"error");
-  }
 });
+  function makeMarkerIcon(color) {
+    return L.divIcon({
+        className: "",
+        html: `<div style="
+            width:20px;height:20px;border-radius:50%;
+            background:${color};border:3px solid white;
+            box-shadow:0 1px 7px #555"></div>`,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10]
+    });
+}
+
+function initMap() {
+    if (typeof L === "undefined") {
+        notify("Map library load nahi hui. Internet connection check karein.", "error");
+        return;
+    }
+
+    map = L.map("tripMap").setView([31.5204, 74.3587], 12);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>'
+    }).addTo(map);
+
+    map.on("click", async event => {
+        const point = {
+            lat: event.latlng.lat,
+            lng: event.latlng.lng
+        };
+
+        try {
+            const address = await reverseGeocode(point.lat, point.lng);
+            if (mapTarget === "pickup") {
+                setPickup(point, address);
+            } else {
+                setDropoff(point, address);
+            }
+        } catch (error) {
+            notify(t("geocodeFailed"), "error");
+        }
+    });
+
+    setTimeout(() => map.invalidateSize(), 300);
+}
+
+function setPickup(point, address) {
+    pickupPoint = {
+        lat: Number(point.lat),
+        lng: Number(point.lng),
+        address: safeText(address)
+    };
+
+    $("pickup").value = pickupPoint.address;
+
+    if (pickupMarker) map.removeLayer(pickupMarker);
+
+    pickupMarker = L.marker([pickupPoint.lat, pickupPoint.lng], {
+        icon: makeMarkerIcon("#16a34a")
+    }).addTo(map).bindPopup(t("pickup"));
+
+    mapTarget = "dropoff";
+    clearRoute();
+    updateFareDisplay();
+
+    if (pickupPoint && dropoffPoint) {
+        calculateRoute();
+    } else {
+        notify(t("pickupSelected"), "success");
+    }
+}
+
+function setDropoff(point, address) {
+    dropoffPoint = {
+        lat: Number(point.lat),
+        lng: Number(point.lng),
+        address: safeText(address)
+    };
+
+    $("dropoff").value = dropoffPoint.address;
+
+    if (dropoffMarker) map.removeLayer(dropoffMarker);
+
+    dropoffMarker = L.marker([dropoffPoint.lat, dropoffPoint.lng], {
+        icon: makeMarkerIcon("#dc2626")
+    }).addTo(map).bindPopup(t("destination"));
+
+    clearRoute();
+    updateFareDisplay();
+
+    if (pickupPoint && dropoffPoint) {
+        calculateRoute();
+    } else {
+        notify(t("destinationSelected"), "success");
+    }
+}
+
+function clearRoute() {
+    routeRequestNumber++;
+    if (routeLayer && map) {
+        map.removeLayer(routeLayer);
+        routeLayer = null;
+    }
+
+    routeDistanceKm = null;
+    routeDurationMin = null;
+    $("routeDistance").textContent = "—";
+    $("routeDuration").textContent = "—";
+    updateFareDisplay();
+}
+
+function resetMap() {
+    clearRoute();
+
+    if (pickupMarker) map.removeLayer(pickupMarker);
+    if (dropoffMarker) map.removeLayer(dropoffMarker);
+
+    pickupMarker = null;
+    dropoffMarker = null;
+    pickupPoint = null;
+    dropoffPoint = null;
+
+    $("pickup").value = "";
+    $("dropoff").value = "";
+
+    mapTarget = "pickup";
+    map.setView([31.5204, 74.3587], 12);
+    updateFareDisplay();
+    clearMessage();
+}
+
+$("choosePickupBtn").addEventListener("click", () => {
+    mapTarget = "pickup";
+    notify(t("chooseLocation"), "info");
+});
+
+$("chooseDropoffBtn").addEventListener("click", () => {
+    mapTarget = "dropoff";
+    notify(t("chooseLocation"), "info");
+});
+
+$("resetMapBtn").addEventListener("click", resetMap);
+
+async function geocodeAddress(address) {
+    const url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" +
+        encodeURIComponent(address);
+
+    const response = await fetch(url, {
+        headers: { "Accept": "application/json" }
+    });
+
+    if (!response.ok) throw new Error("Geocoding service error");
+
+    const results = await response.json();
+    if (!results.length) throw new Error("Address not found");
+
+    return {
+        lat: Number(results[0].lat),
+        lng: Number(results[0].lon),
+        address: results[0].display_name
+    };
+}
+
+async function reverseGeocode(lat, lng) {
+    const url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" +
+        encodeURIComponent(lat) + "&lon=" + encodeURIComponent(lng);
+
+    const response = await fetch(url, {
+        headers: { "Accept": "application/json" }
+    });
+
+    if (!response.ok) throw new Error("Reverse geocoding failed");
+
+    const result = await response.json();
+    return result.display_name || `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  }
+  async function findLocation(which) {
+    const input = $(which);
+    const address = input.value.trim();
+
+    if (!address) {
+        notify(which === "pickup" ? t("selectPickupFirst") : t("selectDestinationFirst"), "error");
+        input.focus();
+        return;
+    }
+
+    notify(t("finding"), "info");
+
+    try {
+        const result = await geocodeAddress(address);
+
+        if (which === "pickup") {
+            setPickup(result, result.address);
+            map.setView([result.lat, result.lng], 15);
+        } else {
+            setDropoff(result, result.address);
+            map.setView([result.lat, result.lng], 15);
+        }
+    } catch (error) {
+        notify(t("geocodeFailed"), "error");
+    }
+}
+
+$("findPickupBtn").addEventListener("click", () => findLocation("pickup"));
+$("findDropoffBtn").addEventListener("click", () => findLocation("dropoff"));
+
+$("pickup").addEventListener("change", () => {
+    pickupPoint = null;
+    if (pickupMarker) map.removeLayer(pickupMarker);
+    pickupMarker = null;
+    clearRoute();
+});
+
+$("dropoff").addEventListener("change", () => {
+    dropoffPoint = null;
+    if (dropoffMarker) map.removeLayer(dropoffMarker);
+    dropoffMarker = null;
+    clearRoute();
+});
+
+$("myLocationBtn").addEventListener("click", () => {
+    if (!navigator.geolocation) {
+        notify(t("locationFailed"), "error");
+        return;
+    }
+
+    notify(t("locateMe"), "info");
+
+    navigator.geolocation.getCurrentPosition(async position => {
+        const point = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        };
+
+        try {
+            const address = await reverseGeocode(point.lat, point.lng);
+
+            if (mapTarget === "pickup") {
+                setPickup(point, address);
+            } else {
+                setDropoff(point, address);
+            }
+
+            map.setView([point.lat, point.lng], 16);
+        } catch (error) {
+            notify(t("locationFailed"), "error");
+        }
+    }, () => {
+        notify(t("locationFailed"), "error");
+    }, {
+        enableHighAccuracy: true,
+        timeout: 12000,
+        maximumAge: 30000
+    });
+});
+
+async function calculateRoute() {
+    if (!pickupPoint || !dropoffPoint) return;
+
+    const requestId = ++routeRequestNumber;
+    notify(t("calculating"), "info");
+
+    const url =
+        "https://router.project-osrm.org/route/v1/driving/" +
+        encodeURIComponent(pickupPoint.lng + "," + pickupPoint.lat) + ";" +
+        encodeURIComponent(dropoffPoint.lng + "," + dropoffPoint.lat) +
+        "?overview=full&geometries=geojson&steps=false";
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Route service error");
+
+        const data = await response.json();
+
+        if (requestId !== routeRequestNumber) return;
+        if (!data.routes || !data.routes.length) throw new Error("No route");
+
+        const route = data.routes[0];
+
+        routeDistanceKm = route.distance / 1000;
+        routeDurationMin = route.duration / 60;
+
+        if (routeLayer) map.removeLayer(routeLayer);
+
+        routeLayer = L.geoJSON(route.geometry, {
+            style: {
+                color: "#0f9f76",
+                weight: 6,
+                opacity: 0.85
+            }
+        }).addTo(map);
+
+        const group = L.featureGroup([routeLayer]);
+        if (pickupMarker) group.addLayer(pickupMarker);
+        if (dropoffMarker) group.addLayer(dropoffMarker);
+
+        map.fitBounds(group.getBounds().pad(0.15));
+
+        $("routeDistance").textContent =
+            routeDistanceKm.toFixed(1) + " " + t("km");
+
+        $("routeDuration").textContent =
+            Math.max(1, Math.round(routeDurationMin)) + " " + t("min");
+
+        updateFareDisplay();
+        notify(t("routeReady"), "success");
+    } catch (error) {
+        if (requestId !== routeRequestNumber) return;
+
+        routeDistanceKm = null;
+        routeDurationMin = null;
+        $("routeDistance").textContent = "—";
+        $("routeDuration").textContent = "—";
+        updateFareDisplay();
+        notify(t("routeFailed"), "error");
+    }
+}
+
+const serviceRates = {
+    bike: { base: 150, perKm: 35 },
+    rickshaw: { base: 200, perKm: 45 },
+    car: { base: 350, perKm: 65 }
+};
+
+function estimateFare() {
+    const rate = serviceRates[$("service").value] || serviceRates.bike;
+
+    if (!Number.isFinite(routeDistanceKm)) {
+        return rate.base;
+    }
+
+    return Math.round(rate.base + routeDistanceKm * rate.perKm);
+}
+
+function updateFareDisplay() {
+    $("fareAmount").textContent = formatMoney(estimateFare());
+
+    $("distanceFare").textContent = Number.isFinite(routeDistanceKm) ?
+        routeDistanceKm.toFixed(1) + " " + t("km") : "—";
+}
+
+document.querySelectorAll("[data-service]").forEach(button => {
+    button.addEventListener("click", () => {
+        document.querySelectorAll("[data-service]").forEach(item => {
+            item.classList.remove("active");
+        });
+
+        button.classList.add("active");
+        $("service").value = button.dataset.service;
+        updateFareDisplay();
+    });
+});
+  function createElement(tag, className, text) {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (text !== undefined) element.textContent = text;
+    return element;
+}
+
+function getRideStatus(ride) {
+    return String(ride.status || ride.rideStatus || "pending").toLowerCase();
+}
+
+function renderRideCard(id, ride) {
+    const card = createElement("article", "ride");
+    const title = createElement("h3", "", t("rideId") + ": " + id);
+    card.appendChild(title);
+
+    const badge = createElement("span", "status-badge", statusLabel(getRideStatus(ride)));
+    card.appendChild(badge);
+
+    const details = createElement("div", "ride-details");
+
+    const rows = [
+        [t("pickup"), ride.pickupAddress || ride.pickup || "—"],
+        [t("destination"), ride.dropoffAddress || ride.destination || ride.dropoff || "—"],
+        [t("vehicle"), ride.service || ride.vehicleType || "—"],
+        [t("fare"), formatMoney(ride.fare || ride.estimatedFare || 0)],
+        [t("distance"), Number.isFinite(Number(ride.distanceKm)) ?
+            Number(ride.distanceKm).toFixed(1) + " " + t("km") : "—"],
+        [t("driver"), ride.driverName || ride.driverEmail || "—"]
+    ];
+
+    rows.forEach(([label, value]) => {
+        const row = createElement("div");
+        const strong = createElement("strong", "", label + ": ");
+        row.appendChild(strong);
+        row.appendChild(document.createTextNode(safeText(value)));
+        details.appendChild(row);
+    });
+
+    card.appendChild(details);
+
+    const actions = createElement("div", "ride-actions");
+
+    const chatButton = createElement("button", "btn btn-light", t("chat"));
+    chatButton.type = "button";
+    chatButton.addEventListener("click", () => openChat(id, ride));
+    actions.appendChild(chatButton);
+
+    if (getRideStatus(ride) === "pending" || getRideStatus(ride) === "requested") {
+        const cancelButton = createElement("button", "btn btn-danger", t("cancel"));
+        cancelButton.type = "button";
+        cancelButton.addEventListener("click", () => cancelRide(id));
+        actions.appendChild(cancelButton);
+    }
+
+    card.appendChild(actions);
+    return card;
+}
+
+async function renderRides() {
+    const container = $("rides");
+
+    if (!currentUser) {
+        container.replaceChildren(
+            createElement("p", "muted", t("loginRequired"))
+        );
+        return;
+    }
+
+    try {
+        const snapshot = await db.ref("orders")
+            .orderByChild("customerUid")
+            .equalTo(currentUser.uid)
+            .once("value");
+
+        const rides = [];
+
+        snapshot.forEach(child => {
+            rides.push({
+                id: child.key,
+                data: child.val() || {}
+            });
+        });
+
+        rides.sort((a, b) =>
+            Number(b.data.createdAt || 0) - Number(a.data.createdAt || 0)
+        );
+
+        container.replaceChildren();
+
+        if (!rides.length) {
+            container.appendChild(createElement("p", "muted", t("noRides")));
+            return;
+        }
+
+        rides.forEach(item => {
+            container.appendChild(renderRideCard(item.id, item.data));
+        });
+    } catch (error) {
+        container.replaceChildren(
+            createElement("p", "muted", t("loadFailed"))
+        );
+    }
+}
+
+async function cancelRide(orderId) {
+    if (!currentUser) {
+        notify(t("loginRequired"), "error");
+        return;
+    }
+
+    if (!window.confirm(t("cancelConfirm"))) return;
+
+    const orderRef = db.ref("orders/" + orderId);
+
+    try {
+        const result = await orderRef.transaction(order => {
+            if (!order) return;
+            if (order.customerUid !== currentUser.uid) return;
+
+            const status = String(order.status || "").toLowerCase();
+
+            if (status !== "pending" && status !== "requested") return;
+
+            order.status = "cancelled";
+            order.cancelledAt = Date.now();
+            return order;
+        });
+
+        if (!result.committed) {
+            notify(t("cancelNotAllowed"), "error");
+            return;
+        }
+
+        await db.ref("rideQueue/" + orderId).update({
+            status: "cancelled",
+            cancelledAt: Date.now()
+        });
+
+        notify(t("cancelSuccess"), "success");
+        await renderRides();
+    } catch (error) {
+        notify(t("cancelFailed"), "error");
+    }
+  }
+  $("bookingForm").addEventListener("submit", async event => {
+    event.preventDefault();
+    clearMessage();
+
+    if (bookingBusy) return;
+
+    if (!currentUser) {
+        notify(t("loginRequired"), "error");
+        return;
+    }
+
+    if (!currentUser.emailVerified) {
+        notify(t("verifyEmail"), "error");
+        return;
+    }
+
+    const phone = $("phone").value.trim();
+
+    if (phone.length < 7) {
+        notify(t("phoneRequired"), "error");
+        $("phone").focus();
+        return;
+    }
+
+    if (!pickupPoint || !dropoffPoint || !Number.isFinite(routeDistanceKm)) {
+        notify(t("selectBoth"), "error");
+        return;
+    }
+
+    bookingBusy = true;
+    $("bookBtn").disabled = true;
+    $("bookBtn").textContent = t("bookingInProgress");
+
+    try {
+        const profileSnapshot = await db.ref("users/" + currentUser.uid).once("value");
+        const profile = profileSnapshot.val();
+
+        if (!profile) {
+            notify(t("profileMissing"), "error");
+            return;
+        }
+
+        const role = String(profile.role || "customer").toLowerCase();
+
+        if (role !== "customer") {
+            notify(t("customerOnly"), "error");
+            return;
+        }
+
+        const now = Date.now();
+        const orderRef = db.ref("orders").push();
+        const orderId = orderRef.key;
+
+        const service = $("service").value;
+        const fare = estimateFare();
+
+        const order = {
+            orderId,
+            customerUid: currentUser.uid,
+            customerName: profile.name || currentUser.displayName || "Customer",
+            customerEmail: currentUser.email || "",
+            customerPhone: phone,
+
+            pickupAddress: pickupPoint.address,
+            dropoffAddress: dropoffPoint.address,
+
+            pickupLat: pickupPoint.lat,
+            pickupLng: pickupPoint.lng,
+            dropoffLat: dropoffPoint.lat,
+            dropoffLng: dropoffPoint.lng,
+
+            service,
+            vehicleType: service,
+            fare,
+            estimatedFare: fare,
+            distanceKm: Number(routeDistanceKm.toFixed(2)),
+            durationMin: Math.round(routeDurationMin || 0),
+
+            status: "pending",
+            createdAt: now,
+            updatedAt: now
+        };
+
+        const queueItem = {
+            orderId,
+            customerUid: currentUser.uid,
+            customerName: order.customerName,
+            customerPhone: phone,
+            pickupAddress: order.pickupAddress,
+            dropoffAddress: order.dropoffAddress,
+            pickupLat: order.pickupLat,
+            pickupLng: order.pickupLng,
+            dropoffLat: order.dropoffLat,
+            dropoffLng: order.dropoffLng,
+            service,
+            vehicleType: service,
+            fare,
+            estimatedFare: fare,
+            distanceKm: order.distanceKm,
+            durationMin: order.durationMin,
+            status: "pending",
+            createdAt: now,
+            updatedAt: now
+        };
+
+        const updates = {};
+        updates["orders/" + orderId] = order;
+        updates["rideQueue/" + orderId] = queueItem;
+
+        await db.ref().update(updates);
+
+        $("bookingForm").reset();
+        $("service").value = "bike";
+
+        document.querySelectorAll("[data-service]").forEach(button => {
+            button.classList.toggle("active", button.dataset.service === "bike");
+        });
+
+        resetMap();
+        updateFareDisplay();
+
+        notify(t("bookingSuccess"), "success");
+        await renderRides();
+    } catch (error) {
+        console.error("Booking error:", error);
+        notify(t("bookingFailed"), "error");
+    } finally {
+        bookingBusy = false;
+        $("bookBtn").disabled = false;
+        $("bookBtn").textContent = t("bookBtn");
+    }
+});
+  function stopChatListener() {
+    if (chatRef) {
+        chatRef.off();
+        chatRef = null;
+    }
+
+    activeChatOrder = null;
+    $("chatCard").classList.add("hidden");
+    $("chatMessages").replaceChildren();
+}
+
+async function openChat(orderId, ride) {
+    if (!currentUser) {
+        notify(t("loginRequired"), "error");
+        return;
+    }
+
+    try {
+        const snapshot = await db.ref("orders/" + orderId).once("value");
+        const order = snapshot.val();
+
+        if (!order || order.customerUid !== currentUser.uid) {
+            notify(t("rideNotFound"), "error");
+            return;
+        }
+
+        stopChatListener();
+
+        activeChatOrder = orderId;
+        chatRef = db.ref("chats/" + orderId + "/messages");
+
+        $("chatCard").classList.remove("hidden");
+        $("chatInfo").textContent = t("chatInfo") + " — " + orderId;
+
+        chatRef.on("value", messageSnapshot => {
+            const container = $("chatMessages");
+            container.replaceChildren();
+
+            messageSnapshot.forEach(child => {
+                const message = child.val() || {};
+                const item = createElement("div", "chat-message");
+
+                item.appendChild(createElement(
+                    "strong",
+                    "",
+                    safeText(message.senderName || message.senderRole || "User")
+                ));
+
+                item.appendChild(document.createTextNode(safeText(message.text || "")));
+
+                if (message.createdAt) {
+                    item.appendChild(createElement(
+                        "div",
+                        "muted",
+                        new Date(message.createdAt).toLocaleString()
+                    ));
+                }
+
+                container.appendChild(item);
+            });
+
+            container.scrollTop = container.scrollHeight;
+        }, error => {
+            console.error("Chat listener error:", error);
+            notify(t("chatUnavailable"), "error");
+        });
+
+        $("chatCard").scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch (error) {
+        notify(t("chatUnavailable"), "error");
+    }
+}
+
+$("chatForm").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    if (!currentUser || !activeChatOrder) {
+        notify(t("chatUnavailable"), "error");
+        return;
+    }
+
+    const text = $("chatInput").value.trim();
+
+    if (!text) {
+        notify(t("messageRequired"), "error");
+        return;
+    }
+
+    if (text.length > 1000) {
+        notify(t("messageRequired"), "error");
+        return;
+    }
+
+    try {
+        const orderSnapshot = await db.ref("orders/" + activeChatOrder).once("value");
+        const order = orderSnapshot.val();
+
+        if (!order || order.customerUid !== currentUser.uid) {
+            notify(t("rideNotFound"), "error");
+            return;
+        }
+
+        const messageRef = db.ref("chats/" + activeChatOrder + "/messages").push();
+
+        await messageRef.set({
+            senderUid: currentUser.uid,
+            senderName: currentUser.displayName || currentUser.email || "Customer",
+            senderRole: "customer",
+            text,
+            createdAt: Date.now()
+        });
+
+        $("chatInput").value = "";
+    } catch (error) {
+        console.error("Send chat error:", error);
+        notify(t("sendFailed"), "error");
+    }
+});
+  $("year").textContent = new Date().getFullYear();
 
 applyLanguage();
+
+if (typeof L !== "undefined") {
+    initMap();
+} else {
+    notify("Map library load nahi hui. Internet connection check karein.", "error");
+}
+
+auth.onAuthStateChanged(async user => {
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    currentUser = user;
+
+    try {
+        await user.reload();
+        currentUser = auth.currentUser || user;
+
+        if (!currentUser.emailVerified) {
+            notify(t("verifyEmail"), "error");
+            return;
+        }
+
+        await renderRides();
+    } catch (error) {
+        console.error("Authentication check error:", error);
+        notify(t("authError"), "error");
+    }
+});
 </script>
 </body>
-    </html>
+</html>
+
+$("logoutBtn").addEventListener("click", async () => {
+    try {
+        stopChatListener();
+        await auth.signOut();
+        window.location.href = "login.html";
+    } catch (error) {
+        notify(t("authError"), "error");
+    }
+});
