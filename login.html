@@ -1,7 +1,11 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Zrides | Login & Signup</title><style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zrides | Login & Signup</title>
+
+<style>
 * {
     box-sizing: border-box;
     margin: 0;
@@ -16,89 +20,92 @@ body {
     justify-content: center;
     padding: 20px;
     background: #0f172a;
-    color: #fff;
+    color: white;
 }
 
-.auth-card {
+.card {
     width: 100%;
-    max-width: 420px;
+    max-width: 430px;
     padding: 28px;
     background: #1e293b;
     border: 1px solid #334155;
     border-radius: 16px;
-    box-shadow: 0 10px 35px rgba(0,0,0,.35);
+    box-shadow: 0 10px 35px #0005;
 }
 
 .logo {
     text-align: center;
-    font-size: 30px;
-    font-weight: bold;
     color: #10b981;
+    font-size: 32px;
+    font-weight: bold;
     margin-bottom: 8px;
 }
 
 .subtitle {
     text-align: center;
     color: #cbd5e1;
-    font-size: 14px;
     margin-bottom: 24px;
+    font-size: 14px;
 }
 
 h2 {
     text-align: center;
-    font-size: 22px;
     margin-bottom: 20px;
+    font-size: 22px;
 }
 
-.form-group {
+.group {
     margin-bottom: 16px;
 }
 
 label {
     display: block;
+    margin-bottom: 7px;
     color: #cbd5e1;
     font-size: 14px;
-    margin-bottom: 7px;
 }
 
-input {
+input, select {
     width: 100%;
     padding: 13px;
-    background: #0f172a;
     border: 1px solid #475569;
     border-radius: 8px;
+    background: #0f172a;
     color: white;
     font-size: 15px;
     outline: none;
 }
 
-input:focus {
+input:focus, select:focus {
     border-color: #10b981;
 }
 
-.btn {
+button {
+    cursor: pointer;
+}
+
+.primary {
     width: 100%;
     padding: 13px;
     margin-top: 8px;
-    border: none;
+    border: 0;
     border-radius: 8px;
     background: #10b981;
     color: white;
     font-size: 16px;
     font-weight: bold;
-    cursor: pointer;
 }
 
-.btn:hover {
+.primary:hover {
     background: #059669;
 }
 
-.btn:disabled {
+button:disabled {
     opacity: .6;
     cursor: not-allowed;
 }
 
-.secondary-btn {
+.secondary {
     width: 100%;
     padding: 11px;
     margin-top: 10px;
@@ -106,7 +113,6 @@ input:focus {
     border-radius: 8px;
     background: transparent;
     color: white;
-    cursor: pointer;
 }
 
 .links {
@@ -123,11 +129,9 @@ input:focus {
 }
 
 .forgot {
-    display: block;
     text-align: right;
+    margin: -5px 0 12px;
     font-size: 13px;
-    margin-top: -5px;
-    margin-bottom: 12px;
 }
 
 .notice {
@@ -143,135 +147,144 @@ input:focus {
 .notice.success {
     display: block;
     background: #064e3b;
-    color: #d1fae5;
     border: 1px solid #059669;
+    color: #d1fae5;
 }
 
 .notice.error {
     display: block;
     background: #7f1d1d;
-    color: #fee2e2;
     border: 1px solid #dc2626;
+    color: #fee2e2;
 }
 
 .notice.info {
     display: block;
     background: #1e3a8a;
-    color: #dbeafe;
     border: 1px solid #3b82f6;
+    color: #dbeafe;
 }
 
 .home-link {
     display: block;
-    margin-top: 20px;
     text-align: center;
+    margin-top: 20px;
     color: #94a3b8;
     font-size: 13px;
     text-decoration: none;
 }
 
-.home-link:hover {
-    color: white;
-}
-
 .small-note {
-    margin-top: 15px;
-    color: #94a3b8;
     text-align: center;
+    color: #94a3b8;
     font-size: 12px;
     line-height: 1.5;
+    margin-top: 15px;
 }
 
 .hidden {
     display: none !important;
 }
 
-@media (max-width: 420px) {
-    .auth-card {
+@media(max-width: 420px) {
+    .card {
         padding: 22px 18px;
     }
 }
-</style></head><body><div class="auth-card"><div class="logo">Zrides</div>
+</style>
+</head>
 
-<div class="subtitle">
-    Your journey, your way.
-</div>
+<body>
 
-<h2 id="formTitle">Account Login</h2>
+<div class="card">
 
-<div id="notice" class="notice" role="status" aria-live="polite"></div>
+    <div class="logo">Zrides</div>
+    <div class="subtitle">Your journey, your way.</div>
 
-<form id="authForm">
+    <h2 id="formTitle">Account Login</h2>
 
-    <div class="form-group hidden" id="nameGroup">
-        <label for="fullName">Full Name</label>
-        <input
-            type="text"
-            id="fullName"
-            autocomplete="name"
-            placeholder="Enter your full name"
-            maxlength="100"
-        >
-    </div>
+    <div id="notice" class="notice"
+         role="status" aria-live="polite"></div>
 
-    <div class="form-group">
-        <label for="email">Email Address</label>
-        <input
-            type="email"
-            id="email"
-            autocomplete="email"
-            placeholder="name@example.com"
-            required
-        >
-    </div>
+    <form id="authForm">
 
-    <div class="form-group" id="passwordGroup">
-        <label for="password">Password</label>
-        <input
-            type="password"
-            id="password"
-            autocomplete="current-password"
-            placeholder="At least 6 characters"
-            minlength="6"
-            required
-        >
-    </div>
+        <div class="group hidden" id="nameGroup">
+            <label for="fullName">Full Name</label>
+            <input
+                id="fullName"
+                type="text"
+                maxlength="100"
+                autocomplete="name"
+                placeholder="Enter your full name">
+        </div>
 
-    <div class="forgot" id="forgotGroup">
-        <span class="link" id="forgotBtn">Forgot Password?</span>
-    </div>
+        <div class="group hidden" id="roleGroup">
+            <label for="accountRole">Account Type</label>
 
-    <button type="submit" class="btn" id="submitBtn">
-        Login
+            <select id="accountRole">
+                <option value="customer">Customer — Book a Ride</option>
+                <option value="driver">Driver — Provide Rides</option>
+            </select>
+        </div>
+
+        <div class="group">
+            <label for="email">Email Address</label>
+            <input
+                id="email"
+                type="email"
+                autocomplete="email"
+                placeholder="name@example.com"
+                required>
+        </div>
+
+        <div class="group">
+            <label for="password">Password</label>
+            <input
+                id="password"
+                type="password"
+                autocomplete="current-password"
+                minlength="6"
+                placeholder="At least 6 characters"
+                required>
+        </div>
+
+        <div class="forgot" id="forgotGroup">
+            <span class="link" id="forgotBtn">
+                Forgot Password?
+            </span>
+        </div>
+
+        <button class="primary" id="submitBtn" type="submit">
+            Login
+        </button>
+
+    </form>
+
+    <button class="secondary hidden" id="resendBtn" type="button">
+        Resend Verification Email
     </button>
 
-</form>
+    <div class="links">
+        <span id="togglePrompt">Don't have an account?</span>
+        <span class="link" id="toggleBtn">Sign Up</span>
+    </div>
 
-<button type="button" class="secondary-btn hidden" id="resendBtn">
-    Resend Verification Email
-</button>
+    <a href="index.html" class="home-link">
+        &#8592; Back to Homepage
+    </a>
 
-<div class="links">
-    <span id="togglePrompt">Don't have an account?</span>
-    <span class="link" id="toggleBtn">Sign Up</span>
+    <div class="small-note">
+        If you do not receive an email, check your Spam or Junk folder.
+    </div>
+
 </div>
 
-<a href="index.html" class="home-link">
-    &#8592; Back to Homepage
-</a>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
-<div class="small-note">
-    If you do not receive the verification or reset email,
-    check your Spam or Junk folder.
-</div>
-
-</div><!-- Firebase SDK --><script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script><script>
+<script>
 "use strict";
-
-/*
- * Zrides Firebase configuration.
- * Keep this configuration consistent with the other website pages.
- */
 
 const firebaseConfig = {
     apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
@@ -288,18 +301,20 @@ if (!firebase.apps.length) {
 }
 
 const auth = firebase.auth();
+const db = firebase.database();
 
 let isSignup = false;
 let isBusy = false;
-let verificationPending = false;
+let authActionInProgress = false;
 
 const form = document.getElementById("authForm");
 const nameInput = document.getElementById("fullName");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
+const roleInput = document.getElementById("accountRole");
 
 const nameGroup = document.getElementById("nameGroup");
-const passwordGroup = document.getElementById("passwordGroup");
+const roleGroup = document.getElementById("roleGroup");
 const forgotGroup = document.getElementById("forgotGroup");
 
 const formTitle = document.getElementById("formTitle");
@@ -336,6 +351,7 @@ function updateFormMode() {
         : "Account Login";
 
     nameGroup.classList.toggle("hidden", !isSignup);
+    roleGroup.classList.toggle("hidden", !isSignup);
     forgotGroup.classList.toggle("hidden", isSignup);
 
     nameInput.required = isSignup;
@@ -355,13 +371,13 @@ function updateFormMode() {
         : "Login";
 
     resendBtn.classList.add("hidden");
-    verificationPending = false;
 }
 
-toggleBtn.addEventListener("click", function () {
+toggleBtn.addEventListener("click", function() {
     if (isBusy) return;
 
     isSignup = !isSignup;
+
     clearMessage();
     updateFormMode();
 });
@@ -374,46 +390,71 @@ function getFriendlyError(error) {
             "Please enter a valid email address.",
 
         "auth/user-not-found":
-            "No account was found for this email address. Please sign up first.",
+            "No account found. Please sign up first.",
 
         "auth/wrong-password":
             "Incorrect email or password.",
 
         "auth/invalid-credential":
-            "Incorrect email or password. Please check your details.",
+            "Incorrect email or password.",
 
         "auth/email-already-in-use":
-            "An account with this email already exists. Please log in.",
+            "This email already has an account. Please log in.",
 
         "auth/weak-password":
-            "Your password is too weak. Please use at least 6 characters.",
+            "Use a password containing at least 6 characters.",
 
         "auth/too-many-requests":
-            "Too many attempts. Please wait a while and try again.",
+            "Too many attempts. Please wait and try again.",
 
         "auth/network-request-failed":
-            "Network error. Please check your internet connection.",
+            "Network error. Check your internet connection.",
 
         "auth/operation-not-allowed":
-            "Email/password authentication is disabled. Enable it in Firebase Authentication settings.",
+            "Enable Email/Password in Firebase Authentication.",
 
         "auth/invalid-api-key":
-            "Firebase configuration is invalid. Please check the Firebase project settings.",
-
-        "auth/requires-recent-login":
-            "For security, please log in again and repeat this action."
+            "Check your Firebase configuration."
     };
 
     return messages[code] ||
-        "Something went wrong. Please try again. Error: " +
-        (code || "unknown-error");
+        "Something went wrong. Please try again. " +
+        (code || "");
 }
 
 /*
- * Account creation and email/password login.
+ * Redirect according to the role saved in the database.
+ *
+ * This is client-side navigation, not a replacement
+ * for Firebase Database Security Rules.
  */
+async function redirectByRole(user) {
+    const snapshot = await db.ref("users/" + user.uid).once("value");
+    const profile = snapshot.val();
 
-form.addEventListener("submit", async function (event) {
+    const role = profile && profile.role
+        ? profile.role
+        : "customer";
+
+    if (role === "driver") {
+        window.location.replace("driver.html");
+        return;
+    }
+
+    if (role === "customer") {
+        window.location.replace("index.html");
+        return;
+    }
+
+    showMessage(
+        "This account has an unsupported role. Contact the administrator.",
+        "error"
+    );
+
+    await auth.signOut();
+}
+
+form.addEventListener("submit", async function(event) {
     event.preventDefault();
 
     if (isBusy) return;
@@ -423,9 +464,10 @@ form.addEventListener("submit", async function (event) {
     const email = emailInput.value.trim();
     const password = passwordInput.value;
     const fullName = nameInput.value.trim();
+    const selectedRole = roleInput.value;
 
     if (!email) {
-        showMessage("Please enter your email address.", "error");
+        showMessage("Enter your email address.", "error");
         return;
     }
 
@@ -438,11 +480,17 @@ form.addEventListener("submit", async function (event) {
     }
 
     if (isSignup && !fullName) {
-        showMessage("Please enter your full name.", "error");
+        showMessage("Enter your full name.", "error");
+        return;
+    }
+
+    if (!["customer", "driver"].includes(selectedRole)) {
+        showMessage("Select a valid account type.", "error");
         return;
     }
 
     setBusy(true);
+    authActionInProgress = true;
 
     try {
         if (isSignup) {
@@ -459,43 +507,48 @@ form.addEventListener("submit", async function (event) {
                     displayName: fullName
                 });
 
+                /*
+                 * Save basic profile and selected role.
+                 * Driver profile details and approval will
+                 * be completed in the next driver.html step.
+                 */
+                await db.ref("users/" + user.uid).set({
+                    uid: user.uid,
+                    name: fullName,
+                    email: email,
+                    role: selectedRole,
+                    emailVerified: false,
+                    createdAt: firebase.database.ServerValue.TIMESTAMP
+                });
+
                 await user.sendEmailVerification();
 
-                showMessage(
-                    "Your account has been created. A verification link was sent to " +
-                    email +
-                    ". Please verify your email before logging in.",
-                    "success"
-                );
-
-                verificationPending = true;
-                resendBtn.classList.remove("hidden");
-
-                /*
-                 * Sign out until the email is verified.
-                 */
                 await auth.signOut();
 
                 isSignup = false;
                 updateFormMode();
 
+                emailInput.value = email;
+
                 showMessage(
-                    "Account created successfully! Check your inbox or Spam folder for the verification link. After verifying, log in here.",
+                    "Account created! A verification email has been sent. Verify your email, then log in using the same email and password.",
                     "success"
                 );
 
-            } catch (verificationError) {
+            } catch (error) {
+                /*
+                 * If profile creation fails, do not pretend
+                 * registration completed successfully.
+                 */
                 showMessage(
-                    "Your account was created, but the verification email could not be sent. Try the resend button after signing in, or check your Firebase settings. " +
-                    getFriendlyError(verificationError),
+                    "Account creation started, but profile or verification setup failed. " +
+                    getFriendlyError(error),
                     "error"
                 );
 
-                /*
-                 * Keep the account. The user can try signing in
-                 * and requesting another verification email.
-                 */
-                await auth.signOut();
+                if (auth.currentUser) {
+                    await auth.signOut();
+                }
             }
 
         } else {
@@ -510,44 +563,57 @@ form.addEventListener("submit", async function (event) {
             await user.reload();
 
             if (!user.emailVerified) {
-                verificationPending = true;
-
                 resendBtn.classList.remove("hidden");
 
                 await auth.signOut();
 
                 showMessage(
-                    "Your email is not verified yet. Open the verification link sent to your email, then log in again.",
+                    "Your email is not verified. Verify it first, or use Resend Verification Email.",
                     "error"
                 );
 
                 return;
             }
 
-            showMessage("Login successful. Opening Zrides...", "success");
-
             /*
-             * Preserve the existing customer login destination.
-             * Driver registration and approval are handled by
-             * the existing driver.html workflow.
+             * Refresh verified status in the user profile.
+             * Existing users without a profile will be treated
+             * as customers for backward compatibility.
              */
-            window.location.href = "index.html";
+            const profileRef = db.ref("users/" + user.uid);
+            const snapshot = await profileRef.once("value");
+
+            if (!snapshot.exists()) {
+                await profileRef.set({
+                    uid: user.uid,
+                    name: user.displayName || "",
+                    email: user.email || email,
+                    role: "customer",
+                    emailVerified: true,
+                    createdAt: firebase.database.ServerValue.TIMESTAMP
+                });
+            } else {
+                await profileRef.update({
+                    emailVerified: true
+                });
+            }
+
+            await redirectByRole(user);
         }
 
     } catch (error) {
         showMessage(getFriendlyError(error), "error");
 
     } finally {
+        authActionInProgress = false;
         setBusy(false);
     }
 });
 
 /*
- * Resend verification email.
- * The user must successfully sign in first.
+ * Resend email verification.
  */
-
-resendBtn.addEventListener("click", async function () {
+resendBtn.addEventListener("click", async function() {
     if (isBusy) return;
 
     const email = emailInput.value.trim();
@@ -555,13 +621,14 @@ resendBtn.addEventListener("click", async function () {
 
     if (!email || !password) {
         showMessage(
-            "Enter your email and password, then log in to request another verification email.",
+            "Enter your email and password first.",
             "info"
         );
         return;
     }
 
     setBusy(true);
+    authActionInProgress = true;
 
     try {
         const credential =
@@ -574,12 +641,13 @@ resendBtn.addEventListener("click", async function () {
         if (user.emailVerified) {
             await auth.signOut();
 
+            resendBtn.classList.add("hidden");
+
             showMessage(
-                "Your email is already verified. You can log in normally.",
+                "Your email is already verified. You can log in.",
                 "success"
             );
 
-            resendBtn.classList.add("hidden");
             return;
         }
 
@@ -587,7 +655,7 @@ resendBtn.addEventListener("click", async function () {
         await auth.signOut();
 
         showMessage(
-            "A new verification email has been sent. Check your inbox and Spam/Junk folder.",
+            "A new verification email has been sent. Check Inbox and Spam/Junk.",
             "success"
         );
 
@@ -595,6 +663,7 @@ resendBtn.addEventListener("click", async function () {
         showMessage(getFriendlyError(error), "error");
 
     } finally {
+        authActionInProgress = false;
         setBusy(false);
     }
 });
@@ -602,30 +671,27 @@ resendBtn.addEventListener("click", async function () {
 /*
  * Password reset.
  */
-
-forgotBtn.addEventListener("click", async function () {
+forgotBtn.addEventListener("click", async function() {
     if (isBusy) return;
 
     const email = emailInput.value.trim();
 
     if (!email) {
         showMessage(
-            "Enter your registered email address first, then click Forgot Password.",
+            "Enter your registered email address first.",
             "info"
         );
-
         emailInput.focus();
         return;
     }
 
     setBusy(true);
-    clearMessage();
 
     try {
         await auth.sendPasswordResetEmail(email);
 
         showMessage(
-            "If an account exists for this address, a password reset email will be sent. Check your inbox and Spam/Junk folder.",
+            "If an account exists for this address, a reset email will be sent. Check Inbox and Spam/Junk.",
             "success"
         );
 
@@ -638,24 +704,27 @@ forgotBtn.addEventListener("click", async function () {
 });
 
 /*
- * If an already authenticated and verified user opens this page,
- * send them to the customer homepage.
+ * Handle an existing Firebase session.
  */
-
-auth.onAuthStateChanged(async function (user) {
-    if (!user) return;
+auth.onAuthStateChanged(async function(user) {
+    if (!user || authActionInProgress || isBusy) return;
 
     try {
         await user.reload();
 
-        if (user.emailVerified) {
-            window.location.href = "index.html";
+        if (!user.emailVerified) {
+            return;
         }
+
+        await redirectByRole(user);
+
     } catch (error) {
-        console.error("Unable to refresh authentication state:", error);
+        console.error("Authentication state error:", error);
     }
 });
 
 updateFormMode();
-</script></body>
-        </html>
+</script>
+
+</body>
+                </html>
