@@ -36,8 +36,7 @@
         .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; background: #fff; }
 
         .fare-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 15px; text-align: center; margin: 20px 0; }
-        .fare-box h3 { color: #15803d; font-size: 24px; margin-top: 5px; }
-        .fare-note { font-size: 11px; color: #64748b; margin-top: 4px; }
+        .fare-box h3 { color: #15803d; font-size: 26px; margin-top: 5px; font-weight: bold; }
 
         .btn-submit { width: 100%; background-color: #10b981; color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; }
         .btn-submit:hover { background-color: #059669; }
@@ -73,11 +72,11 @@
                 <div class="form-group">
                     <label id="lblService">سروس کی قسم منتخب کریں:</label>
                     <select id="serviceType" onchange="calculateFare()">
-                        <option value="بائیک رائیڈ (Bike Ride)">🏍️ بائیک رائیڈ (Bike - Rs.25/km)</option>
-                        <option value="آٹو رکشہ (Rickshaw)">🛺 آٹو رکشہ (Rickshaw - Rs.45/km)</option>
-                        <option value="منی کار (Car Mini)">🚗 منی کار (Car Mini - Rs.65/km)</option>
-                        <option value="سیڈان AC کار (Car Sedan)">🚘 AC گاڑی (Car Sedan - Rs.85/km)</option>
-                        <option value="پارسل ڈیلیوری (Parcel Delivery)">📦 پارسل ڈیلیوری (Parcel - Rs.30/km)</option>
+                        <option value="بائیک رائیڈ (Bike Ride)">🏍️ بائیک رائیڈ (Bike Ride)</option>
+                        <option value="آٹو رکشہ (Rickshaw)">🛺 آٹو رکشہ (Rickshaw)</option>
+                        <option value="منی کار (Car Mini)">🚗 منی کار (Car Mini)</option>
+                        <option value="سیڈان AC کار (Car Sedan)">🚘 AC گاڑی (Car Sedan)</option>
+                        <option value="پارسل ڈیلیوری (Parcel Delivery)">📦 پارسل ڈیلیوری (Parcel Delivery)</option>
                         <option value="خریدو سروس (Buy For Me)">🛒 خریدو سروس (Buy For Me)</option>
                     </select>
                 </div>
@@ -99,8 +98,7 @@
 
                 <div class="fare-box">
                     <p id="lblTotalFare">کل متوقع کرایہ:</p>
-                    <h3 id="estimatedFare">Rs. 75</h3>
-                    <div class="fare-note" id="fareDetailsNote">بیس فیئر: Rs. 50 | فی کلومیٹر: Rs. 25</div>
+                    <h3 id="estimatedFare">Rs. 45</h3>
                 </div>
 
                 <div class="form-group">
@@ -217,29 +215,29 @@
             var service = document.getElementById('serviceType').value;
             var distance = parseFloat(document.getElementById('distance').value) || 1;
             
-            var baseFare = 50; 
-            var perKmRate = 25; // Bike
+            // Backend Fare Rates Calculation
+            var baseFare = 30; 
+            var perKmRate = 15; // Bike
 
             if (service.includes('Rickshaw')) { 
+                baseFare = 50; 
+                perKmRate = 30; 
+            } else if (service.includes('Car Mini')) { 
                 baseFare = 80; 
                 perKmRate = 45; 
-            } else if (service.includes('Car Mini')) { 
-                baseFare = 120; 
-                perKmRate = 65; 
             } else if (service.includes('Car Sedan')) { 
-                baseFare = 180; 
-                perKmRate = 85; 
-            } else if (service.includes('Parcel')) { 
-                baseFare = 60; 
-                perKmRate = 30; 
-            } else if (service.includes('Buy')) { 
                 baseFare = 100; 
-                perKmRate = 30; 
+                perKmRate = 60; 
+            } else if (service.includes('Parcel')) { 
+                baseFare = 40; 
+                perKmRate = 18; 
+            } else if (service.includes('Buy')) { 
+                baseFare = 50; 
+                perKmRate = 20; 
             }
 
             var total = baseFare + (distance * perKmRate);
             document.getElementById('estimatedFare').innerText = "Rs. " + Math.round(total);
-            document.getElementById('fareDetailsNote').innerText = `بیس فیئر: Rs. ${baseFare} | فی کلومیٹر: Rs. ${perKmRate}`;
         }
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
