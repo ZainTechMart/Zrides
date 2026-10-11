@@ -1,285 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
 <title>Zrides | Login & Signup</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background: #0f172a;
-    color: white;
-}
-
-.card {
-    width: 100%;
-    max-width: 430px;
-    padding: 28px;
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-radius: 16px;
-    box-shadow: 0 10px 35px #0005;
-}
-
-.logo {
-    text-align: center;
-    color: #10b981;
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-
-.subtitle {
-    text-align: center;
-    color: #cbd5e1;
-    margin-bottom: 24px;
-    font-size: 14px;
-}
-
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 22px;
-}
-
-.group {
-    margin-bottom: 16px;
-}
-
-label {
-    display: block;
-    margin-bottom: 7px;
-    color: #cbd5e1;
-    font-size: 14px;
-}
-
-input, select {
-    width: 100%;
-    padding: 13px;
-    border: 1px solid #475569;
-    border-radius: 8px;
-    background: #0f172a;
-    color: white;
-    font-size: 15px;
-    outline: none;
-}
-
-input:focus, select:focus {
-    border-color: #10b981;
-}
-
-button {
-    cursor: pointer;
-}
-
-.primary {
-    width: 100%;
-    padding: 13px;
-    margin-top: 8px;
-    border: 0;
-    border-radius: 8px;
-    background: #10b981;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.primary:hover {
-    background: #059669;
-}
-
-button:disabled {
-    opacity: .6;
-    cursor: not-allowed;
-}
-
-.secondary {
-    width: 100%;
-    padding: 11px;
-    margin-top: 10px;
-    border: 1px solid #64748b;
-    border-radius: 8px;
-    background: transparent;
-    color: white;
-}
-
-.links {
-    margin-top: 18px;
-    text-align: center;
-    font-size: 14px;
-    line-height: 2;
-}
-
-.link {
-    color: #38bdf8;
-    cursor: pointer;
-    text-decoration: underline;
-}
-
-.forgot {
-    text-align: right;
-    margin: -5px 0 12px;
-    font-size: 13px;
-}
-
-.notice {
-    display: none;
-    padding: 12px;
-    margin-bottom: 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    line-height: 1.5;
-    overflow-wrap: anywhere;
-}
-
-.notice.success,
-.notice.error,
-.notice.info {
-    display: block;
-}
-
-.notice.success {
-    background: #064e3b;
-    border: 1px solid #059669;
-    color: #d1fae5;
-}
-
-.notice.error {
-    background: #7f1d1d;
-    border: 1px solid #dc2626;
-    color: #fee2e2;
-}
-
-.notice.info {
-    background: #1e3a8a;
-    border: 1px solid #3b82f6;
-    color: #dbeafe;
-}
-
-.home-link {
-    display: block;
-    text-align: center;
-    margin-top: 20px;
-    color: #94a3b8;
-    font-size: 13px;
-    text-decoration: none;
-}
-
-.small-note {
-    text-align: center;
-    color: #94a3b8;
-    font-size: 12px;
-    line-height: 1.5;
-    margin-top: 15px;
-}
-
-.hidden {
-    display: none !important;
-}
-
-@media(max-width: 420px) {
-    .card {
-        padding: 22px 18px;
-    }
-}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f3f4f6;color:#111827;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
+.card{width:100%;max-width:440px;background:white;padding:25px;border-radius:18px;box-shadow:0 8px 30px #0001}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.logo{font-size:29px;font-weight:800;color:#16a34a}
+select,input{width:100%;padding:13px;border:1px solid #d1d5db;border-radius:9px;font-size:16px;background:white}
+label{display:block;margin-bottom:7px;font-weight:bold;font-size:14px}
+.field{margin-bottom:16px}
+button{cursor:pointer}
+.tabs{display:flex;gap:8px;margin-bottom:20px}
+.tabs button{flex:1;padding:12px;border:0;border-radius:9px;background:#e5e7eb;font-weight:bold}
+.tabs .active{background:#16a34a;color:white}
+.primary{width:100%;padding:14px;background:#16a34a;color:white;border:0;border-radius:9px;font-size:16px;font-weight:bold}
+.secondary{width:100%;padding:12px;border:0;background:transparent;color:#15803d;font-weight:bold}
+.message{display:none;padding:12px;border-radius:8px;margin-bottom:15px;line-height:1.5;overflow-wrap:anywhere}
+.success{display:block;background:#dcfce7;color:#166534}
+.error{display:block;background:#fee2e2;color:#991b1b}
+.info{display:block;background:#dbeafe;color:#1e40af}
+.hidden{display:none!important}
+.lang{width:auto;padding:8px;border-radius:8px}
+.small{text-align:center;color:#6b7280;font-size:13px;line-height:1.6;margin-top:18px}
 </style>
 </head>
 
 <body>
+<main class="card">
 
-<div class="card">
-
+  <div class="top">
     <div class="logo">Zrides</div>
-    <div class="subtitle">Your journey, your way.</div>
+    <select id="language" class="lang" aria-label="Language">
+      <option value="en">English</option>
+      <option value="ur">اردو</option>
+    </select>
+  </div>
 
-    <h2 id="formTitle">Account Login</h2>
+  <h2 id="heading">Welcome to Zrides</h2>
+  <p id="subtitle" style="margin:8px 0 22px;color:#6b7280">
+    Login or create your account.
+  </p>
 
-    <div id="notice" class="notice"
-         role="status" aria-live="polite"></div>
+  <div class="tabs">
+    <button type="button" id="loginTab" class="active">Login</button>
+    <button type="button" id="signupTab">Sign Up</button>
+  </div>
 
-    <form id="authForm">
+  <div id="message" class="message" role="status" aria-live="polite"></div>
 
-        <div class="group hidden" id="nameGroup">
-            <label for="fullName">Full Name</label>
-            <input
-                id="fullName"
-                type="text"
-                maxlength="100"
-                autocomplete="name"
-                placeholder="Enter your full name">
-        </div>
+  <form id="authForm">
 
-        <div class="group hidden" id="roleGroup">
-            <label for="accountRole">Account Type</label>
-            <select id="accountRole">
-                <option value="customer">Customer — Book a Ride</option>
-                <option value="driver">Driver — Provide Rides</option>
-            </select>
-        </div>
-
-        <div class="group">
-            <label for="email">Email Address</label>
-            <input
-                id="email"
-                type="email"
-                autocomplete="email"
-                placeholder="name@example.com"
-                required>
-        </div>
-
-        <div class="group">
-            <label for="password">Password</label>
-            <input
-                id="password"
-                type="password"
-                autocomplete="current-password"
-                minlength="6"
-                placeholder="At least 6 characters"
-                required>
-        </div>
-
-        <div class="forgot" id="forgotGroup">
-            <span class="link" id="forgotBtn">
-                Forgot Password?
-            </span>
-        </div>
-
-        <button class="primary" id="submitBtn" type="submit">
-            Login
-        </button>
-
-    </form>
-
-    <button class="secondary hidden" id="resendBtn" type="button">
-        Resend Verification Email
-    </button>
-
-    <div class="links">
-        <span id="togglePrompt">Don't have an account? </span>
-        <span class="link" id="toggleBtn">Sign Up</span>
+    <div id="nameField" class="field hidden">
+      <label id="nameLabel" for="name">Full Name</label>
+      <input id="name" maxlength="80" autocomplete="name">
     </div>
 
-    <a href="index.html" class="home-link">
-        &#8592; Back to Homepage
-    </a>
-
-    <div class="small-note">
-        If you do not receive an email, check your Spam or Junk folder.
+    <div class="field">
+      <label id="emailLabel" for="email">Email Address</label>
+      <input id="email" type="email" maxlength="254"
+             autocomplete="email" required>
     </div>
 
-</div>
+    <div class="field">
+      <label id="passwordLabel" for="password">Password</label>
+      <input id="password" type="password" minlength="6"
+             autocomplete="current-password" required>
+    </div>
+
+    <div id="roleField" class="field hidden">
+      <label id="roleLabel" for="role">Account Type</label>
+      <select id="role">
+        <option value="customer" id="customerOption">Customer</option>
+        <option value="driver" id="driverOption">Driver</option>
+      </select>
+    </div>
+
+    <button class="primary" id="submitBtn" type="submit">Login</button>
+  </form>
+
+  <button id="resetBtn" class="secondary" type="button">
+    Forgot Password?
+  </button>
+
+  <button id="resendBtn" class="secondary hidden" type="button">
+    Resend Verification Email
+  </button>
+
+  <button id="logoutBtn" class="secondary hidden" type="button">
+    Logout
+  </button>
+
+  <p class="small" id="footerText">
+    Your account and personal information should be protected.
+  </p>
+</main>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -289,486 +109,360 @@ button:disabled {
 "use strict";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
-    authDomain: "zrides-9f2da.firebaseapp.com",
-    databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
-    projectId: "zrides-9f2da",
-    storageBucket: "zrides-9f2da.firebasestorage.app",
-    messagingSenderId: "93898388224",
-    appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
+  apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
+  authDomain: "zrides-9f2da.firebaseapp.com",
+  databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
+  projectId: "zrides-9f2da",
+  storageBucket: "zrides-9f2da.firebasestorage.app",
+  messagingSenderId: "93898388224",
+  appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
 };
 
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
+const ADMIN_UID = "cmmo7x7k0CY8lkcev4Rq92t84wU2";
+
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
 const db = firebase.database();
 
-/*
- * Admin account UID configured for this project.
- * Database Security Rules must independently enforce
- * authorization for protected database operations.
- */
-const ADMIN_UID = "cmmo7x7k0CY8lkcev4Rq92t84wU2";
+const $ = id => document.getElementById(id);
 
-let isSignup = false;
-let isBusy = false;
-let authActionInProgress = false;
+const translations = {
+  en: {
+    heading:"Welcome to Zrides",
+    subtitle:"Login or create your account.",
+    login:"Login", signup:"Sign Up",
+    name:"Full Name", email:"Email Address",
+    password:"Password", role:"Account Type",
+    customer:"Customer", driver:"Driver",
+    forgot:"Forgot Password?",
+    resend:"Resend Verification Email",
+    logout:"Logout",
+    footer:"Your account and personal information should be protected.",
+    create:"Create Account", wait:"Please wait...",
+    enterName:"Please enter your full name.",
+    shortName:"Your name must contain at least 2 characters.",
+    chooseRole:"Please select a valid account type.",
+    verify:"Please verify your email before accessing Zrides.",
+    verificationSent:"Verification email sent. Check your inbox and spam folder.",
+    accountCreated:"Account created. Verify your email, then log in.",
+    resetSent:"If an account exists for this email, a reset email will be sent.",
+    loginError:"Email or password is incorrect.",
+    network:"Network error. Check your internet connection.",
+    profileError:"Unable to load your profile. Please try again.",
+    invalidRole:"Your account role is not valid. Contact support.",
+    resetFirst:"Enter your email address first.",
+    resetError:"Unable to send the reset email. Please try again.",
+    resendError:"Unable to send verification email. Please try again.",
+    logoutError:"Unable to log out. Please try again.",
+    permission:"Database permission denied. Rules need to be configured correctly.",
+    verified:"Your email is already verified. Please log in again.",
+    session:"Unable to verify your session. Please log in again."
+  },
+  ur: {
+    heading:"Zrides mein khush aamdeed",
+    subtitle:"Login karein ya naya account banayein.",
+    login:"Login", signup:"Account Banayein",
+    name:"Poora Naam", email:"Email Address",
+    password:"Password", role:"Account ki Qisam",
+    customer:"Customer", driver:"Driver",
+    forgot:"Password Bhool Gaye?",
+    resend:"Verification Email Dobara Bhejein",
+    logout:"Logout",
+    footer:"Apne account aur zaati maloomat ki hifazat karein.",
+    create:"Account Banayein", wait:"Barah-e-karam intezar karein...",
+    enterName:"Apna poora naam likhein.",
+    shortName:"Naam kam az kam 2 haroof ka hona chahiye.",
+    chooseRole:"Sahi account type select karein.",
+    verify:"Zrides istemal karne se pehle email verify karein.",
+    verificationSent:"Verification email bhej di gayi hai. Inbox aur Spam check karein.",
+    accountCreated:"Account ban gaya. Email verify karke login karein.",
+    resetSent:"Agar is email par account hai to reset email bhej di jayegi.",
+    loginError:"Email ya password ghalat hai.",
+    network:"Internet connection check karein.",
+    profileError:"Profile load nahi ho saki. Dobara koshish karein.",
+    invalidRole:"Account role durust nahi. Support se rabta karein.",
+    resetFirst:"Pehle apna email address likhein.",
+    resetError:"Reset email nahi bheji ja saki. Dobara koshish karein.",
+    resendError:"Verification email nahi bheji ja saki.",
+    logoutError:"Logout nahi ho saka. Dobara koshish karein.",
+    permission:"Database permission nahi mili. Rules check karne honge.",
+    verified:"Email pehle hi verify hai. Dobara login karein.",
+    session:"Session verify nahi ho saka. Dobara login karein."
+  }
+};
 
-const form = document.getElementById("authForm");
-const nameInput = document.getElementById("fullName");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const roleInput = document.getElementById("accountRole");
+let language = localStorage.getItem("zridesLanguage") || "en";
+let mode = "login";
+let busy = false;
 
-const nameGroup = document.getElementById("nameGroup");
-const roleGroup = document.getElementById("roleGroup");
-const forgotGroup = document.getElementById("forgotGroup");
+function t(key) {
+  return translations[language][key] || translations.en[key] || key;
+}
 
-const formTitle = document.getElementById("formTitle");
-const submitBtn = document.getElementById("submitBtn");
-const toggleBtn = document.getElementById("toggleBtn");
-const togglePrompt = document.getElementById("togglePrompt");
-const forgotBtn = document.getElementById("forgotBtn");
-const resendBtn = document.getElementById("resendBtn");
-const notice = document.getElementById("notice");
-
-function showMessage(message, type = "info") {
-    notice.textContent = message;
-    notice.className = "notice " + type;
+function say(text, type="info") {
+  $("message").textContent = text;
+  $("message").className = "message " + type;
 }
 
 function clearMessage() {
-    notice.textContent = "";
-    notice.className = "notice";
+  $("message").textContent = "";
+  $("message").className = "message";
 }
+
+function applyLanguage() {
+  document.documentElement.lang = language;
+  document.documentElement.dir = language === "ur" ? "rtl" : "ltr";
+  $("language").value = language;
+
+  [
+    ["heading","heading"],["subtitle","subtitle"],
+    ["nameLabel","name"],["emailLabel","email"],
+    ["passwordLabel","password"],["roleLabel","role"],
+    ["customerOption","customer"],["driverOption","driver"],
+    ["resetBtn","forgot"],["resendBtn","resend"],
+    ["logoutBtn","logout"],["footerText","footer"]
+  ].forEach(([id,key]) => $(id).textContent = t(key));
+
+  $("loginTab").textContent = t("login");
+  $("signupTab").textContent = t("signup");
+  $("submitBtn").textContent = busy ? t("wait") :
+    (mode === "login" ? t("login") : t("create"));
+}
+
+$("language").addEventListener("change", e => {
+  language = e.target.value;
+  localStorage.setItem("zridesLanguage", language);
+  applyLanguage();
+});
+
+function setMode(value) {
+  mode = value;
+  clearMessage();
+
+  $("loginTab").classList.toggle("active", mode === "login");
+  $("signupTab").classList.toggle("active", mode === "signup");
+  $("nameField").classList.toggle("hidden", mode !== "signup");
+  $("roleField").classList.toggle("hidden", mode !== "signup");
+  $("name").required = mode === "signup";
+  $("resetBtn").classList.toggle("hidden", mode === "signup");
+
+  applyLanguage();
+}
+
+$("loginTab").onclick = () => setMode("login");
+$("signupTab").onclick = () => setMode("signup");
 
 function setBusy(value) {
-    isBusy = value;
-    submitBtn.disabled = value;
-
-    toggleBtn.style.pointerEvents = value ? "none" : "auto";
-    forgotBtn.style.pointerEvents = value ? "none" : "auto";
-    resendBtn.disabled = value;
-
-    submitBtn.textContent = value
-        ? "Please wait..."
-        : (isSignup ? "Create Account" : "Login");
+  busy = value;
+  $("submitBtn").disabled = value;
+  applyLanguage();
 }
 
-function updateFormMode() {
-    formTitle.textContent = isSignup
-        ? "Create Your Account"
-        : "Account Login";
-
-    nameGroup.classList.toggle("hidden", !isSignup);
-    roleGroup.classList.toggle("hidden", !isSignup);
-    forgotGroup.classList.toggle("hidden", isSignup);
-
-    nameInput.required = isSignup;
-
-    passwordInput.autocomplete = isSignup
-        ? "new-password"
-        : "current-password";
-
-    togglePrompt.textContent = isSignup
-        ? "Already have an account? "
-        : "Don't have an account? ";
-
-    toggleBtn.textContent = isSignup ? "Login" : "Sign Up";
-
-    submitBtn.textContent = isSignup
-        ? "Create Account"
-        : "Login";
-
-    resendBtn.classList.add("hidden");
-}
-
-toggleBtn.addEventListener("click", function() {
-    if (isBusy) return;
-
-    isSignup = !isSignup;
-
-    clearMessage();
-    updateFormMode();
-});
-
-function getFriendlyError(error) {
-    const code = error && error.code ? error.code : "";
-
-    const messages = {
-        "auth/invalid-email":
-            "Please enter a valid email address.",
-
-        "auth/user-not-found":
-            "No account found. Please sign up first.",
-
-        "auth/wrong-password":
-            "Incorrect email or password.",
-
-        "auth/invalid-credential":
-            "Incorrect email or password.",
-
-        "auth/email-already-in-use":
-            "This email already has an account. Please log in.",
-
-        "auth/weak-password":
-            "Use a password containing at least 6 characters.",
-
-        "auth/too-many-requests":
-            "Too many attempts. Please wait and try again.",
-
-        "auth/network-request-failed":
-            "Network error. Check your internet connection.",
-
-        "auth/operation-not-allowed":
-            "Enable Email/Password in Firebase Authentication.",
-
-        "auth/invalid-api-key":
-            "Check your Firebase configuration.",
-
-        "auth/user-disabled":
-            "This account has been disabled."
-    };
-
-    return messages[code] ||
-        "Something went wrong. Please try again. " +
-        (code || "");
-}
-
-/*
- * Read the existing profile and route by its role.
- * Do not automatically create an admin profile here.
- */
 async function redirectByRole(user) {
-    const snapshot = await db.ref("users/" + user.uid).once("value");
-    const profile = snapshot.val();
+  await user.reload();
+  user = auth.currentUser;
 
-    if (!profile || !profile.role) {
-        showMessage(
-            "Your account profile is missing. Contact the administrator.",
-            "error"
-        );
+  if (!user) return;
 
-        await auth.signOut();
-        return;
-    }
+  if (!user.emailVerified) {
+    say(t("verify"), "info");
+    $("resendBtn").classList.remove("hidden");
+    $("logoutBtn").classList.remove("hidden");
+    return;
+  }
 
-    const role = profile.role;
+  if (user.uid === ADMIN_UID) {
+    location.replace("admin.html");
+    return;
+  }
 
-    if (role === "admin") {
-        if (user.uid !== ADMIN_UID) {
-            showMessage("Admin access denied.", "error");
-            await auth.signOut();
-            return;
-        }
+  const snap = await db.ref("users/" + user.uid).once("value");
+  const profile = snap.val();
 
-        window.location.replace("admin.html");
-        return;
-    }
+  if (!profile || profile.uid !== user.uid) {
+    say(t("profileError"), "error");
+    return;
+  }
 
-    if (role === "driver") {
-        window.location.replace("driver.html");
-        return;
-    }
-
-    if (role === "customer") {
-        window.location.replace("index.html");
-        return;
-    }
-
-    showMessage(
-        "This account has an unsupported role. Contact the administrator.",
-        "error"
-    );
-
-    await auth.signOut();
+  if (profile.role === "driver") {
+    location.replace("driver.html");
+  } else if (profile.role === "customer") {
+    location.replace("index.html");
+  } else {
+    say(t("invalidRole"), "error");
+  }
 }
 
-form.addEventListener("submit", async function(event) {
-    event.preventDefault();
+$("authForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (busy) return;
 
-    if (isBusy) return;
+  clearMessage();
+  setBusy(true);
 
-    clearMessage();
+  try {
+    const email = $("email").value.trim().toLowerCase();
+    const password = $("password").value;
 
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-    const fullName = nameInput.value.trim();
-    const selectedRole = roleInput.value;
+    if (mode === "signup") {
+      const name = $("name").value.trim();
+      const role = $("role").value;
 
-    if (!email) {
-        showMessage("Enter your email address.", "error");
-        return;
-    }
+      if (name.length < 2) throw new Error(t("shortName"));
+      if (!["customer","driver"].includes(role)) {
+        throw new Error(t("chooseRole"));
+      }
 
-    if (password.length < 6) {
-        showMessage(
-            "Your password must contain at least 6 characters.",
-            "error"
-        );
-        return;
-    }
+      const credential = await auth.createUserWithEmailAndPassword(
+        email, password
+      );
 
-    if (isSignup && !fullName) {
-        showMessage("Enter your full name.", "error");
-        return;
-    }
+      const user = credential.user;
 
-    if (isSignup &&
-        !["customer", "driver"].includes(selectedRole)) {
-        showMessage("Select a valid account type.", "error");
-        return;
-    }
-
-    setBusy(true);
-    authActionInProgress = true;
-
-    try {
-        if (isSignup) {
-            const credential =
-                await auth.createUserWithEmailAndPassword(
-                    email,
-                    password
-                );
-
-            const user = credential.user;
-
-            try {
-                await user.updateProfile({
-                    displayName: fullName
-                });
-
-                await db.ref("users/" + user.uid).set({
-                    uid: user.uid,
-                    name: fullName,
-                    email: email,
-                    role: selectedRole,
-                    emailVerified: false,
-                    createdAt:
-                        firebase.database.ServerValue.TIMESTAMP
-                });
-
-                await user.sendEmailVerification();
-                await auth.signOut();
-
-                isSignup = false;
-                updateFormMode();
-
-                emailInput.value = email;
-                passwordInput.value = "";
-
-                showMessage(
-                    "Account created. A verification email has been sent. Verify your email, then log in.",
-                    "success"
-                );
-
-            } catch (error) {
-                console.error("Signup setup error:", error);
-
-                showMessage(
-                    "Your account may have been created, but profile or verification setup failed. " +
-                    getFriendlyError(error),
-                    "error"
-                );
-
-                if (auth.currentUser) {
-                    await auth.signOut();
-                }
-            }
-
-        } else {
-            const credential =
-                await auth.signInWithEmailAndPassword(
-                    email,
-                    password
-                );
-
-            const user = credential.user;
-
-            await user.reload();
-
-            if (!user.emailVerified) {
-                resendBtn.classList.remove("hidden");
-
-                await auth.signOut();
-
-                showMessage(
-                    "Your email is not verified. Verify it first, or use Resend Verification Email.",
-                    "error"
-                );
-
-                return;
-            }
-
-            /*
-             * Check for the pre-authorized Admin UID.
-             * The database role alone does not grant admin access.
-             */
-            const profileRef = db.ref("users/" + user.uid);
-            const snapshot = await profileRef.once("value");
-            const profile = snapshot.val();
-
-            if (user.uid === ADMIN_UID) {
-                if (!profile || profile.role !== "admin") {
-                    showMessage(
-                        "Admin account profile is missing or its role is not set to admin. Check the users record in Firebase.",
-                        "error"
-                    );
-
-                    await auth.signOut();
-                    return;
-                }
-
-                await profileRef.update({
-                    emailVerified: true
-                });
-
-                await redirectByRole(user);
-                return;
-            }
-
-            if (!profile || !profile.role) {
-                showMessage(
-                    "Your account profile is missing. Contact the administrator.",
-                    "error"
-                );
-
-                await auth.signOut();
-                return;
-            }
-
-            await profileRef.update({
-                emailVerified: true
-            });
-
-            await redirectByRole(user);
-        }
-
-    } catch (error) {
-        console.error("Authentication error:", error);
-        showMessage(getFriendlyError(error), "error");
-
-    } finally {
-        authActionInProgress = false;
-        setBusy(false);
-    }
-});
-
-/*
- * Resend email verification.
- */
-resendBtn.addEventListener("click", async function() {
-    if (isBusy) return;
-
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-
-    if (!email || !password) {
-        showMessage(
-            "Enter your email and password first.",
-            "info"
-        );
-        return;
-    }
-
-    setBusy(true);
-    authActionInProgress = true;
-
-    try {
-        const credential =
-            await auth.signInWithEmailAndPassword(email, password);
-
-        const user = credential.user;
-
-        await user.reload();
-
-        if (user.emailVerified) {
-            await auth.signOut();
-
-            resendBtn.classList.add("hidden");
-
-            showMessage(
-                "Your email is already verified. You can log in.",
-                "success"
-            );
-
-            return;
-        }
+      try {
+        await db.ref("users/" + user.uid).set({
+          uid:user.uid,
+          name:name,
+          email:email,
+          role:role,
+          emailVerified:false,
+          createdAt:firebase.database.ServerValue.TIMESTAMP
+        });
 
         await user.sendEmailVerification();
-        await auth.signOut();
+      } catch (error) {
+        /*
+          Do not delete the Firebase Auth account automatically:
+          a failed network request may leave profile creation uncertain.
+        */
+        console.error(error);
+        throw error;
+      }
 
-        showMessage(
-            "A new verification email has been sent. Check Inbox and Spam/Junk.",
-            "success"
-        );
+      say(t("accountCreated"), "success");
+      $("resendBtn").classList.remove("hidden");
+      $("logoutBtn").classList.remove("hidden");
+      $("password").value = "";
 
-    } catch (error) {
-        showMessage(getFriendlyError(error), "error");
-
-    } finally {
-        authActionInProgress = false;
-        setBusy(false);
+    } else {
+      const credential = await auth.signInWithEmailAndPassword(
+        email, password
+      );
+      await redirectByRole(credential.user);
     }
+
+  } catch (error) {
+    console.error(error);
+
+    let message = error.message || t("profileError");
+
+    if (error.code === "auth/invalid-credential" ||
+        error.code === "auth/wrong-password" ||
+        error.code === "auth/user-not-found") {
+      message = t("loginError");
+    } else if (error.code === "auth/network-request-failed") {
+      message = t("network");
+    } else if (error.code === "auth/email-already-in-use") {
+      message = language === "ur"
+        ? "Yeh email pehle se registered hai. Login karein."
+        : "This email is already registered. Please log in.";
+    } else if (error.code === "auth/weak-password") {
+      message = language === "ur"
+        ? "Mazboot password likhein."
+        : "Please choose a stronger password.";
+    } else if (error.code === "auth/invalid-email") {
+      message = language === "ur"
+        ? "Email address durust nahi."
+        : "Please enter a valid email address.";
+    } else if (error.code === "auth/operation-not-allowed") {
+      message = language === "ur"
+        ? "Firebase mein Email/Password login enable karein."
+        : "Enable Email/Password sign-in in Firebase.";
+    } else if (error.code === "PERMISSION_DENIED" ||
+               error.code === "database/permission-denied") {
+      message = t("permission");
+    }
+
+    say(message, "error");
+
+  } finally {
+    setBusy(false);
+  }
 });
 
-/*
- * Password reset.
- */
-forgotBtn.addEventListener("click", async function() {
-    if (isBusy) return;
+$("resetBtn").onclick = async () => {
+  clearMessage();
+  const email = $("email").value.trim().toLowerCase();
 
-    const email = emailInput.value.trim();
+  if (!email) {
+    say(t("resetFirst"), "info");
+    $("email").focus();
+    return;
+  }
 
-    if (!email) {
-        showMessage(
-            "Enter your registered email address first.",
-            "info"
-        );
-        emailInput.focus();
-        return;
+  try {
+    $("resetBtn").disabled = true;
+    await auth.sendPasswordResetEmail(email);
+    say(t("resetSent"), "success");
+  } catch (error) {
+    console.error(error);
+    say(t("resetError"), "error");
+  } finally {
+    $("resetBtn").disabled = false;
+  }
+};
+
+$("resendBtn").onclick = async () => {
+  const user = auth.currentUser;
+  if (!user) {
+    say(t("verify"), "info");
+    return;
+  }
+
+  try {
+    $("resendBtn").disabled = true;
+    await user.reload();
+
+    if (auth.currentUser.emailVerified) {
+      say(t("verified"), "success");
+      return;
     }
 
-    setBusy(true);
+    await auth.currentUser.sendEmailVerification();
+    say(t("verificationSent"), "success");
+  } catch (error) {
+    console.error(error);
+    say(t("resendError"), "error");
+  } finally {
+    $("resendBtn").disabled = false;
+  }
+};
 
-    try {
-        await auth.sendPasswordResetEmail(email);
+$("logoutBtn").onclick = async () => {
+  try {
+    await auth.signOut();
+    $("resendBtn").classList.add("hidden");
+    $("logoutBtn").classList.add("hidden");
+    say(language === "ur" ? "Logout ho gaya." : "You are logged out.", "success");
+  } catch (error) {
+    say(t("logoutError"), "error");
+  }
+};
 
-        showMessage(
-            "If an account exists for this address, a reset email will be sent. Check Inbox and Spam/Junk.",
-            "success"
-        );
+auth.onAuthStateChanged(async user => {
+  if (!user) return;
 
-    } catch (error) {
-        showMessage(getFriendlyError(error), "error");
-
-    } finally {
-        setBusy(false);
-    }
+  try {
+    await redirectByRole(user);
+  } catch (error) {
+    console.error(error);
+    say(t("profileError"), "error");
+  }
 });
 
-/*
- * Handle an existing Firebase session.
- */
-auth.onAuthStateChanged(async function(user) {
-    if (!user || authActionInProgress || isBusy) return;
-
-    try {
-        await user.reload();
-
-        if (!user.emailVerified) return;
-
-        await redirectByRole(user);
-
-    } catch (error) {
-        console.error("Authentication state error:", error);
-    }
-});
-
-updateFormMode();
+applyLanguage();
+setMode("login");
 </script>
-
 </body>
-    </html>
+        </html>
