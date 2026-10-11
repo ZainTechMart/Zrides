@@ -1,130 +1,661 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zrides - Login & Password Recovery</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0f172a; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .auth-card { background: #1e293b; padding: 30px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 1px solid #334155; }
-        .auth-card h2 { text-align: center; margin-bottom: 20px; color: #10b981; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 6px; font-size: 14px; color: #cbd5e1; }
-        .form-group input { width: 100%; padding: 12px; border: 1px solid #475569; border-radius: 6px; background: #0f172a; color: white; font-size: 15px; }
-        .btn { width: 100%; background: #10b981; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 16px; margin-top: 10px; transition: 0.3s; }
-        .btn:hover { background: #059669; }
-        .toggle-link { text-align: center; margin-top: 15px; font-size: 14px; color: #38bdf8; cursor: pointer; }
-        .forgot-link { text-align: right; margin-top: -8px; margin-bottom: 12px; font-size: 13px; color: #f59e0b; cursor: pointer; }
-        .forgot-link:hover { text-decoration: underline; }
-        .back-home { display: block; text-align: center; margin-top: 15px; color: #94a3b8; text-decoration: none; font-size: 13px; }
-        .notice-box { background: #334155; border-left: 4px solid #38bdf8; padding: 10px; font-size: 12px; margin-bottom: 15px; border-radius: 4px; line-height: 1.4; }
-    </style>
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Zrides | Login & Signup</title><style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
-    <div class="auth-card">
-        <h2 id="formTitle">Account Login</h2>
-        <div class="notice-box">
-            💡 <strong>Verification & Recovery Tip:</strong> If you don't see emails in your inbox, please check your <strong>Spam / Junk</strong> folder.
-        </div>
-        <form id="authForm">
-            <div class="form-group" id="nameGroup" style="display:none;">
-                <label>Full Name:</label>
-                <input type="text" id="fullName" placeholder="John Doe">
-            </div>
-            <div class="form-group">
-                <label>Email Address:</label>
-                <input type="email" id="email" required placeholder="name@example.com">
-            </div>
-            <div class="form-group" id="passGroup">
-                <label>Password:</label>
-                <input type="password" id="password" required placeholder="******">
-            </div>
-            
-            <!-- Forgot Password Link -->
-            <div class="forgot-link" id="forgotBtn" onclick="resetPassword()">Forgot Password?</div>
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: #0f172a;
+    color: #fff;
+}
 
-            <button type="submit" class="btn" id="submitBtn">Login</button>
-        </form>
-        <div class="toggle-link" onclick="toggleAuthMode()" id="toggleText">Don't have an account? Sign Up</div>
-        <a href="index.html" class="back-home">← Back to Homepage</a>
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 28px;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    box-shadow: 0 10px 35px rgba(0,0,0,.35);
+}
+
+.logo {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: #10b981;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #cbd5e1;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+h2 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    color: #cbd5e1;
+    font-size: 14px;
+    margin-bottom: 7px;
+}
+
+input {
+    width: 100%;
+    padding: 13px;
+    background: #0f172a;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    color: white;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #10b981;
+}
+
+.btn {
+    width: 100%;
+    padding: 13px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 8px;
+    background: #10b981;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #059669;
+}
+
+.btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.secondary-btn {
+    width: 100%;
+    padding: 11px;
+    margin-top: 10px;
+    border: 1px solid #64748b;
+    border-radius: 8px;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+}
+
+.links {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 2;
+}
+
+.link {
+    color: #38bdf8;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.forgot {
+    display: block;
+    text-align: right;
+    font-size: 13px;
+    margin-top: -5px;
+    margin-bottom: 12px;
+}
+
+.notice {
+    display: none;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.notice.success {
+    display: block;
+    background: #064e3b;
+    color: #d1fae5;
+    border: 1px solid #059669;
+}
+
+.notice.error {
+    display: block;
+    background: #7f1d1d;
+    color: #fee2e2;
+    border: 1px solid #dc2626;
+}
+
+.notice.info {
+    display: block;
+    background: #1e3a8a;
+    color: #dbeafe;
+    border: 1px solid #3b82f6;
+}
+
+.home-link {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.home-link:hover {
+    color: white;
+}
+
+.small-note {
+    margin-top: 15px;
+    color: #94a3b8;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 420px) {
+    .auth-card {
+        padding: 22px 18px;
+    }
+}
+</style></head><body><div class="auth-card"><div class="logo">Zrides</div>
+
+<div class="subtitle">
+    Your journey, your way.
+</div>
+
+<h2 id="formTitle">Account Login</h2>
+
+<div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+<form id="authForm">
+
+    <div class="form-group hidden" id="nameGroup">
+        <label for="fullName">Full Name</label>
+        <input
+            type="text"
+            id="fullName"
+            autocomplete="name"
+            placeholder="Enter your full name"
+            maxlength="100"
+        >
     </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+            type="email"
+            id="email"
+            autocomplete="email"
+            placeholder="name@example.com"
+            required
+        >
+    </div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
-            authDomain: "zrides-9f2da.firebaseapp.com",
-            databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
-            projectId: "zrides-9f2da",
-            storageBucket: "zrides-9f2da.firebasestorage.app",
-            messagingSenderId: "93898388224",
-            appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+    <div class="form-group" id="passwordGroup">
+        <label for="password">Password</label>
+        <input
+            type="password"
+            id="password"
+            autocomplete="current-password"
+            placeholder="At least 6 characters"
+            minlength="6"
+            required
+        >
+    </div>
 
-        let isSignup = false;
+    <div class="forgot" id="forgotGroup">
+        <span class="link" id="forgotBtn">Forgot Password?</span>
+    </div>
 
-        function toggleAuthMode() {
-            isSignup = !isSignup;
-            document.getElementById('formTitle').innerText = isSignup ? "Create Secure Account" : "Account Login";
-            document.getElementById('submitBtn').innerText = isSignup ? "Create Account & Verify" : "Login";
-            document.getElementById('nameGroup').style.display = isSignup ? "block" : "none";
-            document.getElementById('forgotBtn').style.display = isSignup ? "none" : "block";
-            document.getElementById('toggleText').innerText = isSignup ? "Already have an account? Login" : "Don't have an account? Sign Up";
-        }
+    <button type="submit" class="btn" id="submitBtn">
+        Login
+    </button>
 
-        // Login & Signup Submission
-        document.getElementById('authForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
+</form>
 
-            if (isSignup) {
-                auth.createUserWithEmailAndPassword(email, password)
-                    .then((userCredential) => {
-                        userCredential.user.sendEmailVerification().then(() => {
-                            alert("Account created successfully!\n\nA verification link has been sent to your email. Please check your inbox and SPAM folder to verify your account before logging in.");
-                            toggleAuthMode();
-                        });
-                    })
-                    .catch(error => alert("Registration Error: " + error.message));
-            } else {
-                auth.signInWithEmailAndPassword(email, password)
-                    .then((userCredential) => {
-                        if (userCredential.user.emailVerified) {
-                            alert("Login successful!");
-                            window.location.href = "index.html";
-                        } else {
-                            alert("Your email is not verified yet!\n\nPlease check your inbox or Spam/Junk folder and click the verification link.");
-                            auth.signOut();
-                        }
-                    })
-                    .catch(error => alert("Login Failed: " + error.message));
+<button type="button" class="secondary-btn hidden" id="resendBtn">
+    Resend Verification Email
+</button>
+
+<div class="links">
+    <span id="togglePrompt">Don't have an account?</span>
+    <span class="link" id="toggleBtn">Sign Up</span>
+</div>
+
+<a href="index.html" class="home-link">
+    &#8592; Back to Homepage
+</a>
+
+<div class="small-note">
+    If you do not receive the verification or reset email,
+    check your Spam or Junk folder.
+</div>
+
+</div><!-- Firebase SDK --><script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script><script>
+"use strict";
+
+/*
+ * Zrides Firebase configuration.
+ * Keep this configuration consistent with the other website pages.
+ */
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
+    authDomain: "zrides-9f2da.firebaseapp.com",
+    databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
+    projectId: "zrides-9f2da",
+    storageBucket: "zrides-9f2da.firebasestorage.app",
+    messagingSenderId: "93898388224",
+    appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
+};
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+
+const auth = firebase.auth();
+
+let isSignup = false;
+let isBusy = false;
+let verificationPending = false;
+
+const form = document.getElementById("authForm");
+const nameInput = document.getElementById("fullName");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+
+const nameGroup = document.getElementById("nameGroup");
+const passwordGroup = document.getElementById("passwordGroup");
+const forgotGroup = document.getElementById("forgotGroup");
+
+const formTitle = document.getElementById("formTitle");
+const submitBtn = document.getElementById("submitBtn");
+const toggleBtn = document.getElementById("toggleBtn");
+const togglePrompt = document.getElementById("togglePrompt");
+const forgotBtn = document.getElementById("forgotBtn");
+const resendBtn = document.getElementById("resendBtn");
+const notice = document.getElementById("notice");
+
+function showMessage(message, type = "info") {
+    notice.textContent = message;
+    notice.className = "notice " + type;
+}
+
+function clearMessage() {
+    notice.textContent = "";
+    notice.className = "notice";
+}
+
+function setBusy(value) {
+    isBusy = value;
+    submitBtn.disabled = value;
+    toggleBtn.style.pointerEvents = value ? "none" : "auto";
+
+    submitBtn.textContent = value
+        ? "Please wait..."
+        : (isSignup ? "Create Account" : "Login");
+}
+
+function updateFormMode() {
+    formTitle.textContent = isSignup
+        ? "Create Your Account"
+        : "Account Login";
+
+    nameGroup.classList.toggle("hidden", !isSignup);
+    forgotGroup.classList.toggle("hidden", isSignup);
+
+    nameInput.required = isSignup;
+
+    passwordInput.autocomplete = isSignup
+        ? "new-password"
+        : "current-password";
+
+    togglePrompt.textContent = isSignup
+        ? "Already have an account? "
+        : "Don't have an account? ";
+
+    toggleBtn.textContent = isSignup ? "Login" : "Sign Up";
+
+    submitBtn.textContent = isSignup
+        ? "Create Account"
+        : "Login";
+
+    resendBtn.classList.add("hidden");
+    verificationPending = false;
+}
+
+toggleBtn.addEventListener("click", function () {
+    if (isBusy) return;
+
+    isSignup = !isSignup;
+    clearMessage();
+    updateFormMode();
+});
+
+function getFriendlyError(error) {
+    const code = error && error.code ? error.code : "";
+
+    const messages = {
+        "auth/invalid-email":
+            "Please enter a valid email address.",
+
+        "auth/user-not-found":
+            "No account was found for this email address. Please sign up first.",
+
+        "auth/wrong-password":
+            "Incorrect email or password.",
+
+        "auth/invalid-credential":
+            "Incorrect email or password. Please check your details.",
+
+        "auth/email-already-in-use":
+            "An account with this email already exists. Please log in.",
+
+        "auth/weak-password":
+            "Your password is too weak. Please use at least 6 characters.",
+
+        "auth/too-many-requests":
+            "Too many attempts. Please wait a while and try again.",
+
+        "auth/network-request-failed":
+            "Network error. Please check your internet connection.",
+
+        "auth/operation-not-allowed":
+            "Email/password authentication is disabled. Enable it in Firebase Authentication settings.",
+
+        "auth/invalid-api-key":
+            "Firebase configuration is invalid. Please check the Firebase project settings.",
+
+        "auth/requires-recent-login":
+            "For security, please log in again and repeat this action."
+    };
+
+    return messages[code] ||
+        "Something went wrong. Please try again. Error: " +
+        (code || "unknown-error");
+}
+
+/*
+ * Account creation and email/password login.
+ */
+
+form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    if (isBusy) return;
+
+    clearMessage();
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    const fullName = nameInput.value.trim();
+
+    if (!email) {
+        showMessage("Please enter your email address.", "error");
+        return;
+    }
+
+    if (password.length < 6) {
+        showMessage(
+            "Your password must contain at least 6 characters.",
+            "error"
+        );
+        return;
+    }
+
+    if (isSignup && !fullName) {
+        showMessage("Please enter your full name.", "error");
+        return;
+    }
+
+    setBusy(true);
+
+    try {
+        if (isSignup) {
+            const credential =
+                await auth.createUserWithEmailAndPassword(
+                    email,
+                    password
+                );
+
+            const user = credential.user;
+
+            try {
+                await user.updateProfile({
+                    displayName: fullName
+                });
+
+                await user.sendEmailVerification();
+
+                showMessage(
+                    "Your account has been created. A verification link was sent to " +
+                    email +
+                    ". Please verify your email before logging in.",
+                    "success"
+                );
+
+                verificationPending = true;
+                resendBtn.classList.remove("hidden");
+
+                /*
+                 * Sign out until the email is verified.
+                 */
+                await auth.signOut();
+
+                isSignup = false;
+                updateFormMode();
+
+                showMessage(
+                    "Account created successfully! Check your inbox or Spam folder for the verification link. After verifying, log in here.",
+                    "success"
+                );
+
+            } catch (verificationError) {
+                showMessage(
+                    "Your account was created, but the verification email could not be sent. Try the resend button after signing in, or check your Firebase settings. " +
+                    getFriendlyError(verificationError),
+                    "error"
+                );
+
+                /*
+                 * Keep the account. The user can try signing in
+                 * and requesting another verification email.
+                 */
+                await auth.signOut();
             }
-        });
 
-        // Password Recovery Function
-        function resetPassword() {
-            const email = document.getElementById('email').value.trim();
-            if (!email) {
-                alert("Please enter your registered Email Address first in the input field above, then click 'Forgot Password'.");
+        } else {
+            const credential =
+                await auth.signInWithEmailAndPassword(
+                    email,
+                    password
+                );
+
+            const user = credential.user;
+
+            await user.reload();
+
+            if (!user.emailVerified) {
+                verificationPending = true;
+
+                resendBtn.classList.remove("hidden");
+
+                await auth.signOut();
+
+                showMessage(
+                    "Your email is not verified yet. Open the verification link sent to your email, then log in again.",
+                    "error"
+                );
+
                 return;
             }
 
-            auth.sendPasswordResetEmail(email)
-                .then(() => {
-                    alert("Password Reset Link Sent!\n\nPlease check your email inbox (and Spam/Junk folder) for instructions to reset your password.");
-                })
-                .catch((error) => {
-                    alert("Error sending password reset email: " + error.message);
-                });
+            showMessage("Login successful. Opening Zrides...", "success");
+
+            /*
+             * Preserve the existing customer login destination.
+             * Driver registration and approval are handled by
+             * the existing driver.html workflow.
+             */
+            window.location.href = "index.html";
         }
-    </script>
-</body>
-</html>
+
+    } catch (error) {
+        showMessage(getFriendlyError(error), "error");
+
+    } finally {
+        setBusy(false);
+    }
+});
+
+/*
+ * Resend verification email.
+ * The user must successfully sign in first.
+ */
+
+resendBtn.addEventListener("click", async function () {
+    if (isBusy) return;
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+        showMessage(
+            "Enter your email and password, then log in to request another verification email.",
+            "info"
+        );
+        return;
+    }
+
+    setBusy(true);
+
+    try {
+        const credential =
+            await auth.signInWithEmailAndPassword(email, password);
+
+        const user = credential.user;
+
+        await user.reload();
+
+        if (user.emailVerified) {
+            await auth.signOut();
+
+            showMessage(
+                "Your email is already verified. You can log in normally.",
+                "success"
+            );
+
+            resendBtn.classList.add("hidden");
+            return;
+        }
+
+        await user.sendEmailVerification();
+        await auth.signOut();
+
+        showMessage(
+            "A new verification email has been sent. Check your inbox and Spam/Junk folder.",
+            "success"
+        );
+
+    } catch (error) {
+        showMessage(getFriendlyError(error), "error");
+
+    } finally {
+        setBusy(false);
+    }
+});
+
+/*
+ * Password reset.
+ */
+
+forgotBtn.addEventListener("click", async function () {
+    if (isBusy) return;
+
+    const email = emailInput.value.trim();
+
+    if (!email) {
+        showMessage(
+            "Enter your registered email address first, then click Forgot Password.",
+            "info"
+        );
+
+        emailInput.focus();
+        return;
+    }
+
+    setBusy(true);
+    clearMessage();
+
+    try {
+        await auth.sendPasswordResetEmail(email);
+
+        showMessage(
+            "If an account exists for this address, a password reset email will be sent. Check your inbox and Spam/Junk folder.",
+            "success"
+        );
+
+    } catch (error) {
+        showMessage(getFriendlyError(error), "error");
+
+    } finally {
+        setBusy(false);
+    }
+});
+
+/*
+ * If an already authenticated and verified user opens this page,
+ * send them to the customer homepage.
+ */
+
+auth.onAuthStateChanged(async function (user) {
+    if (!user) return;
+
+    try {
+        await user.reload();
+
+        if (user.emailVerified) {
+            window.location.href = "index.html";
+        }
+    } catch (error) {
+        console.error("Unable to refresh authentication state:", error);
+    }
+});
+
+updateFormMode();
+</script></body>
+        </html>
