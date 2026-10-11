@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zrides - Driver Portal</title>
+    <title>Zrides - ڈرائیور پورٹل</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f1f5f9; color: #1e293b; padding-bottom: 30px; }
         header { background-color: #0f172a; color: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 24px; font-weight: bold; color: #10b981; }
+        .btn-logout { background: #ef4444; border: none; color: white; padding: 7px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
         .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; }
         .card h2 { font-size: 18px; margin-bottom: 15px; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
@@ -27,52 +28,58 @@
 
     <header>
         <div class="logo">Zrides Driver</div>
-        <div id="driverStatus" style="font-weight:bold; color:#f59e0b;">Status: Checking...</div>
+        <div>
+            <span id="driverStatus" style="font-weight:bold; color:#f59e0b; margin-left: 15px;">اسٹیٹس: چیک ہو رہا ہے...</span>
+            <button class="btn-logout" onclick="logoutDriver()" id="logoutBtn" style="display:none;">لاگ آؤٹ</button>
+        </div>
     </header>
 
     <div class="container">
-        <!-- 1. Driver Registration Card -->
+        <!-- Registration Form -->
         <div class="card" id="regCard">
-            <h2>🚗 Driver Profile & Documents Upload</h2>
+            <h2>🚗 ڈرائیور رجسٹریشن اور لاگ ان</h2>
             <form id="driverRegForm">
-                <div class="form-group"><label>Poora Naam:</label><input type="text" id="dName" required></div>
-                <div class="form-group"><label>Mobile Number:</label><input type="tel" id="dPhone" required placeholder="03001234567"></div>
+                <div class="form-group"><label>پورا نام:</label><input type="text" id="dName" required></div>
+                <div class="form-group"><label>ای میل ایڈریس:</label><input type="email" id="dEmail" required placeholder="driver@gmail.com"></div>
+                <div class="form-group"><label>پاس ورڈ:</label><input type="password" id="dPassword" required placeholder="******"></div>
+                <div class="form-group"><label>موبائل نمبر:</label><input type="tel" id="dPhone" required placeholder="03001234567"></div>
                 <div class="form-group">
-                    <label>Gari Ki Kism:</label>
+                    <label>گاڑی کی قسم:</label>
                     <select id="dVehicle">
                         <option value="Bike">🏍️ Bike</option>
                         <option value="Rickshaw">🛺 Rickshaw</option>
                         <option value="Car Mini">🚗 Car Mini</option>
                     </select>
                 </div>
-                <div class="form-group"><label>Gari Number:</label><input type="text" id="dPlate" required placeholder="LEA-1234"></div>
-                <button type="submit" class="btn">Register Account</button>
+                <div class="form-group"><label>گاڑی کا نمبر:</label><input type="text" id="dPlate" required placeholder="LEA-1234"></div>
+                <button type="submit" class="btn">رجسٹر کریں اور ای میل ویریفائی کریں</button>
             </form>
         </div>
 
-        <!-- 2. JazzCash & WhatsApp Payment Card -->
+        <!-- Wallet & Recharge -->
         <div class="card" id="paymentCard" style="display:none;">
-            <h2>💳 JazzCash Account Recharge</h2>
+            <h2>💳 جیز کیش ریچارج اور والٹ بیلنس</h2>
             <div class="wallet-box">
-                <p>Aap Ka Available Balance:</p>
+                <p>آپ کا دستیاب بیلنس:</p>
                 <h3 id="walletBal">Rs. 0</h3>
             </div>
             <p style="font-size:13px; color:#475569; margin-bottom:10px; line-height: 1.6;">
-                1. Pehle JazzCash account <strong>03077237059</strong> par Rs. 100 se 1000 tak transfer karein.<br>
-                2. Uske baad neechay diye gaye button par click karke Apni Payment Details aur TID WhatsApp par Admin ko bhejein taake balance approve ho sakay.
+                1. جیز کیش اکاؤنٹ <strong>03077237059</strong> پر Rs. 100 سے 1000 کی رقم منتقل کریں۔<br>
+                2. واٹس ایپ بٹن (<strong>03303118422</strong>) پر کلک کر کے TID اور تفصیلات ایڈمن کو بھیجیں۔
             </p>
-            <a href="https://wa.me/923303118422?text=Hello%20Admin,%20maine%20JazzCash%20(03077237059)%20par%20payment%20transfer%20kar%20di%20hai.%20Mera%20Number:%20[Yahan%20Apna%20Number%20Likhein],%20TID:%20[Yahan%20TID%20Likhein]" target="_blank" class="btn btn-whatsapp">📱 Send TID & Details on WhatsApp (03303118422)</a>
+            <a href="https://wa.me/923303118422?text=Hello%20Admin,%20maine%20JazzCash%20(03077237059)%20par%20payment%20send%20kardi%20hai.%20TID:" target="_blank" class="btn btn-whatsapp">📱 TID ایڈمن کو واٹس ایپ کریں</a>
         </div>
 
-        <!-- 3. Available Rides Card -->
+        <!-- Available Orders -->
         <div class="card" id="ordersCard" style="display:none;">
-            <h2>📦 Available Rides</h2>
-            <div id="ordersList">Rides dhoondi ja rahi hain...</div>
+            <h2>📦 دستیاب سواریاں</h2>
+            <div id="ordersList">سواریاں تلاش کی جا رہی ہیں...</div>
         </div>
     </div>
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <script>
@@ -83,67 +90,87 @@
             projectId: "zrides-9f2da",
             storageBucket: "zrides-9f2da.firebasestorage.app",
             messagingSenderId: "93898388224",
-            appId: "1:93898388224:web:2e4f78e5b31dec26f839e5",
-            measurementId: "G-XCGVR3L9YV"
+            appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
         };
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.database();
 
-        let currentDriverId = null;
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                if (!user.emailVerified) {
+                    alert("پہلے اپنی ای میل کی تصدیق کریں۔");
+                    auth.signOut();
+                } else {
+                    document.getElementById('logoutBtn').style.display = 'inline-block';
+                    document.getElementById('regCard').style.display = 'none';
+                    document.getElementById('paymentCard').style.display = 'block';
+                    checkDriverApproval(user.email);
+                }
+            }
+        });
 
         document.getElementById('driverRegForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            const email = document.getElementById('dEmail').value;
+            const password = document.getElementById('dPassword').value;
             const phone = document.getElementById('dPhone').value;
-            currentDriverId = phone;
 
-            db.ref(`drivers/${phone}`).set({
-                name: document.getElementById('dName').value,
-                phone: phone,
-                vehicle: document.getElementById('dVehicle').value,
-                plate: document.getElementById('dPlate').value,
-                approvalStatus: 'pending',
-                walletBalance: 0
-            });
-
-            checkDriverStatus(phone);
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    userCredential.user.sendEmailVerification().then(() => {
+                        db.ref(`drivers/${phone}`).set({
+                            name: document.getElementById('dName').value,
+                            email: email, phone: phone,
+                            vehicle: document.getElementById('dVehicle').value,
+                            plate: document.getElementById('dPlate').value,
+                            approvalStatus: 'pending', walletBalance: 0
+                        });
+                        alert("تصدیقی ای میل بھیج دی گئی ہے! لنک کنفرم کر کے لاگ ان کریں۔");
+                        auth.signOut();
+                    });
+                })
+                .catch(error => alert("خرابی: " + error.message));
         });
 
-        function checkDriverStatus(phone) {
-            db.ref(`drivers/${phone}`).on('value', snapshot => {
-                const driver = snapshot.val();
-                if(!driver) return;
+        function checkDriverApproval(email) {
+            db.ref('drivers').orderByChild('email').equalTo(email).on('value', snapshot => {
+                const data = snapshot.val();
+                if(!data) return;
+                const driverKey = Object.keys(data)[0];
+                const driver = data[driverKey];
 
-                document.getElementById('regCard').style.display = 'none';
-                document.getElementById('paymentCard').style.display = 'block';
                 document.getElementById('walletBal').innerText = `Rs. ${driver.walletBalance || 0}`;
 
                 if(driver.approvalStatus === 'approved') {
-                    document.getElementById('driverStatus').innerText = "Approved & Verified ✅";
+                    document.getElementById('driverStatus').innerText = "منظور شدہ (Approved) ✅";
                     document.getElementById('driverStatus').style.color = "#10b981";
 
                     if((driver.walletBalance || 0) > 0) {
                         document.getElementById('ordersCard').style.display = 'block';
-                        listenForOrders(driver);
+                        listenForOrders(driverKey, driver);
                     } else {
                         document.getElementById('ordersCard').style.display = 'none';
-                        alert("Aap ka balance Rs. 0 ho chuka hai! Mazeed rides lene ke liye JazzCash ke zariye recharge karein.");
+                        alert("بیلنس ختم ہو گیا ہے! مزید سواریوں کے لیے جیز کیش ریچارج کریں۔");
                     }
                 } else if(driver.approvalStatus === 'rejected') {
-                    document.getElementById('driverStatus').innerText = "Account Rejected ❌";
+                    document.getElementById('driverStatus').innerText = "مسترد شدہ (Rejected) ❌";
                     document.getElementById('driverStatus').style.color = "#ef4444";
-                    document.getElementById('ordersCard').style.display = 'none';
                 } else {
-                    document.getElementById('driverStatus').innerText = "Approval Pending... ⏳";
+                    document.getElementById('driverStatus').innerText = "منظوری کی منتظر ⏳";
                 }
             });
         }
 
-        function listenForOrders(driver) {
+        function logoutDriver() {
+            auth.signOut().then(() => window.location.reload());
+        }
+
+        function listenForOrders(driverKey, driver) {
             db.ref('orders').on('value', snapshot => {
                 const ordersList = document.getElementById('ordersList');
                 ordersList.innerHTML = '';
                 const data = snapshot.val();
-
                 if(!data) return;
 
                 Object.keys(data).forEach(key => {
@@ -152,9 +179,9 @@
                         const div = document.createElement('div');
                         div.className = 'order-card';
                         div.innerHTML = `
-                            <strong>${order.service}</strong> - Fare: ${order.fare}<br>
+                            <strong>${order.service}</strong> - کرایہ: ${order.fare}<br>
                             ${order.pickup} ➔ ${order.dropoff}<br>
-                            <button class="btn" style="margin-top:8px;" onclick="acceptRide('${key}', '${order.fare}')">Accept Ride (5% Commission Deduct)</button>
+                            <button class="btn" style="margin-top:8px;" onclick="acceptRide('${key}', '${order.fare}', '${driverKey}', '${driver.name}')">قبول کریں (5% کمیشن کٹوتی)</button>
                         `;
                         ordersList.appendChild(div);
                     }
@@ -162,27 +189,20 @@
             });
         }
 
-        function acceptRide(orderId, fareStr) {
+        function acceptRide(orderId, fareStr, driverKey, driverName) {
             const fareNum = parseInt(fareStr.replace('Rs. ', '')) || 100;
-            const commission = Math.round(fareNum * 0.05); // 5% Commission Deduction
+            const commission = Math.round(fareNum * 0.05);
 
-            db.ref(`drivers/${currentDriverId}`).once('value', snapshot => {
+            db.ref(`drivers/${driverKey}`).once('value', snapshot => {
                 const driver = snapshot.val();
                 if((driver.walletBalance || 0) < commission) {
-                    alert("Aap ke paas commission ke liye kafi balance nahi hai. Pehle JazzCash se recharge karein!");
+                    alert("کمیشن کے لیے رقم کم ہے! جیز کیش سے ریچارج کریں۔");
                     return;
                 }
 
-                const newBal = driver.walletBalance - commission;
-                db.ref(`drivers/${currentDriverId}`).update({ walletBalance: newBal });
-
-                db.ref(`orders/${orderId}`).update({
-                    status: 'accepted_by_driver',
-                    driverPhone: driver.phone,
-                    driverName: driver.name
-                });
-
-                alert(`Ride Accept Ho Gayi! 5% Commission (Rs. ${commission}) aap ke balance se deduct ho gaya hai.`);
+                db.ref(`drivers/${driverKey}`).update({ walletBalance: driver.walletBalance - commission });
+                db.ref(`orders/${orderId}`).update({ status: 'confirmed_by_driver', driverName: driverName });
+                alert(`سواری قبول ہو گئی! 5% کمیشن (Rs. ${commission}) کٹ گیا ہے۔`);
             });
         }
     </script>
