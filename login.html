@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zrides - لاگ ان / سائن اپ</title>
+    <title>Zrides - Login & Password Recovery</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0f172a; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
@@ -15,30 +15,40 @@
         .btn { width: 100%; background: #10b981; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 16px; margin-top: 10px; transition: 0.3s; }
         .btn:hover { background: #059669; }
         .toggle-link { text-align: center; margin-top: 15px; font-size: 14px; color: #38bdf8; cursor: pointer; }
+        .forgot-link { text-align: right; margin-top: -8px; margin-bottom: 12px; font-size: 13px; color: #f59e0b; cursor: pointer; }
+        .forgot-link:hover { text-decoration: underline; }
         .back-home { display: block; text-align: center; margin-top: 15px; color: #94a3b8; text-decoration: none; font-size: 13px; }
+        .notice-box { background: #334155; border-left: 4px solid #38bdf8; padding: 10px; font-size: 12px; margin-bottom: 15px; border-radius: 4px; line-height: 1.4; }
     </style>
 </head>
 <body>
 
     <div class="auth-card">
-        <h2 id="formTitle">Zrides اکاؤنٹ لاگ ان</h2>
+        <h2 id="formTitle">Account Login</h2>
+        <div class="notice-box">
+            💡 <strong>Verification & Recovery Tip:</strong> If you don't see emails in your inbox, please check your <strong>Spam / Junk</strong> folder.
+        </div>
         <form id="authForm">
             <div class="form-group" id="nameGroup" style="display:none;">
-                <label>پورا نام (Full Name):</label>
-                <input type="text" id="fullName" placeholder="علی خان">
+                <label>Full Name:</label>
+                <input type="text" id="fullName" placeholder="John Doe">
             </div>
             <div class="form-group">
-                <label>ای میل ایڈریس (Email Address):</label>
+                <label>Email Address:</label>
                 <input type="email" id="email" required placeholder="name@example.com">
             </div>
-            <div class="form-group">
-                <label>پاس ورڈ (Password):</label>
+            <div class="form-group" id="passGroup">
+                <label>Password:</label>
                 <input type="password" id="password" required placeholder="******">
             </div>
-            <button type="submit" class="btn" id="submitBtn">لاگ ان کریں</button>
+            
+            <!-- Forgot Password Link -->
+            <div class="forgot-link" id="forgotBtn" onclick="resetPassword()">Forgot Password?</div>
+
+            <button type="submit" class="btn" id="submitBtn">Login</button>
         </form>
-        <div class="toggle-link" onclick="toggleAuthMode()" id="toggleText">نیا اکاؤنٹ بنائیں؟ سائن اپ کریں</div>
-        <a href="index.html" class="back-home">← ہوم پیج پر واپس جائیں</a>
+        <div class="toggle-link" onclick="toggleAuthMode()" id="toggleText">Don't have an account? Sign Up</div>
+        <a href="index.html" class="back-home">← Back to Homepage</a>
     </div>
 
     <!-- Firebase SDKs -->
@@ -62,12 +72,14 @@
 
         function toggleAuthMode() {
             isSignup = !isSignup;
-            document.getElementById('formTitle').innerText = isSignup ? "نیا محفوظ اکاؤنٹ بنائیں" : "Zrides اکاؤنٹ لاگ ان";
-            document.getElementById('submitBtn').innerText = isSignup ? "اکاؤنٹ بنائیں اور تصدیق کریں" : "لاگ ان کریں";
+            document.getElementById('formTitle').innerText = isSignup ? "Create Secure Account" : "Account Login";
+            document.getElementById('submitBtn').innerText = isSignup ? "Create Account & Verify" : "Login";
             document.getElementById('nameGroup').style.display = isSignup ? "block" : "none";
-            document.getElementById('toggleText').innerText = isSignup ? "پہلے سے اکاؤنٹ موجود ہے؟ لاگ ان کریں" : "نیا اکاؤنٹ بنائیں؟ سائن اپ کریں";
+            document.getElementById('forgotBtn').style.display = isSignup ? "none" : "block";
+            document.getElementById('toggleText').innerText = isSignup ? "Already have an account? Login" : "Don't have an account? Sign Up";
         }
 
+        // Login & Signup Submission
         document.getElementById('authForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
@@ -77,25 +89,42 @@
                 auth.createUserWithEmailAndPassword(email, password)
                     .then((userCredential) => {
                         userCredential.user.sendEmailVerification().then(() => {
-                            alert("اکاؤنٹ بن گیا ہے! آپ کی ای میل پر تصدیقی لنک بھیج دیا گیا ہے۔ ای میل کنفرم کر کے لاگ ان کریں۔");
+                            alert("Account created successfully!\n\nA verification link has been sent to your email. Please check your inbox and SPAM folder to verify your account before logging in.");
                             toggleAuthMode();
                         });
                     })
-                    .catch(error => alert("رجسٹریشن کی خرابی: " + error.message));
+                    .catch(error => alert("Registration Error: " + error.message));
             } else {
                 auth.signInWithEmailAndPassword(email, password)
                     .then((userCredential) => {
                         if (userCredential.user.emailVerified) {
-                            alert("لاگ ان کامیاب ہو گیا!");
+                            alert("Login successful!");
                             window.location.href = "index.html";
                         } else {
-                            alert("پہلے اپنی ای میل ان بکس چیک کر کے تصدیق (Verify) کریں۔");
+                            alert("Your email is not verified yet!\n\nPlease check your inbox or Spam/Junk folder and click the verification link.");
                             auth.signOut();
                         }
                     })
-                    .catch(error => alert("لاگ ان ناکام: " + error.message));
+                    .catch(error => alert("Login Failed: " + error.message));
             }
         });
+
+        // Password Recovery Function
+        function resetPassword() {
+            const email = document.getElementById('email').value.trim();
+            if (!email) {
+                alert("Please enter your registered Email Address first in the input field above, then click 'Forgot Password'.");
+                return;
+            }
+
+            auth.sendPasswordResetEmail(email)
+                .then(() => {
+                    alert("Password Reset Link Sent!\n\nPlease check your email inbox (and Spam/Junk folder) for instructions to reset your password.");
+                })
+                .catch((error) => {
+                    alert("Error sending password reset email: " + error.message);
+                });
+        }
     </script>
 </body>
 </html>
