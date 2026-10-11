@@ -3,156 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zrides - لاگ ان یا سائن اپ</title>
+    <title>Zrides - لاگ ان / سائن اپ</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f4f6f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .auth-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .auth-card h2 {
-            color: #10b981;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-        }
-
-        .form-group input:focus {
-            border-color: #10b981;
-            outline: none;
-        }
-
-        .btn {
-            width: 100%;
-            background-color: #10b981;
-            color: white;
-            border: none;
-            padding: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #059669;
-        }
-
-        .switch-text {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-
-        .switch-text a {
-            color: #10b981;
-            text-decoration: none;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .forgot-link {
-            display: block;
-            text-align: right;
-            margin-top: -8px;
-            margin-bottom: 15px;
-            font-size: 13px;
-        }
-
-        .forgot-link a {
-            color: #64748b;
-            text-decoration: none;
-        }
-
-        .forgot-link a:hover {
-            color: #10b981;
-            text-decoration: underline;
-        }
-        
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            color: #64748b;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .back-link:hover {
-            color: #333;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0f172a; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .auth-card { background: #1e293b; padding: 30px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 1px solid #334155; }
+        .auth-card h2 { text-align: center; margin-bottom: 20px; color: #10b981; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 6px; font-size: 14px; color: #cbd5e1; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid #475569; border-radius: 6px; background: #0f172a; color: white; font-size: 15px; }
+        .btn { width: 100%; background: #10b981; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 16px; margin-top: 10px; transition: 0.3s; }
+        .btn:hover { background: #059669; }
+        .toggle-link { text-align: center; margin-top: 15px; font-size: 14px; color: #38bdf8; cursor: pointer; }
+        .back-home { display: block; text-align: center; margin-top: 15px; color: #94a3b8; text-decoration: none; font-size: 13px; }
     </style>
 </head>
 <body>
 
     <div class="auth-card">
-        <h2 id="formTitle">Zrides میں لاگ ان کریں</h2>
-        
+        <h2 id="formTitle">Zrides اکاؤنٹ لاگ ان</h2>
         <form id="authForm">
-            <div class="form-group" id="nameGroup" style="display: none;">
-                <label>آپ کا نام (Full Name):</label>
+            <div class="form-group" id="nameGroup" style="display:none;">
+                <label>پورا نام (Full Name):</label>
                 <input type="text" id="fullName" placeholder="علی خان">
             </div>
-
             <div class="form-group">
-                <label>موبائل نمبر یا ای میل (Mobile / Email):</label>
-                <input type="text" id="userPhone" placeholder="03001234567 یا name@example.com" required>
+                <label>ای میل ایڈریس (Email Address):</label>
+                <input type="email" id="email" required placeholder="name@example.com">
             </div>
-
-            <div class="form-group" id="passwordGroup">
+            <div class="form-group">
                 <label>پاس ورڈ (Password):</label>
-                <input type="password" id="userPassword" placeholder="******" required>
+                <input type="password" id="password" required placeholder="******">
             </div>
-
-            <div class="forgot-link" id="forgotBox">
-                <a onclick="forgotPassword()">پاس ورڈ بھول گئے؟</a>
-            </div>
-
             <button type="submit" class="btn" id="submitBtn">لاگ ان کریں</button>
         </form>
-
-        <div class="switch-text">
-            <span id="switchText">اکاؤنٹ نہیں ہے؟</span> <a id="switchBtn" onclick="toggleAuthMode()">سائن اپ (نیا اکاؤنٹ بنائیں)</a>
-        </div>
-
-        <a href="index.html" class="back-link">← ہوم پیج پر واپس جائیں</a>
+        <div class="toggle-link" onclick="toggleAuthMode()" id="toggleText">نیا اکاؤنٹ بنائیں؟ سائن اپ کریں</div>
+        <a href="index.html" class="back-home">← ہوم پیج پر واپس جائیں</a>
     </div>
 
     <!-- Firebase SDKs -->
@@ -160,7 +46,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 
     <script>
-        // آپ کی اصل فائر بیس کنفیگریشن
         const firebaseConfig = {
             apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
             authDomain: "zrides-9f2da.firebaseapp.com",
@@ -168,92 +53,49 @@
             projectId: "zrides-9f2da",
             storageBucket: "zrides-9f2da.firebasestorage.app",
             messagingSenderId: "93898388224",
-            appId: "1:93898388224:web:2e4f78e5b31dec26f839e5",
-            measurementId: "G-XCGVR3L9YV"
+            appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        var isLoginMode = true;
+        let isSignup = false;
 
         function toggleAuthMode() {
-            isLoginMode = !isLoginMode;
-            var title = document.getElementById('formTitle');
-            var nameGroup = document.getElementById('nameGroup');
-            var submitBtn = document.getElementById('submitBtn');
-            var switchText = document.getElementById('switchText');
-            var switchBtn = document.getElementById('switchBtn');
-            var forgotBox = document.getElementById('forgotBox');
-
-            if (isLoginMode) {
-                title.innerText = "Zrides میں لاگ ان کریں";
-                nameGroup.style.display = "none";
-                submitBtn.innerText = "لاگ ان کریں";
-                switchText.innerText = "اکاؤنٹ نہیں ہے؟";
-                switchBtn.innerText = "سائن اپ (نیا اکاؤنٹ بنائیں)";
-                forgotBox.style.display = "block";
-            } else {
-                title.innerText = "Zrides پر سائن اپ کریں";
-                nameGroup.style.display = "block";
-                submitBtn.innerText = "اکاؤنٹ بنائیں";
-                switchText.innerText = "پہلے سے اکاؤنٹ ہے؟";
-                switchBtn.innerText = "لاگ ان کریں";
-                forgotBox.style.display = "none";
-            }
+            isSignup = !isSignup;
+            document.getElementById('formTitle').innerText = isSignup ? "نیا محفوظ اکاؤنٹ بنائیں" : "Zrides اکاؤنٹ لاگ ان";
+            document.getElementById('submitBtn').innerText = isSignup ? "اکاؤنٹ بنائیں اور تصدیق کریں" : "لاگ ان کریں";
+            document.getElementById('nameGroup').style.display = isSignup ? "block" : "none";
+            document.getElementById('toggleText').innerText = isSignup ? "پہلے سے اکاؤنٹ موجود ہے؟ لاگ ان کریں" : "نیا اکاؤنٹ بنائیں؟ سائن اپ کریں";
         }
 
         document.getElementById('authForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            var userInput = document.getElementById('userPhone').value.trim();
-            var password = document.getElementById('userPassword').value;
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
 
-            // اگر صارف موبائل نمبر درج کرے تو اسے خودکار طور پر ای میل فارمیٹ میں تبدیل کریں تاکہ فائر بیس اتھینٹیکیشن میں مسئلہ نہ ہو
-            var email = userInput;
-            if (!email.includes('@')) {
-                email = userInput + "@zrides.pk";
-            }
-
-            if (isLoginMode) {
-                auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    alert("مبارک ہو! آپ کامیابی سے لاگ ان ہو گئے ہیں۔");
-                    window.location.href = "index.html";
-                })
-                .catch((error) => {
-                    alert("لاگ ان ناکام: " + error.message);
-                });
-            } else {
-                var name = document.getElementById('fullName').value;
+            if (isSignup) {
                 auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    alert("مبارک ہو " + name + "! آپ کا اکاؤنٹ کامیابی سے بن گیا ہے۔ اب آپ لاگ ان کر سکتے ہیں۔");
-                    toggleAuthMode();
-                })
-                .catch((error) => {
-                    alert("رجسٹریشن میں خرابی: " + error.message);
-                });
+                    .then((userCredential) => {
+                        userCredential.user.sendEmailVerification().then(() => {
+                            alert("اکاؤنٹ بن گیا ہے! آپ کی ای میل پر تصدیقی لنک بھیج دیا گیا ہے۔ ای میل کنفرم کر کے لاگ ان کریں۔");
+                            toggleAuthMode();
+                        });
+                    })
+                    .catch(error => alert("رجسٹریشن کی خرابی: " + error.message));
+            } else {
+                auth.signInWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        if (userCredential.user.emailVerified) {
+                            alert("لاگ ان کامیاب ہو گیا!");
+                            window.location.href = "index.html";
+                        } else {
+                            alert("پہلے اپنی ای میل ان بکس چیک کر کے تصدیق (Verify) کریں۔");
+                            auth.signOut();
+                        }
+                    })
+                    .catch(error => alert("لاگ ان ناکام: " + error.message));
             }
         });
-
-        function forgotPassword() {
-            var userInput = document.getElementById('userPhone').value.trim();
-            if (!userInput) {
-                alert("براہ کرم اوپر والے خانے میں اپنا موبائل نمبر یا ای میل درج کریں تاکہ پاس ورڈ ری سیٹ لنک بھیجا جا سکے۔");
-                return;
-            }
-            var email = userInput;
-            if (!email.includes('@')) {
-                email = userInput + "@zrides.pk";
-            }
-
-            auth.sendPasswordResetEmail(email)
-            .then(() => {
-                alert("پاس ورڈ ری سیٹ کرنے کی ہدایات آپ کو بھیج دی گئی ہیں۔");
-            })
-            .catch((error) => {
-                alert("خرابی: " + error.message);
-            });
-        }
     </script>
 </body>
 </html>
