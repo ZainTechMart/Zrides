@@ -7,6 +7,8 @@
 
     <!-- Leaflet Map CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet Routing Machine CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -35,6 +37,7 @@
 
         .fare-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 15px; text-align: center; margin: 20px 0; }
         .fare-box h3 { color: #15803d; font-size: 24px; margin-top: 5px; }
+        .fare-note { font-size: 11px; color: #64748b; margin-top: 4px; }
 
         .btn-submit { width: 100%; background-color: #10b981; color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; }
         .btn-submit:hover { background-color: #059669; }
@@ -43,6 +46,8 @@
         .map-hint { font-size: 13px; color: #10b981; text-align: center; margin-bottom: 10px; font-weight: bold; background: #ecfdf5; padding: 8px; border-radius: 6px; border: 1px solid #a7f3d0; }
         
         footer { background: #0f172a; color: #94a3b8; text-align: center; padding: 20px; margin-top: 40px; font-size: 14px; }
+        
+        .leaflet-routing-container { display: none !important; }
     </style>
 </head>
 <body>
@@ -58,7 +63,7 @@
 
     <section class="hero">
         <h1 id="heroTitle">محفوظ اور تیز ترین رائیڈ سروس</h1>
-        <p id="heroSubtitle">اپنا مقام چنیں اور منٹوں میں سواری یا پارسل ڈیلیوری حاصل کریں</p>
+        <p id="heroSubtitle">نقشے پر مقام چنیں اور خودکار روٹ اور کرایہ حاصل کریں</p>
     </section>
 
     <div class="main-container">
@@ -68,31 +73,34 @@
                 <div class="form-group">
                     <label id="lblService">سروس کی قسم منتخب کریں:</label>
                     <select id="serviceType" onchange="calculateFare()">
-                        <option value="بائیک رائیڈ (Bike Ride)">🏍️ بائیک رائیڈ (Bike Ride)</option>
-                        <option value="آٹو رکشہ (Rickshaw)">🛺 آٹو رکشہ (Auto Rickshaw)</option>
-                        <option value="پارسل ڈیلیوری (Parcel Delivery)">📦 پارسل ڈیلیوری (Parcel Delivery)</option>
+                        <option value="بائیک رائیڈ (Bike Ride)">🏍️ بائیک رائیڈ (Bike - Rs.25/km)</option>
+                        <option value="آٹو رکشہ (Rickshaw)">🛺 آٹو رکشہ (Rickshaw - Rs.45/km)</option>
+                        <option value="منی کار (Car Mini)">🚗 منی کار (Car Mini - Rs.65/km)</option>
+                        <option value="سیڈان AC کار (Car Sedan)">🚘 AC گاڑی (Car Sedan - Rs.85/km)</option>
+                        <option value="پارسل ڈیلیوری (Parcel Delivery)">📦 پارسل ڈیلیوری (Parcel - Rs.30/km)</option>
                         <option value="خریدو سروس (Buy For Me)">🛒 خریدو سروس (Buy For Me)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label id="lblPickup">پک اپ لوکیشن (Pickup Location):</label>
-                    <input type="text" id="pickup" placeholder="مثلاً: صدر بازار، لاہور" required onfocus="setActiveSelection('pickup')">
+                    <input type="text" id="pickup" placeholder="نقشے پر پہلا کلک کریں" readonly required onclick="setActiveSelection('pickup')">
                 </div>
 
                 <div class="form-group">
                     <label id="lblDropoff">ڈراپ آف لوکیشن (Dropoff Location):</label>
-                    <input type="text" id="dropoff" placeholder="مثلاً: ڈی ایچ اے فیز 5، لاہور" required onfocus="setActiveSelection('dropoff')">
+                    <input type="text" id="dropoff" placeholder="نقشے پر دوسرا کلک کریں" readonly required onclick="setActiveSelection('dropoff')">
                 </div>
 
                 <div class="form-group">
                     <label id="lblDistance">تخمینہ شدہ فاصلہ (کلومیٹر):</label>
-                    <input type="number" id="distance" value="5" min="1" max="100" oninput="calculateFare()">
+                    <input type="number" id="distance" value="1" min="1" max="200" step="0.1" readonly>
                 </div>
 
                 <div class="fare-box">
                     <p id="lblTotalFare">کل متوقع کرایہ:</p>
-                    <h3 id="estimatedFare">Rs. 150</h3>
+                    <h3 id="estimatedFare">Rs. 75</h3>
+                    <div class="fare-note" id="fareDetailsNote">بیس فیئر: Rs. 50 | فی کلومیٹر: Rs. 25</div>
                 </div>
 
                 <div class="form-group">
@@ -114,8 +122,9 @@
         <p id="footerText">© 2026 Zrides Pakistan (Pvt) Ltd. تمام حقوق محفوظ ہیں۔</p>
     </footer>
 
-    <!-- Leaflet Map JS -->
+    <!-- Leaflet & Routing JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -136,72 +145,101 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Initialize Map
         var map = L.map('map').setView([31.5204, 74.3587], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
 
-        var pickupMarker = null;
-        var dropoffMarker = null;
-        var activeTarget = 'pickup'; // Current target for map tap
+        var pickupCoord = null;
+        var dropoffCoord = null;
+        var routingControl = null;
+        var selectionStep = 'pickup';
 
-        function setActiveSelection(target) {
-            activeTarget = target;
-            if (target === 'pickup') {
-                document.getElementById('mapHint').innerText = "💡 نقشے پر کلک کر کے پک اپ لوکیشن (Pickup) منتخب کریں";
+        function setActiveSelection(step) {
+            selectionStep = step;
+            if(step === 'pickup') {
+                document.getElementById('mapHint').innerText = "💡 نقشے پر نیا پک اپ (Pickup) مقام منتخب کریں";
             } else {
-                document.getElementById('mapHint').innerText = "💡 نقشے پر کلک کر کے ڈراپ آف لوکیشن (Dropoff) منتخب کریں";
+                document.getElementById('mapHint').innerText = "💡 نقشے پر نیا ڈراپ آف (Dropoff) مقام منتخب کریں";
             }
         }
 
-        // Custom Markers Styling
-        var greenIcon = L.icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-            iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-        });
-
-        var redIcon = L.icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-            iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-        });
-
-        // Tap on Map Logic
         map.on('click', function(e) {
-            var lat = e.latlng.lat.toFixed(4);
-            var lng = e.latlng.lng.toFixed(4);
-            var locationString = "Lat: " + lat + ", Lng: " + lng;
-
-            if (activeTarget === 'pickup') {
-                document.getElementById('pickup').value = locationString;
-                if (pickupMarker) map.removeLayer(pickupMarker);
-                pickupMarker = L.marker([lat, lng], {icon: greenIcon}).addTo(map).bindPopup("🟢 پک اپ مقام").openPopup();
+            if (selectionStep === 'pickup') {
+                pickupCoord = e.latlng;
+                document.getElementById('pickup').value = "Lat: " + pickupCoord.lat.toFixed(4) + ", Lng: " + pickupCoord.lng.toFixed(4);
+                selectionStep = 'dropoff';
+                document.getElementById('mapHint').innerText = "💡 اب نقشے پر کلک کر کے ڈراپ آف (Dropoff) مقام منتخب کریں";
                 
-                // Auto switch target to dropoff for the next click
-                activeTarget = 'dropoff';
-                document.getElementById('mapHint').innerText = "💡 اب نقشے پر کلک کر کے ڈراپ آف لوکیشن (Dropoff) منتخب کریں";
+                if (routingControl) {
+                    map.removeControl(routingControl);
+                    routingControl = null;
+                }
             } else {
-                document.getElementById('dropoff').value = locationString;
-                if (dropoffMarker) map.removeLayer(dropoffMarker);
-                dropoffMarker = L.marker([lat, lng], {icon: redIcon}).addTo(map).bindPopup("🔴 ڈراپ آف مقام").openPopup();
-                
-                // Switch back to pickup target for future edits
-                activeTarget = 'pickup';
-                document.getElementById('mapHint').innerText = "💡 لوکیشن تبدیل کرنے کے لیے نقشے پر دوبارہ کلک کریں";
+                dropoffCoord = e.latlng;
+                document.getElementById('dropoff').value = "Lat: " + dropoffCoord.lat.toFixed(4) + ", Lng: " + dropoffCoord.lng.toFixed(4);
+                selectionStep = 'pickup';
+                document.getElementById('mapHint').innerText = "💡 لوکیشن تبدیل کرنے کے لیے خانے پر کلک کریں";
+
+                if (pickupCoord && dropoffCoord) {
+                    if (routingControl) {
+                        map.removeControl(routingControl);
+                    }
+
+                    routingControl = L.Routing.control({
+                        waypoints: [
+                            L.latLng(pickupCoord.lat, pickupCoord.lng),
+                            L.latLng(dropoffCoord.lat, dropoffCoord.lng)
+                        ],
+                        routeWhileDragging: false,
+                        addWaypoints: false,
+                        createMarker: function(i, wp, nWps) {
+                            return L.marker(wp.latLng, {
+                                icon: L.icon({
+                                    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${i === 0 ? 'green' : 'red'}.png`,
+                                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                                    iconSize: [25, 41], iconAnchor: [12, 41]
+                                })
+                            });
+                        }
+                    }).addTo(map);
+
+                    routingControl.on('routesfound', function(e) {
+                        var routes = e.routes;
+                        var summary = routes[0].summary;
+                        var distanceInKm = (summary.totalDistance / 1000).toFixed(1);
+                        document.getElementById('distance').value = distanceInKm;
+                        calculateFare();
+                    });
+                }
             }
         });
 
         function calculateFare() {
             var service = document.getElementById('serviceType').value;
-            var distance = parseFloat(document.getElementById('distance').value) || 0;
-            var baseFare = 50; var perKm = 20;
+            var distance = parseFloat(document.getElementById('distance').value) || 1;
+            
+            var baseFare = 50; 
+            var perKmRate = 25; // Bike
 
-            if (service.includes('Rickshaw')) { baseFare = 80; perKm = 35; }
-            else if (service.includes('Parcel')) { baseFare = 60; perKm = 25; }
-            else if (service.includes('Buy')) { baseFare = 100; perKm = 20; }
+            if (service.includes('Rickshaw')) { 
+                baseFare = 80; 
+                perKmRate = 45; 
+            } else if (service.includes('Car Mini')) { 
+                baseFare = 120; 
+                perKmRate = 65; 
+            } else if (service.includes('Car Sedan')) { 
+                baseFare = 180; 
+                perKmRate = 85; 
+            } else if (service.includes('Parcel')) { 
+                baseFare = 60; 
+                perKmRate = 30; 
+            } else if (service.includes('Buy')) { 
+                baseFare = 100; 
+                perKmRate = 30; 
+            }
 
-            var total = baseFare + (distance * perKm);
+            var total = baseFare + (distance * perKmRate);
             document.getElementById('estimatedFare').innerText = "Rs. " + Math.round(total);
+            document.getElementById('fareDetailsNote').innerText = `بیس فیئر: Rs. ${baseFare} | فی کلومیٹر: Rs. ${perKmRate}`;
         }
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
@@ -214,11 +252,16 @@
             var phone = document.getElementById('phone').value.trim();
             var fare = document.getElementById('estimatedFare').innerText;
 
+            if(!pickup || !dropoff) {
+                alert("براہ کرم نقشے سے پک اپ اور ڈراپ آف لوکیشن منتخب کریں۔");
+                return;
+            }
+
             db.ref('orders/').push({
                 service: service,
                 pickup: pickup,
                 dropoff: dropoff,
-                distance: distance,
+                distance: distance + " کلومیٹر",
                 phone: phone,
                 fare: fare,
                 offeredFare: fare,
@@ -230,10 +273,13 @@
                 } else {
                     alert("مبارک ہو! آپ کا آرڈر ڈرائیورز کو بھیج دیا گیا ہے۔");
                     document.getElementById('bookingForm').reset();
-                    if (pickupMarker) map.removeLayer(pickupMarker);
-                    if (dropoffMarker) map.removeLayer(dropoffMarker);
-                    activeTarget = 'pickup';
-                    document.getElementById('mapHint').innerText = "💡 نقشے پر پہلا کلک پک اپ (Pickup) اور دوسرا کلک ڈراپ آف (Dropoff) سیٹ کرے گا";
+                    if (routingControl) {
+                        map.removeControl(routingControl);
+                        routingControl = null;
+                    }
+                    pickupCoord = null;
+                    dropoffCoord = null;
+                    selectionStep = 'pickup';
                     calculateFare();
                 }
             });
@@ -246,12 +292,6 @@
             htmlTag.setAttribute('dir', isUrdu ? 'rtl' : 'ltr');
             htmlTag.setAttribute('lang', isUrdu ? 'ur' : 'en');
             document.getElementById('langBtn').innerText = isUrdu ? "English" : "اردو";
-            
-            if (!isUrdu) {
-                document.getElementById('mapHint').innerText = "💡 1st click on map sets Pickup, 2nd click sets Dropoff";
-            } else {
-                document.getElementById('mapHint').innerText = "💡 نقشے پر پہلا کلک پک اپ (Pickup) اور دوسرا کلک ڈراپ آف (Dropoff) سیٹ کرے گا";
-            }
         }
     </script>
 </body>
