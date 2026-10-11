@@ -144,22 +144,25 @@ button:disabled {
     overflow-wrap: anywhere;
 }
 
-.notice.success {
+.notice.success,
+.notice.error,
+.notice.info {
     display: block;
+}
+
+.notice.success {
     background: #064e3b;
     border: 1px solid #059669;
     color: #d1fae5;
 }
 
 .notice.error {
-    display: block;
     background: #7f1d1d;
     border: 1px solid #dc2626;
     color: #fee2e2;
 }
 
 .notice.info {
-    display: block;
     background: #1e3a8a;
     border: 1px solid #3b82f6;
     color: #dbeafe;
@@ -220,7 +223,6 @@ button:disabled {
 
         <div class="group hidden" id="roleGroup">
             <label for="accountRole">Account Type</label>
-
             <select id="accountRole">
                 <option value="customer">Customer — Book a Ride</option>
                 <option value="driver">Driver — Provide Rides</option>
@@ -265,7 +267,7 @@ button:disabled {
     </button>
 
     <div class="links">
-        <span id="togglePrompt">Don't have an account?</span>
+        <span id="togglePrompt">Don't have an account? </span>
         <span class="link" id="toggleBtn">Sign Up</span>
     </div>
 
@@ -303,6 +305,13 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.database();
 
+/*
+ * Admin account UID configured for this project.
+ * Database Security Rules must independently enforce
+ * authorization for protected database operations.
+ */
+const ADMIN_UID = "cmmo7x7k0CY8lkcev4Rq92t84wU2";
+
 let isSignup = false;
 let isBusy = false;
 let authActionInProgress = false;
@@ -338,7 +347,10 @@ function clearMessage() {
 function setBusy(value) {
     isBusy = value;
     submitBtn.disabled = value;
+
     toggleBtn.style.pointerEvents = value ? "none" : "auto";
+    forgotBtn.style.pointerEvents = value ? "none" : "auto";
+    resendBtn.disabled = value;
 
     submitBtn.textContent = value
         ? "Please wait..."
@@ -414,7 +426,10 @@ function getFriendlyError(error) {
             "Enable Email/Password in Firebase Authentication.",
 
         "auth/invalid-api-key":
-            "Check your Firebase configuration."
+            "Check your Firebase configuration.",
+
+        "auth/user-disabled":
+            "This account has been disabled."
     };
 
     return messages[code] ||
@@ -423,18 +438,35 @@ function getFriendlyError(error) {
 }
 
 /*
- * Redirect according to the role saved in the database.
- *
- * This is client-side navigation, not a replacement
- * for Firebase Database Security Rules.
+ * Read the existing profile and route by its role.
+ * Do not automatically create an admin profile here.
  */
 async function redirectByRole(user) {
     const snapshot = await db.ref("users/" + user.uid).once("value");
     const profile = snapshot.val();
 
-    const role = profile && profile.role
-        ? profile.role
-        : "customer";
+    if (!profile || !profile.role) {
+        showMessage(
+            "Your account profile is missing. Contact the administrator.",
+            "error"
+        );
+
+        await auth.signOut();
+        return;
+    }
+
+    const role = profile.role;
+
+    if (role === "admin") {
+        if (user.uid !== ADMIN_UID) {
+            showMessage("Admin access denied.", "error");
+            await auth.signOut();
+            return;
+        }
+
+        window.location.replace("admin.html");
+        return;
+    }
 
     if (role === "driver") {
         window.location.replace("driver.html");
@@ -484,7 +516,8 @@ form.addEventListener("submit", async function(event) {
         return;
     }
 
-    if (!["customer", "driver"].includes(selectedRole)) {
+    if (isSignup &&
+        !["customer", "driver"].includes(selectedRole)) {
         showMessage("Select a valid account type.", "error");
         return;
     }
@@ -507,41 +540,35 @@ form.addEventListener("submit", async function(event) {
                     displayName: fullName
                 });
 
-                /*
-                 * Save basic profile and selected role.
-                 * Driver profile details and approval will
-                 * be completed in the next driver.html step.
-                 */
                 await db.ref("users/" + user.uid).set({
                     uid: user.uid,
                     name: fullName,
                     email: email,
                     role: selectedRole,
                     emailVerified: false,
-                    createdAt: firebase.database.ServerValue.TIMESTAMP
+                    createdAt:
+                        firebase.database.ServerValue.TIMESTAMP
                 });
 
                 await user.sendEmailVerification();
-
                 await auth.signOut();
 
                 isSignup = false;
                 updateFormMode();
 
                 emailInput.value = email;
+                passwordInput.value = "";
 
                 showMessage(
-                    "Account created! A verification email has been sent. Verify your email, then log in using the same email and password.",
+                    "Account created. A verification email has been sent. Verify your email, then log in.",
                     "success"
                 );
 
             } catch (error) {
-                /*
-                 * If profile creation fails, do not pretend
-                 * registration completed successfully.
-                 */
+                console.error("Signup setup error:", error);
+
                 showMessage(
-                    "Account creation started, but profile or verification setup failed. " +
+                    "Your account may have been created, but profile or verification setup failed. " +
                     getFriendlyError(error),
                     "error"
                 );
@@ -576,32 +603,51 @@ form.addEventListener("submit", async function(event) {
             }
 
             /*
-             * Refresh verified status in the user profile.
-             * Existing users without a profile will be treated
-             * as customers for backward compatibility.
+             * Check for the pre-authorized Admin UID.
+             * The database role alone does not grant admin access.
              */
             const profileRef = db.ref("users/" + user.uid);
             const snapshot = await profileRef.once("value");
+            const profile = snapshot.val();
 
-            if (!snapshot.exists()) {
-                await profileRef.set({
-                    uid: user.uid,
-                    name: user.displayName || "",
-                    email: user.email || email,
-                    role: "customer",
-                    emailVerified: true,
-                    createdAt: firebase.database.ServerValue.TIMESTAMP
-                });
-            } else {
+            if (user.uid === ADMIN_UID) {
+                if (!profile || profile.role !== "admin") {
+                    showMessage(
+                        "Admin account profile is missing or its role is not set to admin. Check the users record in Firebase.",
+                        "error"
+                    );
+
+                    await auth.signOut();
+                    return;
+                }
+
                 await profileRef.update({
                     emailVerified: true
                 });
+
+                await redirectByRole(user);
+                return;
             }
+
+            if (!profile || !profile.role) {
+                showMessage(
+                    "Your account profile is missing. Contact the administrator.",
+                    "error"
+                );
+
+                await auth.signOut();
+                return;
+            }
+
+            await profileRef.update({
+                emailVerified: true
+            });
 
             await redirectByRole(user);
         }
 
     } catch (error) {
+        console.error("Authentication error:", error);
         showMessage(getFriendlyError(error), "error");
 
     } finally {
@@ -712,9 +758,7 @@ auth.onAuthStateChanged(async function(user) {
     try {
         await user.reload();
 
-        if (!user.emailVerified) {
-            return;
-        }
+        if (!user.emailVerified) return;
 
         await redirectByRole(user);
 
@@ -727,4 +771,4 @@ updateFormMode();
 </script>
 
 </body>
-                </html>
+    </html>
