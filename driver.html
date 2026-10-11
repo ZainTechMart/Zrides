@@ -1,210 +1,891 @@
 <!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zrides - ڈرائیور پورٹل</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f1f5f9; color: #1e293b; padding-bottom: 30px; }
-        header { background-color: #0f172a; color: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 24px; font-weight: bold; color: #10b981; }
-        .btn-logout { background: #ef4444; border: none; color: white; padding: 7px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .card h2 { font-size: 18px; margin-bottom: 15px; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 5px; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
-        .btn { background: #10b981; color: white; border: none; padding: 10px 18px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; text-decoration: none; display: inline-block; text-align: center; }
-        .btn-whatsapp { background: #25d366; color: white; margin-top: 10px; }
-        .wallet-box { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
-        .wallet-box h3 { color: #15803d; font-size: 24px; }
-        .order-card { background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #10b981; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zrides — Driver Portal</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Tahoma, sans-serif;
+}
+
+body {
+    background: #f1f5f9;
+    color: #1e293b;
+    padding-bottom: 30px;
+}
+
+header {
+    background: #0f172a;
+    color: white;
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.logo {
+    color: #10b981;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+#driverStatus {
+    font-weight: bold;
+    color: #f59e0b;
+}
+
+.btn-logout {
+    background: #ef4444;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.container {
+    max-width: 900px;
+    margin: 22px auto;
+    padding: 0 15px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px -1px #0002;
+    margin-bottom: 20px;
+}
+
+.card h2 {
+    font-size: 19px;
+    margin-bottom: 16px;
+    color: #0f172a;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    color: #475569;
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 15px;
+    background: white;
+}
+
+.btn {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.btn-whatsapp {
+    background: #25d366;
+    margin-top: 12px;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
+
+.wallet-box {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.wallet-box h3 {
+    color: #15803d;
+    font-size: 25px;
+    margin-top: 8px;
+}
+
+.order-card {
+    background: white;
+    border: 1px solid #cbd5e1;
+    border-right: 5px solid #10b981;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    line-height: 1.9;
+}
+
+.notice {
+    display: none;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 7px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.notice.success {
+    display: block;
+    color: #065f46;
+    background: #d1fae5;
+}
+
+.notice.error {
+    display: block;
+    color: #991b1b;
+    background: #fee2e2;
+}
+
+.notice.info {
+    display: block;
+    color: #1e40af;
+    background: #dbeafe;
+}
+
+.muted {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media(max-width: 480px) {
+    header {
+        align-items: flex-start;
+    }
+
+    .card {
+        padding: 16px;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <header>
-        <div class="logo">Zrides Driver</div>
-        <div>
-            <span id="driverStatus" style="font-weight:bold; color:#f59e0b; margin-left: 15px;">اسٹیٹس: چیک ہو رہا ہے...</span>
-            <button class="btn-logout" onclick="logoutDriver()" id="logoutBtn" style="display:none;">لاگ آؤٹ</button>
-        </div>
-    </header>
+<header>
+    <div class="logo">Zrides Driver</div>
 
-    <div class="container">
-        <!-- Registration Form -->
-        <div class="card" id="regCard">
-            <h2>🚗 ڈرائیور رجسٹریشن اور لاگ ان</h2>
-            <form id="driverRegForm">
-                <div class="form-group"><label>پورا نام:</label><input type="text" id="dName" required></div>
-                <div class="form-group"><label>ای میل ایڈریس:</label><input type="email" id="dEmail" required placeholder="driver@gmail.com"></div>
-                <div class="form-group"><label>پاس ورڈ:</label><input type="password" id="dPassword" required placeholder="******"></div>
-                <div class="form-group"><label>موبائل نمبر:</label><input type="tel" id="dPhone" required placeholder="03001234567"></div>
-                <div class="form-group">
-                    <label>گاڑی کی قسم:</label>
-                    <select id="dVehicle">
-                        <option value="Bike">🏍️ Bike</option>
-                        <option value="Rickshaw">🛺 Rickshaw</option>
-                        <option value="Car Mini">🚗 Car Mini</option>
-                    </select>
-                </div>
-                <div class="form-group"><label>گاڑی کا نمبر:</label><input type="text" id="dPlate" required placeholder="LEA-1234"></div>
-                <button type="submit" class="btn">رجسٹر کریں اور ای میل ویریفائی کریں</button>
-            </form>
-        </div>
+    <div class="header-actions">
+        <span id="driverStatus">اسٹیٹس: چیک ہو رہا ہے...</span>
 
-        <!-- Wallet & Recharge -->
-        <div class="card" id="paymentCard" style="display:none;">
-            <h2>💳 جیز کیش ریچارج اور والٹ بیلنس</h2>
-            <div class="wallet-box">
-                <p>آپ کا دستیاب بیلنس:</p>
-                <h3 id="walletBal">Rs. 0</h3>
-            </div>
-            <p style="font-size:13px; color:#475569; margin-bottom:10px; line-height: 1.6;">
-                1. جیز کیش اکاؤنٹ <strong>03077237059</strong> پر Rs. 100 سے 1000 کی رقم منتقل کریں۔<br>
-                2. واٹس ایپ بٹن (<strong>03303118422</strong>) پر کلک کر کے TID اور تفصیلات ایڈمن کو بھیجیں۔
-            </p>
-            <a href="https://wa.me/923303118422?text=Hello%20Admin,%20maine%20JazzCash%20(03077237059)%20par%20payment%20send%20kardi%20hai.%20TID:" target="_blank" class="btn btn-whatsapp">📱 TID ایڈمن کو واٹس ایپ کریں</a>
-        </div>
-
-        <!-- Available Orders -->
-        <div class="card" id="ordersCard" style="display:none;">
-            <h2>📦 دستیاب سواریاں</h2>
-            <div id="ordersList">سواریاں تلاش کی جا رہی ہیں...</div>
-        </div>
+        <button
+            class="btn-logout hidden"
+            id="logoutBtn"
+            type="button">
+            لاگ آؤٹ
+        </button>
     </div>
+</header>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<div class="container">
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
-            authDomain: "zrides-9f2da.firebaseapp.com",
-            databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
-            projectId: "zrides-9f2da",
-            storageBucket: "zrides-9f2da.firebasestorage.app",
-            messagingSenderId: "93898388224",
-            appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
+    <div id="pageNotice" class="notice" role="status"
+         aria-live="polite"></div>
+
+    <!-- Driver profile registration -->
+    <section class="card hidden" id="regCard">
+        <h2>🚗 ڈرائیور رجسٹریشن مکمل کریں</h2>
+
+        <p class="muted" style="margin-bottom:15px;">
+            آپ کا اکاؤنٹ بن چکا ہے۔ ڈرائیور کی درخواست مکمل کرنے کے
+            لیے اپنی تفصیلات درج کریں۔ منظوری کے بعد آپ سواریاں قبول
+            کر سکیں گے۔
+        </p>
+
+        <form id="driverRegForm">
+
+            <div class="form-group">
+                <label for="dName">پورا نام</label>
+                <input id="dName" type="text"
+                       maxlength="100" required>
+            </div>
+
+            <div class="form-group">
+                <label>ای میل ایڈریس</label>
+                <input id="dEmail" type="email" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="dPhone">موبائل نمبر</label>
+                <input
+                    id="dPhone"
+                    type="tel"
+                    inputmode="numeric"
+                    placeholder="03001234567"
+                    maxlength="20"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="dVehicle">گاڑی کی قسم</label>
+
+                <select id="dVehicle" required>
+                    <option value="Bike">🏍️ Bike</option>
+                    <option value="Rickshaw">🛺 Rickshaw</option>
+                    <option value="Car Mini">🚗 Car Mini</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="dPlate">گاڑی کا نمبر</label>
+                <input
+                    id="dPlate"
+                    type="text"
+                    maxlength="30"
+                    placeholder="LEA-1234"
+                    required>
+            </div>
+
+            <button class="btn" id="registerBtn" type="submit">
+                ڈرائیور کی درخواست جمع کریں
+            </button>
+        </form>
+    </section>
+
+    <!-- Approval status -->
+    <section class="card hidden" id="pendingCard">
+        <h2>⏳ درخواست کی منظوری</h2>
+
+        <p id="approvalMessage" style="line-height:1.9;">
+            آپ کی درخواست ایڈمن کی منظوری کی منتظر ہے۔
+        </p>
+    </section>
+
+    <!-- Wallet -->
+    <section class="card hidden" id="paymentCard">
+        <h2>💳 جیز کیش ریچارج اور والٹ</h2>
+
+        <div class="wallet-box">
+            <p>آپ کا دستیاب بیلنس</p>
+            <h3 id="walletBal">Rs. 0</h3>
+        </div>
+
+        <p class="muted">
+            1. جیز کیش اکاؤنٹ 03077237059 پر رقم منتقل کریں۔<br>
+            2. ادائیگی کی رسید یا TID ایڈمن کو واٹس ایپ کریں۔<br>
+            3. ایڈمن کی تصدیق اور والٹ اپڈیٹ ہونے کے بعد دستیاب
+            سواریاں قبول کی جا سکتی ہیں۔
+        </p>
+
+        <a
+            href="https://wa.me/923303118422"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-whatsapp">
+            📱 ادائیگی کی تفصیلات ایڈمن کو بھیجیں
+        </a>
+    </section>
+
+    <!-- Available rides -->
+    <section class="card hidden" id="ordersCard">
+        <h2>📦 دستیاب سواریاں</h2>
+        <div id="ordersList">سواریاں تلاش کی جا رہی ہیں...</div>
+    </section>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+"use strict";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
+    authDomain: "zrides-9f2da.firebaseapp.com",
+    databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
+    projectId: "zrides-9f2da",
+    storageBucket: "zrides-9f2da.firebasestorage.app",
+    messagingSenderId: "93898388224",
+    appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
+};
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+
+const auth = firebase.auth();
+const db = firebase.database();
+
+const el = id => document.getElementById(id);
+
+let currentUser = null;
+let currentDriverKey = null;
+let currentDriver = null;
+let ordersListener = null;
+let driverListener = null;
+let ridesStarted = false;
+let submitting = false;
+
+function showMessage(message, type = "info") {
+    el("pageNotice").textContent = message;
+    el("pageNotice").className = "notice " + type;
+}
+
+function hideMessage() {
+    el("pageNotice").textContent = "";
+    el("pageNotice").className = "notice";
+}
+
+function show(id, visible = true) {
+    el(id).classList.toggle("hidden", !visible);
+}
+
+function setStatus(message, color = "#f59e0b") {
+    el("driverStatus").textContent = message;
+    el("driverStatus").style.color = color;
+}
+
+function stopOrderListener() {
+    if (ordersListener) {
+        db.ref("orders").off("value", ordersListener);
+        ordersListener = null;
+    }
+
+    ridesStarted = false;
+}
+
+function stopDriverListener() {
+    if (driverListener) {
+        db.ref("drivers/" + driverListener.key)
+            .off("value", driverListener.callback);
+
+        driverListener = null;
+    }
+
+    stopOrderListener();
+}
+
+function normalizePhone(phone) {
+    return phone.replace(/\D/g, "");
+}
+
+/*
+ * Authentication:
+ * Driver must have a verified Firebase email and a driver role.
+ */
+auth.onAuthStateChanged(async function(user) {
+    stopDriverListener();
+
+    if (!user) {
+        setStatus("لاگ ان ضروری ہے", "#ef4444");
+        show("regCard", false);
+        show("pendingCard", false);
+        show("paymentCard", false);
+        show("ordersCard", false);
+
+        window.location.replace("login.html");
+        return;
+    }
+
+    try {
+        await user.reload();
+
+        if (!user.emailVerified) {
+            await auth.signOut();
+            window.location.replace("login.html");
+            return;
+        }
+
+        currentUser = auth.currentUser;
+
+        const profileSnap = await db.ref("users/" + user.uid).once("value");
+        const profile = profileSnap.val();
+
+        if (!profile || profile.role !== "driver") {
+            showMessage(
+                "یہ ڈرائیور اکاؤنٹ نہیں ہے۔ ڈرائیور رجسٹریشن کے لیے login.html پر Driver منتخب کریں۔",
+                "error"
+            );
+
+            setStatus("غلط اکاؤنٹ", "#ef4444");
+            await auth.signOut();
+            return;
+        }
+
+        el("logoutBtn").classList.remove("hidden");
+        el("dEmail").value = user.email || "";
+        el("dName").value = profile.name || user.displayName || "";
+
+        await findDriverProfile(user, profile);
+
+    } catch (error) {
+        console.error(error);
+
+        showMessage(
+            "اکاؤنٹ کی معلومات حاصل نہیں ہو سکیں۔ Firebase Database Rules اور انٹرنیٹ کنکشن چیک کریں۔",
+            "error"
+        );
+
+        setStatus("خرابی", "#ef4444");
+    }
+});
+
+/*
+ * Find an existing driver profile by email.
+ * If no profile exists, show the driver-details form.
+ */
+async function findDriverProfile(user, profile) {
+    const snapshot = await db.ref("drivers")
+        .orderByChild("email")
+        .equalTo(user.email)
+        .once("value");
+
+    const records = snapshot.val();
+
+    if (!records) {
+        show("regCard", true);
+        show("pendingCard", false);
+        show("paymentCard", false);
+        show("ordersCard", false);
+
+        setStatus("رجسٹریشن مکمل کریں", "#f59e0b");
+
+        showMessage(
+            "اپنا موبائل نمبر اور گاڑی کی تفصیلات درج کرکے درخواست جمع کریں۔",
+            "info"
+        );
+
+        return;
+    }
+
+    const keys = Object.keys(records);
+
+    currentDriverKey = keys[0];
+    currentDriver = records[currentDriverKey];
+
+    show("regCard", false);
+
+    startDriverListener(currentDriverKey);
+
+    /*
+     * Update the basic profile name only when needed.
+     */
+    if (profile.name !== currentDriver.name) {
+        await db.ref("users/" + user.uid).update({
+            name: currentDriver.name || profile.name || ""
+        });
+    }
+}
+
+/*
+ * Save driver details for the already authenticated driver.
+ * Do not create another Firebase Auth account here.
+ */
+el("driverRegForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    if (submitting) return;
+
+    if (!currentUser || !currentUser.emailVerified) {
+        showMessage("پہلے تصدیق شدہ اکاؤنٹ سے لاگ ان کریں۔", "error");
+        return;
+    }
+
+    const name = el("dName").value.trim();
+    const phone = normalizePhone(el("dPhone").value);
+    const vehicle = el("dVehicle").value;
+    const plate = el("dPlate").value.trim().toUpperCase();
+
+    if (name.length < 2) {
+        showMessage("براہ کرم اپنا پورا نام درج کریں۔", "error");
+        return;
+    }
+
+    if (phone.length < 10 || phone.length > 15) {
+        showMessage("درست موبائل نمبر درج کریں۔", "error");
+        return;
+    }
+
+    if (!["Bike", "Rickshaw", "Car Mini"].includes(vehicle)) {
+        showMessage("درست گاڑی کی قسم منتخب کریں۔", "error");
+        return;
+    }
+
+    if (!plate) {
+        showMessage("گاڑی کا نمبر درج کریں۔", "error");
+        return;
+    }
+
+    submitting = true;
+    el("registerBtn").disabled = true;
+    el("registerBtn").textContent = "درخواست جمع ہو رہی ہے...";
+
+    try {
+        const phoneRef = db.ref("drivers/" + phone);
+        const phoneSnap = await phoneRef.once("value");
+        const existing = phoneSnap.val();
+
+        if (existing && existing.email !== currentUser.email) {
+            showMessage(
+                "یہ موبائل نمبر پہلے کسی دوسرے ڈرائیور کے ساتھ رجسٹر ہے۔",
+                "error"
+            );
+            return;
+        }
+
+        const driverData = {
+            uid: currentUser.uid,
+            name: name,
+            email: currentUser.email,
+            phone: phone,
+            vehicle: vehicle,
+            plate: plate,
+            approvalStatus: existing && existing.approvalStatus
+                ? existing.approvalStatus
+                : "pending",
+            walletBalance: existing &&
+                Number.isFinite(Number(existing.walletBalance))
+                ? Number(existing.walletBalance)
+                : 0,
+            updatedAt: firebase.database.ServerValue.TIMESTAMP
         };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
 
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                if (!user.emailVerified) {
-                    alert("پہلے اپنی ای میل کی تصدیق کریں۔");
-                    auth.signOut();
-                } else {
-                    document.getElementById('logoutBtn').style.display = 'inline-block';
-                    document.getElementById('regCard').style.display = 'none';
-                    document.getElementById('paymentCard').style.display = 'block';
-                    checkDriverApproval(user.email);
-                }
+        if (!existing) {
+            driverData.createdAt =
+                firebase.database.ServerValue.TIMESTAMP;
+        }
+
+        await phoneRef.update(driverData);
+
+        await db.ref("users/" + currentUser.uid).update({
+            name: name,
+            email: currentUser.email,
+            role: "driver",
+            emailVerified: true
+        });
+
+        currentDriverKey = phone;
+        currentDriver = {
+            ...driverData,
+            walletBalance: driverData.walletBalance
+        };
+
+        show("regCard", false);
+        startDriverListener(phone);
+
+        showMessage(
+            "آپ کی درخواست جمع ہو گئی ہے۔ ایڈمن کی منظوری کا انتظار کریں۔",
+            "success"
+        );
+
+    } catch (error) {
+        console.error(error);
+
+        showMessage(
+            "رجسٹریشن محفوظ نہیں ہو سکی۔ Firebase Database Rules چیک کریں۔ " +
+            (error.message || ""),
+            "error"
+        );
+
+    } finally {
+        submitting = false;
+        el("registerBtn").disabled = false;
+        el("registerBtn").textContent = "ڈرائیور کی درخواست جمع کریں";
+    }
+});
+
+/*
+ * Listen for admin approval and wallet changes.
+ */
+function startDriverListener(driverKey) {
+    stopDriverListener();
+
+    const ref = db.ref("drivers/" + driverKey);
+
+    const callback = snapshot => {
+        const driver = snapshot.val();
+
+        if (!driver) {
+            currentDriver = null;
+            show("paymentCard", false);
+            show("ordersCard", false);
+            show("pendingCard", false);
+            show("regCard", true);
+
+            setStatus("رجسٹریشن مکمل کریں", "#f59e0b");
+            return;
+        }
+
+        currentDriverKey = driverKey;
+        currentDriver = driver;
+
+        const status = driver.approvalStatus || "pending";
+        const balance = Number(driver.walletBalance) || 0;
+
+        el("walletBal").textContent =
+            "Rs. " + balance.toLocaleString("en-PK");
+
+        show("regCard", false);
+
+        if (status === "approved") {
+            show("pendingCard", false);
+            show("paymentCard", true);
+
+            setStatus("منظور شدہ (Approved) ✅", "#059669");
+
+            if (balance > 0) {
+                show("ordersCard", true);
+                listenForOrders();
+            } else {
+                show("ordersCard", false);
+                stopOrderListener();
+
+                showMessage(
+                    "آپ کا والٹ بیلنس صفر ہے۔ ریچارج کی تفصیلات ایڈمن کو بھیجیں۔",
+                    "info"
+                );
             }
+
+        } else if (status === "rejected") {
+            show("pendingCard", true);
+            show("paymentCard", false);
+            show("ordersCard", false);
+
+            el("approvalMessage").textContent =
+                "آپ کی درخواست مسترد کر دی گئی ہے۔ مزید معلومات کے لیے ایڈمن سے رابطہ کریں۔";
+
+            setStatus("مسترد شدہ (Rejected) ❌", "#dc2626");
+            stopOrderListener();
+
+        } else {
+            show("pendingCard", true);
+            show("paymentCard", false);
+            show("ordersCard", false);
+
+            el("approvalMessage").textContent =
+                "آپ کی درخواست ایڈمن کی منظوری کی منتظر ہے۔";
+
+            setStatus("منظوری کی منتظر ⏳", "#d97706");
+            stopOrderListener();
+        }
+    };
+
+    driverListener = {
+        key: driverKey,
+        callback: callback
+    };
+
+    ref.on("value", callback);
+}
+
+/*
+ * Render ride details safely without inserting customer text as HTML.
+ */
+function listenForOrders() {
+    if (ridesStarted) return;
+
+    ridesStarted = true;
+
+    ordersListener = snapshot => {
+        const list = el("ordersList");
+        list.replaceChildren();
+
+        const data = snapshot.val();
+
+        if (!data) {
+            list.textContent = "اس وقت کوئی سواری دستیاب نہیں۔";
+            return;
+        }
+
+        let found = false;
+
+        Object.entries(data).forEach(([orderId, order]) => {
+            if (!order || order.status !== "pending") return;
+
+            found = true;
+
+            const card = document.createElement("div");
+            card.className = "order-card";
+
+            const title = document.createElement("strong");
+            title.textContent =
+                String(order.service || "سواری") +
+                " — کرایہ: " +
+                String(order.fare || "معلوم نہیں");
+
+            const route = document.createElement("p");
+            route.textContent =
+                String(order.pickup || "مقام دستیاب نہیں") +
+                " ➜ " +
+                String(order.dropoff || "مقام دستیاب نہیں");
+
+            const button = document.createElement("button");
+            button.className = "btn";
+            button.style.marginTop = "10px";
+            button.textContent = "سواری قبول کریں (5% کمیشن)";
+
+            button.addEventListener("click", function() {
+                acceptRide(orderId, order.fare, button);
+            });
+
+            card.append(title, route, button);
+            list.appendChild(card);
         });
 
-        document.getElementById('driverRegForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('dEmail').value;
-            const password = document.getElementById('dPassword').value;
-            const phone = document.getElementById('dPhone').value;
+        if (!found) {
+            list.textContent = "اس وقت کوئی سواری دستیاب نہیں۔";
+        }
+    };
 
-            auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    userCredential.user.sendEmailVerification().then(() => {
-                        db.ref(`drivers/${phone}`).set({
-                            name: document.getElementById('dName').value,
-                            email: email, phone: phone,
-                            vehicle: document.getElementById('dVehicle').value,
-                            plate: document.getElementById('dPlate').value,
-                            approvalStatus: 'pending', walletBalance: 0
-                        });
-                        alert("تصدیقی ای میل بھیج دی گئی ہے! لنک کنفرم کر کے لاگ ان کریں۔");
-                        auth.signOut();
-                    });
-                })
-                .catch(error => alert("خرابی: " + error.message));
+    db.ref("orders").on("value", ordersListener);
+}
+
+/*
+ * Legacy-compatible client-side ride acceptance.
+ *
+ * IMPORTANT: Commission and ride assignment must ultimately
+ * be enforced by a trusted server/Cloud Function and secure
+ * database rules. This client-side check is not tamper-proof.
+ */
+async function acceptRide(orderId, fareValue, button) {
+    if (!currentUser || !currentDriver || !currentDriverKey) {
+        showMessage("ڈرائیور کی معلومات دستیاب نہیں۔", "error");
+        return;
+    }
+
+    if (currentDriver.approvalStatus !== "approved") {
+        showMessage("آپ کا اکاؤنٹ ابھی منظور نہیں ہوا۔", "error");
+        return;
+    }
+
+    const fareText = String(fareValue || "").replace(/,/g, "");
+    const fareMatch = fareText.match(/\d+(\.\d+)?/);
+    const fare = fareMatch ? Number(fareMatch[0]) : NaN;
+
+    if (!Number.isFinite(fare) || fare <= 0) {
+        showMessage("اس سواری کا کرایہ درست نہیں ہے۔", "error");
+        return;
+    }
+
+    const commission = Math.round(fare * 0.05);
+
+    button.disabled = true;
+    button.textContent = "قبول ہو رہی ہے...";
+
+    try {
+        const orderRef = db.ref("orders/" + orderId);
+        const driverRef = db.ref("drivers/" + currentDriverKey);
+
+        const orderSnap = await orderRef.once("value");
+        const order = orderSnap.val();
+
+        if (!order || order.status !== "pending") {
+            showMessage(
+                "یہ سواری اب دستیاب نہیں ہے۔ فہرست دوبارہ چیک کریں۔",
+                "error"
+            );
+            return;
+        }
+
+        const driverSnap = await driverRef.once("value");
+        const driver = driverSnap.val();
+
+        if (!driver || driver.approvalStatus !== "approved") {
+            showMessage("آپ کا ڈرائیور اکاؤنٹ منظور نہیں ہے۔", "error");
+            return;
+        }
+
+        const balance = Number(driver.walletBalance) || 0;
+
+        if (balance < commission) {
+            showMessage(
+                "والٹ میں کمیشن کے لیے رقم ناکافی ہے۔",
+                "error"
+            );
+            return;
+        }
+
+        /*
+         * These writes are retained for compatibility with
+         * the current database structure. They are not atomic.
+         */
+        await driverRef.update({
+            walletBalance: balance - commission
         });
 
-        function checkDriverApproval(email) {
-            db.ref('drivers').orderByChild('email').equalTo(email).on('value', snapshot => {
-                const data = snapshot.val();
-                if(!data) return;
-                const driverKey = Object.keys(data)[0];
-                const driver = data[driverKey];
+        await orderRef.update({
+            status: "confirmed_by_driver",
+            driverId: currentDriverKey,
+            driverName: driver.name || "",
+            driverPhone: driver.phone || "",
+            commission: commission,
+            acceptedAt: firebase.database.ServerValue.TIMESTAMP
+        });
 
-                document.getElementById('walletBal').innerText = `Rs. ${driver.walletBalance || 0}`;
+        showMessage(
+            "سواری قبول ہو گئی۔ کمیشن: Rs. " + commission,
+            "success"
+        );
 
-                if(driver.approvalStatus === 'approved') {
-                    document.getElementById('driverStatus').innerText = "منظور شدہ (Approved) ✅";
-                    document.getElementById('driverStatus').style.color = "#10b981";
+    } catch (error) {
+        console.error(error);
 
-                    if((driver.walletBalance || 0) > 0) {
-                        document.getElementById('ordersCard').style.display = 'block';
-                        listenForOrders(driverKey, driver);
-                    } else {
-                        document.getElementById('ordersCard').style.display = 'none';
-                        alert("بیلنس ختم ہو گیا ہے! مزید سواریوں کے لیے جیز کیش ریچارج کریں۔");
-                    }
-                } else if(driver.approvalStatus === 'rejected') {
-                    document.getElementById('driverStatus').innerText = "مسترد شدہ (Rejected) ❌";
-                    document.getElementById('driverStatus').style.color = "#ef4444";
-                } else {
-                    document.getElementById('driverStatus').innerText = "منظوری کی منتظر ⏳";
-                }
-            });
-        }
+        showMessage(
+            "سواری قبول نہیں ہو سکی۔ دوبارہ کوشش کریں۔ " +
+            (error.message || ""),
+            "error"
+        );
 
-        function logoutDriver() {
-            auth.signOut().then(() => window.location.reload());
-        }
+    } finally {
+        button.disabled = false;
+        button.textContent = "سواری قبول کریں (5% کمیشن)";
+    }
+}
 
-        function listenForOrders(driverKey, driver) {
-            db.ref('orders').on('value', snapshot => {
-                const ordersList = document.getElementById('ordersList');
-                ordersList.innerHTML = '';
-                const data = snapshot.val();
-                if(!data) return;
+/*
+ * Logout.
+ */
+el("logoutBtn").addEventListener("click", async function() {
+    try {
+        stopDriverListener();
+        await auth.signOut();
+        window.location.replace("login.html");
+    } catch (error) {
+        showMessage("Logout نہیں ہو سکا۔ دوبارہ کوشش کریں۔", "error");
+    }
+});
+</script>
 
-                Object.keys(data).forEach(key => {
-                    const order = data[key];
-                    if(order.status === 'pending') {
-                        const div = document.createElement('div');
-                        div.className = 'order-card';
-                        div.innerHTML = `
-                            <strong>${order.service}</strong> - کرایہ: ${order.fare}<br>
-                            ${order.pickup} ➔ ${order.dropoff}<br>
-                            <button class="btn" style="margin-top:8px;" onclick="acceptRide('${key}', '${order.fare}', '${driverKey}', '${driver.name}')">قبول کریں (5% کمیشن کٹوتی)</button>
-                        `;
-                        ordersList.appendChild(div);
-                    }
-                });
-            });
-        }
-
-        function acceptRide(orderId, fareStr, driverKey, driverName) {
-            const fareNum = parseInt(fareStr.replace('Rs. ', '')) || 100;
-            const commission = Math.round(fareNum * 0.05);
-
-            db.ref(`drivers/${driverKey}`).once('value', snapshot => {
-                const driver = snapshot.val();
-                if((driver.walletBalance || 0) < commission) {
-                    alert("کمیشن کے لیے رقم کم ہے! جیز کیش سے ریچارج کریں۔");
-                    return;
-                }
-
-                db.ref(`drivers/${driverKey}`).update({ walletBalance: driver.walletBalance - commission });
-                db.ref(`orders/${orderId}`).update({ status: 'confirmed_by_driver', driverName: driverName });
-                alert(`سواری قبول ہو گئی! 5% کمیشن (Rs. ${commission}) کٹ گیا ہے۔`);
-            });
-        }
-    </script>
 </body>
-</html>
+    </html>
