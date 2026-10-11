@@ -3,213 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zrides - Ride & Delivery Service</title>
+    <title>Zrides - Professional Ride & Delivery Platform</title>
 
-    <!-- Leaflet CSS -->
+    <!-- Leaflet Map CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f4f6f9; color: #333; }
-        header { background-color: #10b981; color: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .logo { font-size: 28px; font-weight: bold; }
-        nav { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-        nav a { color: white; text-decoration: none; font-weight: 500; }
-        .lang-btn, .partner-btn, .login-btn { background-color: white; color: #10b981; border: none; padding: 6px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 14px; transition: 0.3s; }
-        .login-btn { background-color: #0f172a; color: white; }
-        .login-btn:hover { background-color: #1e293b; }
-        .lang-btn:hover, .partner-btn:hover { background-color: #e2e8f0; }
+        body { background-color: #f8fafc; color: #1e293b; }
         
-        .hero { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=1000') center/cover; height: 220px; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
-        .hero h1 { font-size: 32px; margin-bottom: 8px; }
-        
-        .booking-container { max-width: 1100px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        @media (max-width: 768px) { .booking-container { grid-template-columns: 1fr; } }
-        
-        .booking-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-        .booking-card h2 { color: #10b981; margin-bottom: 20px; text-align: center; }
-        
+        header { background-color: #0f172a; color: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .logo { font-size: 26px; font-weight: bold; color: #10b981; letter-spacing: 1px; }
+        nav { display: flex; align-items: center; gap: 15px; }
+        nav a { color: white; text-decoration: none; font-weight: 500; font-size: 15px; }
+        .btn-nav { background: #10b981; padding: 8px 16px; border-radius: 6px; transition: 0.3s; }
+        .btn-nav:hover { background: #059669; }
+        .btn-outline { border: 1px solid #475569; padding: 7px 15px; border-radius: 6px; }
+
+        .hero { background: linear-gradient(rgba(15,23,42,0.85), rgba(15,23,42,0.85)), url('https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=1000') center/cover; height: 180px; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
+        .hero h1 { font-size: 26px; margin-bottom: 5px; color: #34d399; }
+
+        .main-container { max-width: 1200px; margin: 25px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        @media (max-width: 768px) { .main-container { grid-template-columns: 1fr; } }
+
+        .card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .card h2 { color: #0f172a; margin-bottom: 20px; font-size: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
+
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
-        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; color: #475569; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; background: #fff; }
+
+        .fare-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 15px; text-align: center; margin: 20px 0; }
+        .fare-box h3 { color: #15803d; font-size: 24px; margin-top: 5px; }
+
+        .btn-submit { width: 100%; background-color: #10b981; color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .btn-submit:hover { background-color: #059669; }
+
+        #map { height: 100%; min-height: 420px; border-radius: 8px; border: 1px solid #cbd5e1; }
         
-        .price-box { background-color: #ecfdf5; border: 2px dashed #10b981; border-radius: 8px; padding: 15px; text-align: center; margin: 20px 0; }
-        .price-box h3 { color: #059669; font-size: 22px; }
-        
-        .btn { width: 100%; background-color: #10b981; color: white; border: none; padding: 14px; font-size: 18px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.3s; }
-        .btn:hover { background-color: #059669; }
-        
-        #map { height: 100%; min-height: 400px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-        
-        footer { background-color: #1f2937; color: white; text-align: center; padding: 20px; margin-top: 40px; }
+        footer { background: #0f172a; color: #94a3b8; text-align: center; padding: 20px; margin-top: 40px; font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <!-- Header with Login & Partner Buttons -->
     <header>
-        <div class="logo">Zrides</div>
+        <div class="logo">Zrides.pk</div>
         <nav>
-            <a href="login.html" class="login-btn" id="navLogin">لاگ ان / سائن اپ</a>
-            <a href="driver.html" class="partner-btn" id="navPartner">ڈرائیور پورٹل</a>
-            <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">English</button>
+            <a href="login.html" class="btn-outline" id="navLogin">لاگ ان / سائن اپ</a>
+            <a href="driver.html" class="btn-nav" id="navPartner">ڈرائیور پورٹل</a>
+            <a href="#" onclick="toggleLanguage()" id="langBtn" style="color: #38bdf8;">English</a>
         </nav>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero">
-        <h1 id="heroTitle">Zrides - فاسٹ اور محفوظ سروس</h1>
-        <p id="heroSubtitle">اپنی لوکیشن منتخب کریں اور منٹوں میں سواری یا ڈیلیوری حاصل کریں</p>
+        <h1 id="heroTitle">محفوظ اور تیز ترین رائیڈ سروس</h1>
+        <p id="heroSubtitle">اپنا مقام چنیں اور منٹوں میں سواری یا پارسل ڈیلیوری حاصل کریں</p>
     </section>
 
-    <!-- Booking & Map Section -->
-    <div class="booking-container">
-        <div class="booking-card">
-            <h2 id="formTitle">بکنگ اور کرایہ کا حساب</h2>
-            <form id="rideForm">
+    <div class="main-container">
+        <div class="card">
+            <h2 id="formTitle">فوری بکنگ فارم</h2>
+            <form id="bookingForm">
                 <div class="form-group">
-                    <label id="lblService">سروس کی قسم:</label>
+                    <label id="lblService">سروس کی قسم منتخب کریں:</label>
                     <select id="serviceType" onchange="calculateFare()">
-                        <option value="بائیک سواری (Bike Ride)">🏍️ بائیک سواری (Bike Ride)</option>
-                        <option value="آٹو رکشہ (Rickshaw)">🛺 آٹو رکشہ (Rickshaw)</option>
-                        <option value="پارسل ڈیلیوری (Delivery)">📦 پارسل ڈیلیوری (Delivery)</option>
-                        <option value="خریدو سروس (Buy Service)">🛒 خریدو (Buy Service)</option>
+                        <option value="بائیک رائیڈ (Bike Ride)">🏍️ بائیک رائیڈ (Bike Ride)</option>
+                        <option value="آٹو رکشہ (Rickshaw)">🛺 آٹو رکشہ (Auto Rickshaw)</option>
+                        <option value="پارسل ڈیلیوری (Parcel Delivery)">📦 پارسل ڈیلیوری (Parcel Delivery)</option>
+                        <option value="خریدو سروس (Buy For Me)">🛒 خریدو سروس (Buy For Me)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label id="lblPickup">پک اپ لوکیشن (Pickup):</label>
-                    <input type="text" id="pickup" placeholder="مثلاً: کلمہ چوک، لاہور" required>
+                    <label id="lblPickup">پک اپ لوکیشن (Pickup Location):</label>
+                    <input type="text" id="pickup" placeholder="مثلاً: صدر بازار، لاہور" required>
                 </div>
 
                 <div class="form-group">
-                    <label id="lblDropoff">ڈراپ آف لوکیشن (Dropoff):</label>
-                    <input type="text" id="dropoff" placeholder="مثلاً: مال روڈ، لاہور" required>
+                    <label id="lblDropoff">ڈراپ آف لوکیشن (Dropoff Location):</label>
+                    <input type="text" id="dropoff" placeholder="مثلاً: ڈی ایچ اے فیز 5، لاہور" required>
                 </div>
 
                 <div class="form-group">
-                    <label id="lblDistance">اندازاً فاصلہ (کلومیٹر میں):</label>
+                    <label id="lblDistance">تخمینہ شدہ فاصلہ (کلومیٹر):</label>
                     <input type="number" id="distance" value="5" min="1" max="100" oninput="calculateFare()">
                 </div>
 
-                <div class="price-box">
-                    <p id="lblTotalFare">کل تخمینہ شدہ کرایہ:</p>
-                    <h3 id="estimatedFare">150 روپے</h3>
+                <div class="fare-box">
+                    <p id="lblTotalFare">کل متوقع کرایہ:</p>
+                    <h3 id="estimatedFare">Rs. 150</h3>
                 </div>
 
                 <div class="form-group">
-                    <label id="lblPhone">موبائل نمبر:</label>
+                    <label id="lblPhone">آپ کا موبائل نمبر:</label>
                     <input type="tel" id="phone" placeholder="03001234567" required>
                 </div>
 
-                <button type="submit" class="btn" id="btnSubmit">بکنگ کی تصدیق کریں</button>
+                <button type="submit" class="btn-submit" id="btnSubmit">بکنگ کنفرم کریں</button>
             </form>
         </div>
 
-        <div>
+        <div class="card" style="padding: 10px;">
             <div id="map"></div>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
-        <p id="footerText">© 2026 Zrides - جملہ حقوق محفوظ ہیں</p>
+        <p id="footerText">© 2026 Zrides Pakistan (Pvt) Ltd. تمام حقوق محفوظ ہیں۔</p>
     </footer>
 
     <!-- Leaflet Map JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <script>
         const firebaseConfig = {
-            databaseURL: "https://zrides-default-rtdb.firebaseio.com/"
+            apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
+            authDomain: "zrides-9f2da.firebaseapp.com",
+            databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
+            projectId: "zrides-9f2da",
+            storageBucket: "zrides-9f2da.firebasestorage.app",
+            messagingSenderId: "93898388224",
+            appId: "1:93898388224:web:2e4f78e5b31dec26f839e5",
+            measurementId: "G-XCGVR3L9YV"
         };
+        
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        var currentLang = 'ur';
-        var translations = {
-            ur: {
-                navLogin: "لاگ ان / سائن اپ",
-                navPartner: "ڈرائیور پورٹل",
-                langBtn: "English",
-                heroTitle: "Zrides - فاسٹ اور محفوظ سروس",
-                heroSubtitle: "اپنی لوکیشن منتخب کریں اور منٹوں میں سواری یا ڈیلیوری حاصل کریں",
-                formTitle: "بکنگ اور کرایہ کا حساب",
-                lblService: "سروس کی قسم:",
-                lblPickup: "پک اپ لوکیشن (Pickup):",
-                lblDropoff: "ڈراپ آف لوکیشن (Dropoff):",
-                lblDistance: "اندازاً فاصلہ (کلومیٹر میں):",
-                lblTotalFare: "کل تخمینہ شدہ کرایہ:",
-                currency: "روپے",
-                lblPhone: "موبائل نمبر:",
-                btnSubmit: "بکنگ کی تصدیق کریں",
-                footerText: "© 2026 Zrides - جملہ حقوق محفوظ ہیں"
-            },
-            en: {
-                navLogin: "Login / Signup",
-                navPartner: "Driver Portal",
-                langBtn: "اردو",
-                heroTitle: "Zrides - Fast & Secure Ride Service",
-                heroSubtitle: "Select your location and get a ride or delivery in minutes",
-                formTitle: "Booking & Fare Estimation",
-                lblService: "Service Type:",
-                lblPickup: "Pickup Location:",
-                lblDropoff: "Dropoff Location:",
-                lblDistance: "Estimated Distance (in KM):",
-                lblTotalFare: "Total Estimated Fare:",
-                currency: "PKR",
-                lblPhone: "Phone Number:",
-                btnSubmit: "Confirm Booking",
-                footerText: "© 2026 Zrides - All rights reserved"
-            }
-        };
-
-        function toggleLanguage() {
-            currentLang = (currentLang === 'ur') ? 'en' : 'ur';
-            var html = document.getElementById('htmlTag');
-            html.setAttribute('dir', currentLang === 'ur' ? 'rtl' : 'ltr');
-            html.setAttribute('lang', currentLang);
-            
-            var t = translations[currentLang];
-            document.getElementById('navLogin').innerText = t.navLogin;
-            document.getElementById('navPartner').innerText = t.navPartner;
-            document.getElementById('langBtn').innerText = t.langBtn;
-            document.getElementById('heroTitle').innerText = t.heroTitle;
-            document.getElementById('heroSubtitle').innerText = t.heroSubtitle;
-            document.getElementById('formTitle').innerText = t.formTitle;
-            document.getElementById('lblService').innerText = t.lblService;
-            document.getElementById('lblPickup').innerText = t.lblPickup;
-            document.getElementById('lblDropoff').innerText = t.lblDropoff;
-            document.getElementById('lblDistance').innerText = t.lblDistance;
-            document.getElementById('lblTotalFare').innerText = t.lblTotalFare;
-            document.getElementById('lblPhone').innerText = t.lblPhone;
-            document.getElementById('btnSubmit').innerText = t.btnSubmit;
-            document.getElementById('footerText').innerText = t.footerText;
-            calculateFare();
-        }
-
-        var map = L.map('map').setView([31.5204, 74.3587], 12);
+        var map = L.map('map').setView([31.5204, 74.3587], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
-        L.marker([31.5204, 74.3587]).addTo(map).bindPopup('Zrides').openPopup();
+
+        var marker = L.marker([31.5204, 74.3587]).addTo(map).bindPopup('Zrides مرکز').openPopup();
+
+        // Tap on Map to set Pickup location
+        map.on('click', function(e) {
+            var lat = e.latlng.lat.toFixed(4);
+            var lng = e.latlng.lng.toFixed(4);
+            document.getElementById('pickup').value = "Lat: " + lat + ", Lng: " + lng;
+            if (marker) map.removeLayer(marker);
+            marker = L.marker([lat, lng]).addTo(map).bindPopup("پک اپ مقام").openPopup();
+        });
 
         function calculateFare() {
             var service = document.getElementById('serviceType').value;
             var distance = parseFloat(document.getElementById('distance').value) || 0;
-            var fare = service.includes('Rickshaw') ? 80 + (distance * 35) : service.includes('Delivery') ? 60 + (distance * 25) : 50 + (distance * 20);
-            document.getElementById('estimatedFare').innerText = Math.round(fare) + " " + translations[currentLang].currency;
+            var baseFare = 50; var perKm = 20;
+
+            if (service.includes('Rickshaw')) { baseFare = 80; perKm = 35; }
+            else if (service.includes('Parcel')) { baseFare = 60; perKm = 25; }
+            else if (service.includes('Buy')) { baseFare = 100; perKm = 20; }
+
+            var total = baseFare + (distance * perKm);
+            document.getElementById('estimatedFare').innerText = "Rs. " + Math.round(total);
         }
 
-        document.getElementById('rideForm').addEventListener('submit', function(e) {
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
             var service = document.getElementById('serviceType').value;
-            var pickup = document.getElementById('pickup').value;
-            var dropoff = document.getElementById('dropoff').value;
+            var pickup = document.getElementById('pickup').value.trim();
+            var dropoff = document.getElementById('dropoff').value.trim();
             var distance = document.getElementById('distance').value;
-            var phone = document.getElementById('phone').value;
+            var phone = document.getElementById('phone').value.trim();
             var fare = document.getElementById('estimatedFare').innerText;
 
             db.ref('orders/').push({
@@ -219,18 +178,28 @@
                 distance: distance,
                 phone: phone,
                 fare: fare,
+                offeredFare: fare,
                 status: 'pending',
-                time: new Date().toLocaleTimeString()
+                timestamp: new Date().toLocaleString()
             }, function(error) {
                 if (error) {
-                    alert("بکنگ میں خرابی پیش آئی۔ دوبارہ کوشش کریں۔");
+                    alert("بکنگ میں خرابی: " + error.message);
                 } else {
-                    alert("شکریہ! آپ کی بکنگ کامیاب ہو گئی ہے۔ قریبی ڈرائیور کو الرٹ بھیج دیا گیا ہے۔");
-                    document.getElementById('rideForm').reset();
+                    alert("مبارک ہو! آپ کا آرڈر ڈرائیورز کو بھیج دیا گیا ہے۔");
+                    document.getElementById('bookingForm').reset();
                     calculateFare();
                 }
             });
         });
+
+        let isUrdu = true;
+        function toggleLanguage() {
+            isUrdu = !isUrdu;
+            const htmlTag = document.getElementById('htmlTag');
+            htmlTag.setAttribute('dir', isUrdu ? 'rtl' : 'ltr');
+            htmlTag.setAttribute('lang', isUrdu ? 'ur' : 'en');
+            document.getElementById('langBtn').innerText = isUrdu ? "English" : "اردو";
+        }
     </script>
 </body>
 </html>
