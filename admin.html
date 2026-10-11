@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zrides - Admin Control Portal</title>
+    <title>Zrides - ایڈمن ڈیش بورڈ</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0f172a; color: #f8fafc; padding: 20px; }
@@ -35,44 +35,44 @@
     </header>
 
     <div class="container">
-        <!-- Driver Approvals & Wallet Section -->
+        <!-- Drivers Verification & Balance Section -->
         <div class="card">
-            <h2>👨‍✈️ Driver Verification & Wallet Management</h2>
+            <h2>👨‍✈️ ڈرائیورز کی تصدیق اور والٹ بیلنس منیجمنٹ</h2>
             <table>
                 <thead>
                     <tr>
-                        <th>Naam</th>
-                        <th>Mobile</th>
-                        <th>Gari</th>
-                        <th>Status</th>
-                        <th>Current Balance</th>
-                        <th>Add Balance (Rs)</th>
-                        <th>Actions</th>
+                        <th>نام</th>
+                        <th>موبائل</th>
+                        <th>گاڑی</th>
+                        <th>اسٹیٹس</th>
+                        <th>موجودہ بیلنس</th>
+                        <th>بیلنس شامل کریں (Rs)</th>
+                        <th>ایکشن</th>
                     </tr>
                 </thead>
                 <tbody id="driverList">
-                    <tr><td colspan="7" style="text-align:center;">Drivers load ho rahe hain...</td></tr>
+                    <tr><td colspan="7" style="text-align:center;">ڈرائیورز لوڈ ہو رہے ہیں...</td></tr>
                 </tbody>
             </table>
         </div>
 
-        <!-- All Rides Record Section -->
+        <!-- Rides Record Section -->
         <div class="card">
-            <h2>🚖 All Customer Rides Record</h2>
+            <h2>🚖 تمام کسٹمرز رائیڈز کا ریکارڈ</h2>
             <table>
                 <thead>
                     <tr>
-                        <th>Order ID</th>
-                        <th>Service</th>
-                        <th>Pickup & Dropoff</th>
-                        <th>Fare</th>
-                        <th>Driver</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th>آرڈر ID</th>
+                        <th>سروس</th>
+                        <th>پک اپ اور ڈراپ آف</th>
+                        <th>کرایہ</th>
+                        <th>ڈرائیور</th>
+                        <th>اسٹیٹس</th>
+                        <th>ایکشن</th>
                     </tr>
                 </thead>
                 <tbody id="rideList">
-                    <tr><td colspan="7" style="text-align:center;">Rides load ho rahi hain...</td></tr>
+                    <tr><td colspan="7" style="text-align:center;">سواریوں کا ریکارڈ لوڈ ہو رہا ہے...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -90,20 +90,19 @@
             projectId: "zrides-9f2da",
             storageBucket: "zrides-9f2da.firebasestorage.app",
             messagingSenderId: "93898388224",
-            appId: "1:93898388224:web:2e4f78e5b31dec26f839e5",
-            measurementId: "G-XCGVR3L9YV"
+            appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 1. Load Drivers List
+        // Load Drivers List
         db.ref('drivers').on('value', snapshot => {
             const list = document.getElementById('driverList');
             list.innerHTML = '';
             const drivers = snapshot.val();
 
             if(!drivers) {
-                list.innerHTML = '<tr><td colspan="7" style="text-align:center;">Koi driver registered nahi hai.</td></tr>';
+                list.innerHTML = '<tr><td colspan="7" style="text-align:center;">کوئی ڈرائیور نہیں ہے۔</td></tr>';
                 return;
             }
 
@@ -131,31 +130,31 @@
 
         function updateDriverStatus(driverId, status) {
             db.ref(`drivers/${driverId}`).update({ approvalStatus: status });
-            alert(`Driver Status: ${status}`);
+            alert(`ڈرائیور کا اسٹیٹس ${status} کر دیا گیا ہے۔`);
         }
 
         function addBalance(driverId) {
             const amt = parseInt(document.getElementById(`amt_${driverId}`).value);
             if(!amt || amt < 100 || amt > 1000) {
-                alert("Rs. 100 se 1000 tak amount darj karein!");
+                alert("Rs. 100 سے 1000 تک کی رقم درج کریں!");
                 return;
             }
 
             db.ref(`drivers/${driverId}`).once('value', snapshot => {
                 const current = snapshot.val().walletBalance || 0;
                 db.ref(`drivers/${driverId}`).update({ walletBalance: current + amt });
-                alert(`Rs. ${amt} Balance add kar diya gaya hai!`);
+                alert(`Rs. ${amt} والٹ میں شامل کر دیے گئے ہیں!`);
             });
         }
 
-        // 2. Load Rides Record
+        // Load Rides Record
         db.ref('orders').on('value', snapshot => {
             const list = document.getElementById('rideList');
             list.innerHTML = '';
             const orders = snapshot.val();
 
             if(!orders) {
-                list.innerHTML = '<tr><td colspan="7" style="text-align:center;">Koi ride record nahi hai.</td></tr>';
+                list.innerHTML = '<tr><td colspan="7" style="text-align:center;">کوئی سواری موجود نہیں ہے۔</td></tr>';
                 return;
             }
 
@@ -169,14 +168,14 @@
                     <td style="color:#38bdf8;">${o.fare}</td>
                     <td>${o.driverName || 'N/A'}</td>
                     <td>${o.status}</td>
-                    <td><button class="btn btn-delete" onclick="deleteRide('${id}')">Delete</button></td>
+                    <td><button class="btn btn-delete" onclick="deleteRide('${id}')">ڈیلیٹ کریں</button></td>
                 `;
                 list.appendChild(tr);
             });
         });
 
         function deleteRide(orderId) {
-            if(confirm("Kya aap is ride record ko delete karna chahte hain?")) {
+            if(confirm("کیا آپ اس رائیڈ کا ریکارڈ حذف (Delete) کرنا چاہتے ہیں؟")) {
                 db.ref(`orders/${orderId}`).remove();
             }
         }
