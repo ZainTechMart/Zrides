@@ -27,7 +27,6 @@
         .btn { background: #10b981; color: white; border: none; padding: 10px 18px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; }
         .btn:hover { background: #059669; }
         .btn-secondary { background: #3b82f6; margin-top: 5px; }
-        .btn-danger { background: #ef4444; }
 
         .order-card { background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #10b981; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
         .order-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; margin-bottom: 10px; }
@@ -38,6 +37,8 @@
 
         #map { height: 350px; border-radius: 8px; margin-bottom: 15px; }
         .status-badge { display: inline-block; background: #e0e7ff; color: #3730a3; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+
+        .notification-box { background: #3b82f6; color: white; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 15px; display: none; }
 
         /* Chat Box */
         .chat-container { border: 1px solid #cbd5e1; border-radius: 8px; background: #f8fafc; height: 250px; display: flex; flex-direction: column; }
@@ -60,7 +61,7 @@
     </header>
 
     <div class="container">
-        <!-- 1. Driver Registration Form -->
+        <!-- Driver Registration Form -->
         <div class="card" id="regCard">
             <h2>🚗 Driver Profile & Documents Verification</h2>
             <form id="driverRegForm">
@@ -85,30 +86,21 @@
                     <label>Gari Ka Number (Vehicle Number):</label>
                     <input type="text" id="dPlate" required placeholder="LEA-1234">
                 </div>
-                <div class="form-group">
-                    <label>Apni Saaf Photo / Selfie:</label>
-                    <input type="file" id="dPhoto" accept="image/*" required>
-                </div>
-                <div class="form-group">
-                    <label>CNIC Photo (Shanaakhti Card):</label>
-                    <input type="file" id="dCnic" accept="image/*" required>
-                </div>
-                <div class="form-group">
-                    <label>Driving Licence Photo:</label>
-                    <input type="file" id="dLicence" accept="image/*" required>
-                </div>
                 <button type="submit" class="btn">Register & Start Earning</button>
             </form>
         </div>
 
-        <!-- 2. Active Trip & Map Section -->
+        <!-- Active Trip & Map Section -->
         <div class="card" id="tripCard" style="display: none;">
+            <div id="driverNotification" class="notification-box">🔔 Customer Updates</div>
+
             <h2>📍 Live Ride Management</h2>
             <div id="map"></div>
 
             <div id="tripControls" style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button class="btn btn-secondary" onclick="markArrived()">📍 Arrived at Pickup</button>
-                <button class="btn" onclick="startJourney()">🚀 Start Journey</button>
+                <button id="btnConfirmRide" class="btn" style="display: none;" onclick="confirmRideByDriver()">✅ Confirm & Accept Ride</button>
+                <button id="btnArrived" class="btn btn-secondary" style="display: none;" onclick="markArrived()">📍 Arrived at Pickup</button>
+                <button id="btnStart" class="btn" style="display: none;" onclick="startJourney()">🚀 Start Journey</button>
             </div>
 
             <!-- In-App Chat -->
@@ -122,14 +114,14 @@
             </div>
         </div>
 
-        <!-- 3. Available Orders Section -->
+        <!-- Available Orders Section -->
         <div class="card" id="ordersCard" style="display: none;">
             <h2>📦 Available Rides / Orders</h2>
             <div id="ordersList">Searching for nearby rides...</div>
         </div>
     </div>
 
-    <!-- Leaflet & Routing JS -->
+    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 
@@ -154,10 +146,8 @@
 
         let activeOrderId = null;
         let driverData = null;
-        let map, routingControl, driverMarker;
-        let liveTrackingInterval;
+        let map, driverMarker;
 
-        // Load Driver Registration
         document.getElementById('driverRegForm').addEventListener('submit', function(e) {
             e.preventDefault();
             driverData = {
@@ -177,7 +167,6 @@
             listenForOrders();
         });
 
-        // Listen for Realtime Orders from Customers
         function listenForOrders() {
             db.ref('orders').on('value', snapshot => {
                 const ordersList = document.getElementById('ordersList');
@@ -191,13 +180,13 @@
 
                 Object.keys(data).forEach(key => {
                     const order = data[key];
-                    if (order.status === 'pending') {
+                    if (order.status === 'pending' || order.status === 'customer_counter_offer') {
                         const div = document.createElement('div');
                         div.className = 'order-card';
                         div.innerHTML = `
                             <div class="order-header">
                                 <span>${order.service}</span>
-                                <span style="color:#10b981;">Customer Fare: ${order.fare}</span>
+                                <span style="color:#10b981;">Fare: ${order.offeredFare || order.fare}</span>
                             </div>
                             <div class="order-details">
                                 <strong>Pickup:</strong> ${order.pickup}<br>
@@ -206,8 +195,8 @@
                                 <strong>Phone:</strong> ${order.phone}
                             </div>
                             <div class="bid-box">
-                                <input type="number" id="bid_${key}" value="${parseInt(order.fare.replace('Rs. ','')) || 100}" placeholder="Apna Fare Offer Karein">
-                                <button class="btn" onclick="sendCounterOffer('${key}')">Send Counter Fare</button>
+                                <input type="number" id="bid_${key}" value="${parseInt((order.offeredFare || order.fare).replace('Rs. ','')) || 100}">
+                                <button class="btn" onclick="sendCounterOffer('${key}')">Send Counter Offer</button>
                             </div>
                         `;
                         ordersList.appendChild(div);
@@ -216,12 +205,12 @@
             });
         }
 
-        // Send Edited Fare Counter Offer back to Customer
+        // Send Driver Counter Offer
         function sendCounterOffer(orderId) {
             const newFare = document.getElementById(`bid_${orderId}`).value;
             db.ref(`orders/${orderId}`).update({
                 offeredFare: "Rs. " + newFare,
-                status: 'accepted',
+                status: 'driver_counter_offer',
                 driverPhone: driverData.phone,
                 driverName: driverData.name
             });
@@ -230,7 +219,6 @@
             startTripView(orderId);
         }
 
-        // Start Live Ride View on Map
         function startTripView(orderId) {
             document.getElementById('ordersCard').style.display = 'none';
             document.getElementById('tripCard').style.display = 'block';
@@ -240,7 +228,33 @@
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
             }
 
-            // Listen for Chat Messages
+            // Realtime Status Listener for Driver Side
+            db.ref(`orders/${orderId}`).on('value', snapshot => {
+                const order = snapshot.val();
+                if(!order) return;
+
+                const driverNotif = document.getElementById('driverNotification');
+
+                // Customer Accepted Offer -> Show Confirm Button to Driver
+                if(order.status === 'accepted_by_customer') {
+                    driverNotif.style.display = 'block';
+                    driverNotif.innerText = `🎉 Customer ne Fare (${order.fare}) accept kar liya hai! Click Confirm to Start.`;
+                    document.getElementById('btnConfirmRide').style.display = 'block';
+                }
+
+                if(order.status === 'confirmed_by_driver') {
+                    document.getElementById('btnConfirmRide').style.display = 'none';
+                    document.getElementById('btnArrived').style.display = 'block';
+                    driverNotif.innerText = "🚕 Ride Confirmed! Pickup location par pahunch kar 'Arrived' dabayein.";
+                }
+
+                if(order.status === 'arrived') {
+                    document.getElementById('btnArrived').style.display = 'none';
+                    document.getElementById('btnStart').style.display = 'block';
+                }
+            });
+
+            // Chat Listener
             db.ref(`chats/${orderId}`).on('child_added', snapshot => {
                 const msg = snapshot.val();
                 const chatMsgs = document.getElementById('chatMsgs');
@@ -252,50 +266,44 @@
             });
         }
 
-        // Notification: Driver Arrived at Pickup
-        function markArrived() {
+        // Final Acceptance by Driver
+        function confirmRideByDriver() {
             db.ref(`orders/${activeOrderId}`).update({
-                status: 'arrived',
-                notification: 'Driver Pickup Location Par Pahunch Gaya Hai!'
+                status: 'confirmed_by_driver'
             });
-            alert("Customer ko notification bhej di gayi hai ke aap Pickup par pahunch gaye hain.");
+            alert("Ride Confirmed! Customer ko notification bhej di gayi hai.");
         }
 
-        // Start Journey & Live GPS Movement on Route
+        function markArrived() {
+            db.ref(`orders/${activeOrderId}`).update({
+                status: 'arrived'
+            });
+            alert("Customer ko Pickup Arrival Notification bhej di gayi hai.");
+        }
+
         function startJourney() {
             db.ref(`orders/${activeOrderId}`).update({
-                status: 'in_progress',
-                notification: 'Aap ka safar shuru ho chuka hai!'
+                status: 'in_progress'
             });
 
-            alert("Journey Started! Live GPS tracking shuru ho gayi hai.");
+            alert("Journey Started! Live Location Tracking chalu hai.");
 
-            // Simulate Live GPS Movement on Map
             if (navigator.geolocation) {
-                liveTrackingInterval = setInterval(() => {
+                setInterval(() => {
                     navigator.geolocation.getCurrentPosition(pos => {
                         const lat = pos.coords.latitude;
                         const lng = pos.coords.longitude;
 
                         if (driverMarker) map.removeLayer(driverMarker);
-                        driverMarker = L.marker([lat, lng]).addTo(map).bindPopup("🚗 Live Location").openPopup();
+                        driverMarker = L.marker([lat, lng]).addTo(map).bindPopup("🚗 Live Position").openPopup();
                         map.panTo([lat, lng]);
 
                         db.ref(`orders/${activeOrderId}/driverLocation`).set({ lat, lng });
-
-                        // Check if Arrived at Dropoff (Automated Arrival Logic)
-                        db.ref(`orders/${activeOrderId}`).once('value', snapshot => {
-                            const order = snapshot.val();
-                            if (order && order.dropoff) {
-                                // Simulate automatic dropoff check
-                            }
-                        });
                     });
                 }, 5000);
             }
         }
 
-        // Send Chat Message
         function sendChatMessage() {
             const input = document.getElementById('chatText');
             if (input.value.trim() !== '') {
