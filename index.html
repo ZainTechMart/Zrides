@@ -7,7 +7,6 @@
 
     <!-- Leaflet Map CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <!-- Leaflet Routing Machine CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
 
     <style>
@@ -44,9 +43,14 @@
         #map { height: 100%; min-height: 420px; border-radius: 8px; border: 1px solid #cbd5e1; }
         .map-hint { font-size: 13px; color: #10b981; text-align: center; margin-bottom: 10px; font-weight: bold; background: #ecfdf5; padding: 8px; border-radius: 6px; border: 1px solid #a7f3d0; }
         
-        /* Notification Alert Box */
+        /* Bidding Box Style */
+        .bidding-box { background: #fef3c7; border: 1px solid #fde047; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: none; }
+        .bidding-actions { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-accept { background: #10b981; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 50%; }
+        .btn-reoffer { background: #f59e0b; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 50%; }
+
         .notification-box { background: #3b82f6; color: white; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 15px; display: none; }
-        
+
         /* Chat Box */
         .chat-container { border: 1px solid #cbd5e1; border-radius: 8px; background: #f8fafc; height: 220px; display: flex; flex-direction: column; margin-top: 15px; }
         .chat-messages { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
@@ -79,7 +83,19 @@
 
     <div class="main-container">
         <div class="card">
-            <div id="statusNotification" class="notification-box">🔔 Order update notification yahan aayegi</div>
+            <div id="statusNotification" class="notification-box">🔔 Order update notification</div>
+
+            <!-- Driver Counter Offer Bidding Section -->
+            <div id="biddingBox" class="bidding-box">
+                <p id="bidText">🚕 Driver ne naya fare offer kiya hai!</p>
+                <div class="form-group" style="margin-top: 8px;">
+                    <input type="number" id="custReOfferInput" placeholder="Aapna Fare Re-Offer Karein (Optional)">
+                </div>
+                <div class="bidding-actions">
+                    <button class="btn-accept" onclick="acceptDriverOffer()">Accept Offer</button>
+                    <button class="btn-reoffer" onclick="sendCustomerCounterOffer()">Send Counter Offer</button>
+                </div>
+            </div>
 
             <h2 id="formTitle">فوری بکنگ فارم</h2>
             <form id="bookingForm">
@@ -170,7 +186,7 @@
         const db = firebase.database();
 
         var map = L.map('map').setView([31.5204, 74.3587], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
         var pickupCoord = null;
         var dropoffCoord = null;
@@ -178,6 +194,7 @@
         var driverLiveMarker = null;
         var currentOrderId = null;
         var selectionStep = 'pickup';
+        var currentDriverFare = 0;
 
         function setActiveSelection(step) {
             selectionStep = step;
@@ -244,30 +261,18 @@
             var distance = parseFloat(document.getElementById('distance').value) || 1;
             
             var baseFare = 30; 
-            var perKmRate = 15; // Bike
+            var perKmRate = 15;
 
-            if (service.includes('Rickshaw')) { 
-                baseFare = 50; 
-                perKmRate = 30; 
-            } else if (service.includes('Car Mini')) { 
-                baseFare = 80; 
-                perKmRate = 45; 
-            } else if (service.includes('Car Sedan')) { 
-                baseFare = 100; 
-                perKmRate = 60; 
-            } else if (service.includes('Parcel')) { 
-                baseFare = 40; 
-                perKmRate = 18; 
-            } else if (service.includes('Buy')) { 
-                baseFare = 50; 
-                perKmRate = 20; 
-            }
+            if (service.includes('Rickshaw')) { baseFare = 50; perKmRate = 30; }
+            else if (service.includes('Car Mini')) { baseFare = 80; perKmRate = 45; }
+            else if (service.includes('Car Sedan')) { baseFare = 100; perKmRate = 60; }
+            else if (service.includes('Parcel')) { baseFare = 40; perKmRate = 18; }
+            else if (service.includes('Buy')) { baseFare = 50; perKmRate = 20; }
 
             var total = baseFare + (distance * perKmRate);
             document.getElementById('estimatedFare').innerText = "Rs. " + Math.round(total);
         }
 
-        // Submit Booking and Listen for Realtime Driver Status/Updates
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -306,37 +311,45 @@
             });
         });
 
-        // Realtime Order Updates (Counter Fare, Driver Live Location, Chat, Notifications)
         function listenToOrderUpdates(orderId) {
             db.ref(`orders/${orderId}`).on('value', snapshot => {
                 const order = snapshot.val();
                 if (!order) return;
 
                 const notifBox = document.getElementById('statusNotification');
+                const biddingBox = document.getElementById('biddingBox');
 
-                // 1. Check Counter Offer / Driver Acceptance
-                if (order.status === 'accepted' && order.offeredFare) {
-                    document.getElementById('estimatedFare').innerText = order.offeredFare;
+                // Driver Counter Offer Notification
+                if (order.status === 'driver_counter_offer') {
+                    currentDriverFare = order.offeredFare;
+                    biddingBox.style.display = 'block';
+                    document.getElementById('bidText').innerText = `🚕 Driver (${order.driverName || 'Driver'}) ne Naya Fare Offer Kiya: ${order.offeredFare}`;
+                }
+
+                // Final Ride Confirmation by Driver
+                if (order.status === 'confirmed_by_driver') {
+                    biddingBox.style.display = 'none';
                     notifBox.style.display = 'block';
-                    notifBox.innerText = `🚕 Driver (${order.driverName || 'Driver'}) ne Naya Fare Offer Kiya: ${order.offeredFare}`;
+                    notifBox.style.background = '#10b981';
+                    notifBox.innerText = `🎉 Ride Confirmed! Driver (${order.driverName}) aap ki taraf aa raha hai. Total Fare: ${order.fare}`;
                     document.getElementById('chatSection').style.display = 'block';
                 }
 
-                // 2. Driver Arrived Notification
+                // Driver Arrived Notification
                 if (order.status === 'arrived') {
                     notifBox.style.display = 'block';
                     notifBox.style.background = '#10b981';
                     notifBox.innerText = "🎉 Driver Aap Ki Pickup Location Par Pahunch Gaya Hai!";
                 }
 
-                // 3. Trip In Progress Notification
+                // Trip In Progress Notification
                 if (order.status === 'in_progress') {
                     notifBox.style.display = 'block';
                     notifBox.style.background = '#059669';
                     notifBox.innerText = "🚀 Aap Ka Safar Shuru Ho Chuka Hai!";
                 }
 
-                // 4. Live Driver GPS Marker
+                // Live Driver GPS Tracking
                 if (order.driverLocation) {
                     const lat = order.driverLocation.lat;
                     const lng = order.driverLocation.lng;
@@ -356,6 +369,32 @@
                 chatMsgs.appendChild(msgDiv);
                 chatMsgs.scrollTop = chatMsgs.scrollHeight;
             });
+        }
+
+        // Accept Driver Counter Offer
+        function acceptDriverOffer() {
+            db.ref(`orders/${currentOrderId}`).update({
+                fare: currentDriverFare,
+                status: 'accepted_by_customer'
+            });
+            document.getElementById('biddingBox').style.display = 'none';
+            alert("Aap ne Driver ka Fare accept kar liya hai! Driver ki final confirmation ka intezar karein.");
+        }
+
+        // Send Re-Offer to Driver
+        function sendCustomerCounterOffer() {
+            const newFare = document.getElementById('custReOfferInput').value;
+            if(!newFare) {
+                alert("Kripya naya fare likhein!");
+                return;
+            }
+
+            db.ref(`orders/${currentOrderId}`).update({
+                offeredFare: "Rs. " + newFare,
+                status: 'customer_counter_offer'
+            });
+            document.getElementById('biddingBox').style.display = 'none';
+                alert("Aap ka naya fare offer driver ko bhej diya gaya hai!");
         }
 
         // Send Chat Message to Driver
