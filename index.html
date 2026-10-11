@@ -12,7 +12,7 @@
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f8fafc; color: #1e293b; }
+        body { background-color: #f8fafc; color: #1e293b; padding-bottom: 20px; }
         
         header { background-color: #0f172a; color: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
         .logo { font-size: 26px; font-weight: bold; color: #10b981; letter-spacing: 1px; }
@@ -22,8 +22,8 @@
         .btn-nav:hover { background: #059669; }
         .btn-outline { border: 1px solid #475569; padding: 7px 15px; border-radius: 6px; }
 
-        .hero { background: linear-gradient(rgba(15,23,42,0.85), rgba(15,23,42,0.85)), url('https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=1000') center/cover; height: 180px; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
-        .hero h1 { font-size: 26px; margin-bottom: 5px; color: #34d399; }
+        .hero { background: linear-gradient(rgba(15,23,42,0.85), rgba(15,23,42,0.85)), url('https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=1000') center/cover; height: 160px; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
+        .hero h1 { font-size: 24px; margin-bottom: 5px; color: #34d399; }
 
         .main-container { max-width: 1200px; margin: 25px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
         @media (max-width: 768px) { .main-container { grid-template-columns: 1fr; } }
@@ -44,8 +44,20 @@
         #map { height: 100%; min-height: 420px; border-radius: 8px; border: 1px solid #cbd5e1; }
         .map-hint { font-size: 13px; color: #10b981; text-align: center; margin-bottom: 10px; font-weight: bold; background: #ecfdf5; padding: 8px; border-radius: 6px; border: 1px solid #a7f3d0; }
         
-        footer { background: #0f172a; color: #94a3b8; text-align: center; padding: 20px; margin-top: 40px; font-size: 14px; }
+        /* Notification Alert Box */
+        .notification-box { background: #3b82f6; color: white; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 15px; display: none; }
         
+        /* Chat Box */
+        .chat-container { border: 1px solid #cbd5e1; border-radius: 8px; background: #f8fafc; height: 220px; display: flex; flex-direction: column; margin-top: 15px; }
+        .chat-messages { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .chat-msg { padding: 8px 12px; border-radius: 8px; font-size: 13px; max-width: 80%; }
+        .chat-msg.customer { background: #10b981; color: white; align-self: flex-start; }
+        .chat-msg.driver { background: #e2e8f0; color: #1e293b; align-self: flex-end; }
+        .chat-input { display: flex; padding: 8px; border-top: 1px solid #cbd5e1; background: white; }
+        .chat-input input { flex: 1; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; margin-left: 8px; }
+        .chat-input button { padding: 8px 15px; background: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer; }
+
+        footer { background: #0f172a; color: #94a3b8; text-align: center; padding: 20px; margin-top: 40px; font-size: 14px; }
         .leaflet-routing-container { display: none !important; }
     </style>
 </head>
@@ -67,6 +79,8 @@
 
     <div class="main-container">
         <div class="card">
+            <div id="statusNotification" class="notification-box">🔔 Order update notification yahan aayegi</div>
+
             <h2 id="formTitle">فوری بکنگ فارم</h2>
             <form id="bookingForm">
                 <div class="form-group">
@@ -108,6 +122,18 @@
 
                 <button type="submit" class="btn-submit" id="btnSubmit">بکنگ کنفرم کریں</button>
             </form>
+
+            <!-- Customer Live Chat Box -->
+            <div id="chatSection" style="display: none;">
+                <h3 style="margin-top: 20px; font-size: 16px;">💬 Driver ke sath Live Chat</h3>
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMsgs"></div>
+                    <div class="chat-input">
+                        <input type="text" id="chatText" placeholder="Message likhein...">
+                        <button type="button" onclick="sendChatMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="card" style="padding: 10px;">
@@ -149,6 +175,8 @@
         var pickupCoord = null;
         var dropoffCoord = null;
         var routingControl = null;
+        var driverLiveMarker = null;
+        var currentOrderId = null;
         var selectionStep = 'pickup';
 
         function setActiveSelection(step) {
@@ -215,7 +243,6 @@
             var service = document.getElementById('serviceType').value;
             var distance = parseFloat(document.getElementById('distance').value) || 1;
             
-            // Backend Fare Rates Calculation
             var baseFare = 30; 
             var perKmRate = 15; // Bike
 
@@ -240,6 +267,7 @@
             document.getElementById('estimatedFare').innerText = "Rs. " + Math.round(total);
         }
 
+        // Submit Booking and Listen for Realtime Driver Status/Updates
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -255,7 +283,10 @@
                 return;
             }
 
-            db.ref('orders/').push({
+            var newOrderRef = db.ref('orders/').push();
+            currentOrderId = newOrderRef.key;
+
+            newOrderRef.set({
                 service: service,
                 pickup: pickup,
                 dropoff: dropoff,
@@ -269,19 +300,76 @@
                 if (error) {
                     alert("بکنگ میں خرابی: " + error.message);
                 } else {
-                    alert("مبارک ہو! آپ کا آرڈر ڈرائیورز کو بھیج دیا گیا ہے۔");
-                    document.getElementById('bookingForm').reset();
-                    if (routingControl) {
-                        map.removeControl(routingControl);
-                        routingControl = null;
-                    }
-                    pickupCoord = null;
-                    dropoffCoord = null;
-                    selectionStep = 'pickup';
-                    calculateFare();
+                    alert("Mubarak ho! Aap ka order drivers ko bhej diya gaya hai.");
+                    listenToOrderUpdates(currentOrderId);
                 }
             });
         });
+
+        // Realtime Order Updates (Counter Fare, Driver Live Location, Chat, Notifications)
+        function listenToOrderUpdates(orderId) {
+            db.ref(`orders/${orderId}`).on('value', snapshot => {
+                const order = snapshot.val();
+                if (!order) return;
+
+                const notifBox = document.getElementById('statusNotification');
+
+                // 1. Check Counter Offer / Driver Acceptance
+                if (order.status === 'accepted' && order.offeredFare) {
+                    document.getElementById('estimatedFare').innerText = order.offeredFare;
+                    notifBox.style.display = 'block';
+                    notifBox.innerText = `🚕 Driver (${order.driverName || 'Driver'}) ne Naya Fare Offer Kiya: ${order.offeredFare}`;
+                    document.getElementById('chatSection').style.display = 'block';
+                }
+
+                // 2. Driver Arrived Notification
+                if (order.status === 'arrived') {
+                    notifBox.style.display = 'block';
+                    notifBox.style.background = '#10b981';
+                    notifBox.innerText = "🎉 Driver Aap Ki Pickup Location Par Pahunch Gaya Hai!";
+                }
+
+                // 3. Trip In Progress Notification
+                if (order.status === 'in_progress') {
+                    notifBox.style.display = 'block';
+                    notifBox.style.background = '#059669';
+                    notifBox.innerText = "🚀 Aap Ka Safar Shuru Ho Chuka Hai!";
+                }
+
+                // 4. Live Driver GPS Marker
+                if (order.driverLocation) {
+                    const lat = order.driverLocation.lat;
+                    const lng = order.driverLocation.lng;
+
+                    if (driverLiveMarker) map.removeLayer(driverLiveMarker);
+                    driverLiveMarker = L.marker([lat, lng]).addTo(map).bindPopup("🚗 Driver Live Position").openPopup();
+                }
+            });
+
+            // Listen for Realtime Chat
+            db.ref(`chats/${orderId}`).on('child_added', snapshot => {
+                const msg = snapshot.val();
+                const chatMsgs = document.getElementById('chatMsgs');
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `chat-msg ${msg.sender}`;
+                msgDiv.innerText = `${msg.sender === 'customer' ? 'Aap' : 'Driver'}: ${msg.text}`;
+                chatMsgs.appendChild(msgDiv);
+                chatMsgs.scrollTop = chatMsgs.scrollHeight;
+            });
+        }
+
+        // Send Chat Message to Driver
+        function sendChatMessage() {
+            const input = document.getElementById('chatText');
+            if (input.value.trim() !== '' && currentOrderId) {
+                db.ref(`chats/${currentOrderId}`).push({
+                    sender: 'customer',
+                    text: input.value,
+                    time: new Date().toLocaleTimeString()
+                });
+                input.value = '';
+            }
+        }
 
         let isUrdu = true;
         function toggleLanguage() {
