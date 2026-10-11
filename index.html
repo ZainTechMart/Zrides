@@ -1,160 +1,102 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl" id="htmlTag">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zrides - Ride & Delivery Platform</title>
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css">
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>Zrides | Book a Ride</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
-body{background:#f8fafc;color:#1e293b;padding-bottom:20px}
-header{background:#0f172a;color:white;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 6px -1px rgba(0,0,0,.1)}
-.logo{font-size:26px;font-weight:bold;color:#10b981;letter-spacing:1px}
-nav{display:flex;align-items:center;gap:15px;flex-wrap:wrap}
-nav a{color:white;text-decoration:none;font-weight:500;font-size:15px}
-.btn-nav{background:#10b981;padding:8px 16px;border-radius:6px}
-.btn-outline{border:1px solid #475569;padding:7px 15px;border-radius:6px}
-.btn-logout{background:#ef4444;border:none;color:white;padding:7px 15px;border-radius:6px;cursor:pointer;font-weight:bold}
-.hero{background:linear-gradient(rgba(15,23,42,.85),rgba(15,23,42,.85)),url('https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=1000') center/cover;height:160px;color:white;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20px}
-.hero h1{font-size:24px;margin-bottom:5px;color:#34d399}
-.main-container{max-width:1200px;margin:25px auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:25px}
-@media(max-width:768px){.main-container{grid-template-columns:1fr}header{gap:12px;flex-wrap:wrap}nav{gap:8px}}
-.card{background:white;padding:25px;border-radius:10px;box-shadow:0 4px 6px -1px rgba(0,0,0,.05);border:1px solid #e2e8f0}
-.card h2{color:#0f172a;margin-bottom:20px;font-size:20px;border-bottom:2px solid #f1f5f9;padding-bottom:10px}
-.form-group{margin-bottom:15px}
-.form-group label{display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:#475569}
-.form-group input,.form-group select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:6px;font-size:15px;background:#fff}
-.fare-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:15px;text-align:center;margin:20px 0}
-.fare-box h3{color:#15803d;font-size:26px;margin-top:5px;font-weight:bold}
-.btn-submit{width:100%;background:#10b981;color:white;border:none;padding:14px;font-size:16px;font-weight:bold;border-radius:6px;cursor:pointer}
-.btn-submit:hover{background:#059669}
-.btn-submit:disabled{opacity:.6;cursor:not-allowed}
-#map{height:100%;min-height:420px;border-radius:8px;border:1px solid #cbd5e1}
-.map-hint{font-size:13px;color:#10b981;text-align:center;margin-bottom:10px;font-weight:bold;background:#ecfdf5;padding:8px;border-radius:6px;border:1px solid #a7f3d0}
-.bidding-box{background:#fef3c7;border:1px solid #fde047;padding:15px;border-radius:8px;margin-bottom:15px;display:none}
-.bidding-actions{display:flex;gap:10px;margin-top:10px}
-.btn-accept,.btn-reoffer{color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;font-weight:bold;width:50%}
-.btn-accept{background:#10b981}.btn-reoffer{background:#f59e0b}
-.notification-box{background:#3b82f6;color:white;padding:12px;border-radius:8px;text-align:center;font-weight:bold;margin-bottom:15px;display:none}
-.chat-container{border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc;height:220px;display:flex;flex-direction:column;margin-top:15px}
-.chat-messages{flex:1;padding:10px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
-.chat-msg{padding:8px 12px;border-radius:8px;font-size:13px;max-width:80%;overflow-wrap:anywhere}
-.chat-msg.customer{background:#10b981;color:white;align-self:flex-start}
-.chat-msg.driver{background:#e2e8f0;color:#1e293b;align-self:flex-end}
-.chat-input{display:flex;padding:8px;border-top:1px solid #cbd5e1;background:white}
-.chat-input input{flex:1;min-width:0;padding:8px;border:1px solid #cbd5e1;border-radius:4px;margin-left:8px}
-.chat-input button{padding:8px 15px;background:#10b981;color:white;border:none;border-radius:4px;cursor:pointer}
-footer{background:#0f172a;color:#94a3b8;text-align:center;padding:20px;margin-top:40px;font-size:14px}
-.leaflet-routing-container{display:none!important}
-#appMessage{margin:12px auto;max-width:1200px;padding:12px 18px;border-radius:8px;display:none;overflow-wrap:anywhere}
-#appMessage.info{display:block;background:#dbeafe;color:#1e40af}
-#appMessage.error{display:block;background:#fee2e2;color:#991b1b}
-#appMessage.success{display:block;background:#dcfce7;color:#166534}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f4f6;color:#111827}
+header{background:#111827;color:white;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-size:25px;font-weight:bold;color:#4ade80}
+select,input,textarea{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;font-size:15px;background:white}
+button{padding:11px 14px;border:0;border-radius:8px;background:#16a34a;color:white;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.6}
+header select{width:auto}
+main{max-width:850px;margin:24px auto;padding:0 15px}
+.card{background:white;padding:20px;border-radius:14px;margin-bottom:18px;box-shadow:0 4px 18px #0001}
+.field{margin:14px 0}
+label{display:block;font-weight:bold;margin-bottom:7px}
+.muted{color:#6b7280;font-size:14px;line-height:1.5}
+.message{padding:12px;border-radius:8px;margin-bottom:15px;display:none;overflow-wrap:anywhere}
+.success{display:block;background:#dcfce7;color:#166534}
+.error{display:block;background:#fee2e2;color:#991b1b}
+.info{display:block;background:#dbeafe;color:#1e40af}
+.ride{border:1px solid #e5e7eb;border-radius:10px;padding:14px;margin:12px 0}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1}
+.chatMessages{height:180px;overflow-y:auto;background:#f9fafb;border:1px solid #e5e7eb;padding:10px;margin:10px 0}
+.chatMessage{padding:8px;margin:6px 0;background:#e5e7eb;border-radius:8px;overflow-wrap:anywhere}
+.hidden{display:none!important}
 </style>
 </head>
-
 <body>
+
 <header>
-    <div class="logo">Zrides.pk</div>
-    <nav>
-        <a href="login.html" class="btn-outline" id="navLogin">لاگ ان / سائن اپ</a>
-        <a href="driver.html" class="btn-nav" id="navPartner">ڈرائیور پورٹل</a>
-        <button class="btn-logout" onclick="logoutUser()" id="logoutBtn" style="display:none">لاگ آؤٹ</button>
-        <a href="#" onclick="toggleLanguage();return false" id="langBtn" style="color:#38bdf8">English</a>
-    </nav>
+  <div class="logo">Zrides</div>
+  <div class="row" style="flex:0;align-items:center">
+    <select id="language" aria-label="Language">
+      <option value="en">English</option>
+      <option value="ur">اردو</option>
+    </select>
+    <button id="logoutBtn">Logout</button>
+  </div>
 </header>
 
-<div id="appMessage" role="status" aria-live="polite"></div>
+<main>
+  <div class="card">
+    <h2 id="welcome">Book Your Ride</h2>
+    <p id="intro" class="muted">Enter your trip details to request a ride.</p>
+    <div id="message" class="message" role="status" aria-live="polite"></div>
 
-<section class="hero">
-    <h1 id="heroTitle">محفوظ اور تیز ترین رائیڈ سروس</h1>
-    <p id="heroSubtitle">نقشے پر مقام چنیں اور خودکار روٹ اور کرایہ حاصل کریں</p>
-</section>
-
-<div class="main-container">
-<div class="card">
-    <div id="statusNotification" class="notification-box">🔔 آرڈر اپ ڈیٹ الرٹ</div>
-
-    <div id="biddingBox" class="bidding-box">
-        <p id="bidText">🚕 ڈرائیور نے نیا کرایہ آفر کیا ہے!</p>
-        <div class="form-group" style="margin-top:8px">
-            <input type="number" id="custReOfferInput" min="1" max="100000" placeholder="اپنا کرایہ دوبارہ آفر کریں">
-        </div>
-        <div class="bidding-actions">
-            <button class="btn-accept" onclick="acceptDriverOffer()">آفر قبول کریں</button>
-            <button class="btn-reoffer" onclick="sendCustomerCounterOffer()">جوابی آفر بھیجیں</button>
-        </div>
-    </div>
-
-    <h2 id="formTitle">فوری بکنگ فارم</h2>
     <form id="bookingForm">
-        <div class="form-group">
-            <label id="lblService">سروس کی قسم منتخب کریں:</label>
-            <select id="serviceType" onchange="calculateFare()">
-                <option value="بائیک رائیڈ (Bike Ride)">🏍️ بائیک رائیڈ (Bike Ride)</option>
-                <option value="آٹو رکشہ (Rickshaw)">🛺 آٹو رکشہ (Rickshaw)</option>
-                <option value="منی کار (Car Mini)">🚗 منی کار (Car Mini)</option>
-                <option value="سیڈان AC کار (Car Sedan)">🚘 AC گاڑی (Car Sedan)</option>
-                <option value="پارسل ڈیلیوری (Parcel Delivery)">📦 پارسل ڈیلیوری (Parcel Delivery)</option>
-                <option value="خریدو سروس (Buy For Me)">🛒 خریدو سروس (Buy For Me)</option>
-            </select>
-        </div>
+      <div class="field">
+        <label id="pickupLabel" for="pickup">Pickup Location</label>
+        <input id="pickup" maxlength="200" required>
+      </div>
 
-        <div class="form-group">
-            <label id="lblPickup">پک اپ لوکیشن (Pickup Location):</label>
-            <input type="text" id="pickup" placeholder="نقشے پر پہلا کلک کریں" readonly required onclick="setActiveSelection('pickup')">
-        </div>
+      <div class="field">
+        <label id="dropoffLabel" for="dropoff">Destination</label>
+        <input id="dropoff" maxlength="200" required>
+      </div>
 
-        <div class="form-group">
-            <label id="lblDropoff">ڈراپ آف لوکیشن (Dropoff Location):</label>
-            <input type="text" id="dropoff" placeholder="نقشے پر دوسرا کلک کریں" readonly required onclick="setActiveSelection('dropoff')">
-        </div>
+      <div class="field">
+        <label id="phoneLabel" for="phone">Contact Phone</label>
+        <input id="phone" type="tel" maxlength="25" required>
+      </div>
 
-        <div class="form-group">
-            <label id="lblDistance">تخمینہ شدہ فاصلہ (کلومیٹر):</label>
-            <input type="number" id="distance" value="1" min="1" max="200" step="0.1" readonly>
-        </div>
+      <div class="field">
+        <label id="serviceLabel" for="service">Ride Type</label>
+        <select id="service">
+          <option value="bike">Bike</option>
+          <option value="car">Car</option>
+          <option value="rickshaw">Rickshaw</option>
+        </select>
+      </div>
 
-        <div class="fare-box">
-            <p id="lblTotalFare">کل متوقع کرایہ:</p>
-            <h3 id="estimatedFare">Rs. 45</h3>
-        </div>
-
-        <div class="form-group">
-            <label id="lblPhone">آپ کا موبائل نمبر:</label>
-            <input type="tel" id="phone" placeholder="03001234567" required maxlength="20" autocomplete="tel">
-        </div>
-
-        <button type="submit" class="btn-submit" id="btnSubmit">بکنگ کنفرم کریں</button>
+      <button id="bookBtn" type="submit">Request Ride</button>
     </form>
+  </div>
 
-    <div id="chatSection" style="display:none">
-        <h3 style="margin-top:20px;font-size:16px">💬 ڈرائیور کے ساتھ لائیو چیٹ</h3>
-        <div class="chat-container">
-            <div class="chat-messages" id="chatMsgs"></div>
-            <div class="chat-input">
-                <input type="text" id="chatText" maxlength="500" placeholder="پیغام لکھیں..." autocomplete="off">
-                <button type="button" onclick="sendChatMessage()">بھیجیں</button>
-            </div>
-        </div>
-    </div>
-</div>
+  <div class="card">
+    <h2 id="ridesHeading">My Rides</h2>
+    <div id="rides"><p class="muted">Loading rides...</p></div>
+  </div>
 
-<div class="card" style="padding:10px">
-    <div class="map-hint" id="mapHint">💡 نقشے پر پہلا کلک پک اپ اور دوسرا کلک ڈراپ آف سیٹ کرے گا</div>
-    <div id="map"></div>
-</div>
-</div>
+  <div class="card hidden" id="chatCard">
+    <h2 id="chatHeading">Ride Chat</h2>
+    <p id="chatInfo" class="muted">Messages for your selected ride.</p>
+    <div id="chatMessages" class="chatMessages"></div>
+    <form id="chatForm">
+      <div class="row">
+        <input id="chatInput" maxlength="1000" required>
+        <button id="sendBtn" type="submit">Send</button>
+      </div>
+    </form>
+  </div>
+</main>
 
-<footer>
-    <p id="footerText">© 2026 Zrides Pakistan (Pvt) Ltd. تمام حقوق محفوظ ہیں۔</p>
-</footer>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -163,484 +105,426 @@ footer{background:#0f172a;color:#94a3b8;text-align:center;padding:20px;margin-to
 "use strict";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
-    authDomain: "zrides-9f2da.firebaseapp.com",
-    databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
-    projectId: "zrides-9f2da",
-    storageBucket: "zrides-9f2da.firebasestorage.app",
-    messagingSenderId: "93898388224",
-    appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
+  apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
+  authDomain: "zrides-9f2da.firebaseapp.com",
+  databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
+  projectId: "zrides-9f2da",
+  storageBucket: "zrides-9f2da.firebasestorage.app",
+  messagingSenderId: "93898388224",
+  appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
 };
 
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
 const auth = firebase.auth();
 const db = firebase.database();
-
 const $ = id => document.getElementById(id);
 
+const words = {
+  en:{
+    welcome:"Book Your Ride",intro:"Enter your trip details to request a ride.",
+    pickup:"Pickup Location",dropoff:"Destination",phone:"Contact Phone",
+    service:"Ride Type",book:"Request Ride",wait:"Please wait...",
+    rides:"My Rides",loading:"Loading rides...",noRides:"You have no rides yet.",
+    logout:"Logout",chat:"Ride Chat",chatInfo:"Messages for your selected ride.",
+    send:"Send",bike:"Bike",car:"Car",rickshaw:"Rickshaw",
+    pending:"Pending",accepted:"Accepted",arrived:"Driver Arrived",
+    started:"Ride Started",completed:"Completed",cancelled:"Cancelled",
+    booked:"Ride request submitted.",bookError:"Unable to request a ride.",
+    needLogin:"Please log in to continue.",verify:"Verify your email before booking.",
+    profile:"Your customer profile could not be verified.",
+    selectRide:"Select Chat on one of your rides to open its chat.",
+    chatError:"Unable to load chat. Check your connection and permissions.",
+    messageRequired:"Please enter a message.",noPhone:"Please enter a contact phone number.",
+    cancelledMsg:"Ride cancelled.",cancelError:"Unable to cancel this ride.",
+    pickupRequired:"Enter pickup and destination.",
+    fare:"Estimated fare",status:"Status",driver:"Driver",
+    cancel:"Cancel Ride",openChat:"Chat",noDriver:"Not assigned",
+    sendError:"Unable to send message.",unknown:"Unknown",
+    unauthorized:"This account is not authorized as a customer."
+  },
+  ur:{
+    welcome:"Apni Ride Book Karein",intro:"Ride request karne ke liye safar ki maloomat likhein.",
+    pickup:"Pickup Location",dropoff:"Manzil",phone:"Rabtay ka Phone",
+    service:"Ride ki Qisam",book:"Ride Request Karein",wait:"Barah-e-karam intezar karein...",
+    rides:"Meri Rides",loading:"Rides load ho rahi hain...",noRides:"Abhi aapki koi ride nahi.",
+    logout:"Logout",chat:"Ride Chat",chatInfo:"Apni selected ride ke messages.",
+    send:"Bhejein",bike:"Bike",car:"Car",rickshaw:"Rickshaw",
+    pending:"Pending",accepted:"Accept ho gayi",arrived:"Driver Pohanch Gaya",
+    started:"Ride Shuru",completed:"Mukammal",cancelled:"Cancel",
+    booked:"Ride request bhej di gayi.",bookError:"Ride request nahi bheji ja saki.",
+    needLogin:"Jari rakhne ke liye login karein.",verify:"Booking se pehle email verify karein.",
+    profile:"Customer profile verify nahi ho saki.",
+    selectRide:"Chat kholne ke liye apni kisi ride par Chat dabayein.",
+    chatError:"Chat load nahi hui. Internet aur permissions check karein.",
+    messageRequired:"Message likhein.",noPhone:"Contact phone number likhein.",
+    cancelledMsg:"Ride cancel kar di gayi.",cancelError:"Ride cancel nahi ho saki.",
+    pickupRequired:"Pickup aur destination likhein.",
+    fare:"Andazati kiraya",status:"Status",driver:"Driver",
+    cancel:"Ride Cancel",openChat:"Chat",noDriver:"Abhi assign nahi",
+    sendError:"Message nahi bheja ja saka.",unknown:"Maloom nahi",
+    unauthorized:"Yeh account customer ke taur par authorized nahi."
+  }
+};
+
+let lang = localStorage.getItem("zridesLanguage") || "en";
 let currentUser = null;
-let authReady = false;
-let mapReady = false;
-let pickupCoord = null;
-let dropoffCoord = null;
-let routingControl = null;
-let driverLiveMarker = null;
-let currentOrderId = null;
-let currentDriverFare = 0;
-let selectionStep = "pickup";
-let orderListener = null;
-let chatListener = null;
-let submitting = false;
-let pageLanguage = "ur";
+let myOrdersRef = null;
+let chatRef = null;
+let activeChatOrder = null;
+let bookingBusy = false;
 
-function showMessage(text, type = "info") {
-    const box = $("appMessage");
-    box.textContent = text;
-    box.className = type;
+function t(k){return words[lang][k] || words.en[k] || k;}
+function notify(text,type="info"){
+  $("message").textContent=text;
+  $("message").className="message "+type;
+}
+function applyLanguage(){
+  document.documentElement.lang=lang;
+  document.documentElement.dir=lang==="ur"?"rtl":"ltr";
+  $("language").value=lang;
+  const map={
+    welcome:"welcome",intro:"intro",pickupLabel:"pickup",
+    dropoffLabel:"dropoff",phoneLabel:"phone",serviceLabel:"service",
+    bookBtn:"book",ridesHeading:"rides",logoutBtn:"logout",
+    chatHeading:"chat",chatInfo:"chatInfo",sendBtn:"send"
+  };
+  Object.entries(map).forEach(([id,key])=>$(id).textContent=t(key));
+  $("pickup").placeholder=t("pickup");
+  $("dropoff").placeholder=t("dropoff");
+  $("phone").placeholder=t("phone");
+  $("chatInput").placeholder=lang==="ur"?"Apna message likhein":"Type your message";
+  [...$("service").options].forEach(o=>o.textContent=t(o.value));
+  renderRides();
 }
 
-function hideMessage() {
-    $("appMessage").style.display = "none";
+$("language").onchange=e=>{
+  lang=e.target.value;
+  localStorage.setItem("zridesLanguage",lang);
+  applyLanguage();
+};
+
+function safeText(value){
+  return String(value ?? "");
 }
 
-function logoutUser() {
-    auth.signOut().then(() => {
-        window.location.replace("login.html");
-    }).catch(error => {
-        showMessage("Logout nahi ho saka: " + error.message, "error");
+function statusLabel(status){
+  const key=({
+    pending:"pending",accepted:"accepted",arrived:"arrived",
+    started:"started",completed:"completed",cancelled:"cancelled"
+  })[status] || status || "pending";
+  return t(key);
+}
+
+function renderRides(){
+  if(!currentUser)return;
+  const container=$("rides");
+  const ordersRef=db.ref("orders");
+
+  ordersRef.orderByChild("customerUid").equalTo(currentUser.uid)
+    .once("value")
+    .then(snap=>{
+      const list=[];
+      snap.forEach(child=>list.push({id:child.key,...child.val()}));
+      list.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+
+      container.replaceChildren();
+
+      if(!list.length){
+        const p=document.createElement("p");
+        p.className="muted";
+        p.textContent=t("noRides");
+        container.appendChild(p);
+        return;
+      }
+
+      list.forEach(order=>{
+        const box=document.createElement("div");
+        box.className="ride";
+
+        const title=document.createElement("h3");
+        title.textContent=safeText(order.pickup)+" → "+safeText(order.dropoff);
+        box.appendChild(title);
+
+        const details=document.createElement("p");
+        details.className="muted";
+        details.textContent=
+          t("status")+": "+statusLabel(order.status)+
+          " | "+t("fare")+": "+(order.fare ?? "—");
+        box.appendChild(details);
+
+        if(order.driverUid){
+          const driver=document.createElement("p");
+          driver.className="muted";
+          driver.textContent=t("driver")+": "+safeText(order.driverName||t("noDriver"));
+          box.appendChild(driver);
+        }
+
+        if(!["completed","cancelled"].includes(order.status)){
+          const row=document.createElement("div");
+          row.className="row";
+          row.style.marginTop="10px";
+
+          const chatBtn=document.createElement("button");
+          chatBtn.textContent=t("openChat");
+          chatBtn.onclick=()=>openChat(order.id);
+          row.appendChild(chatBtn);
+
+          const cancelBtn=document.createElement("button");
+          cancelBtn.textContent=t("cancel");
+          cancelBtn.style.background="#dc2626";
+          cancelBtn.onclick=()=>cancelRide(order.id);
+          if(order.status!=="pending")cancelBtn.disabled=true;
+          row.appendChild(cancelBtn);
+
+          box.appendChild(row);
+        }
+
+        container.appendChild(box);
+      });
+    })
+    .catch(error=>{
+      console.error(error);
+      notify(t("chatError"),"error");
     });
 }
 
-auth.onAuthStateChanged(user => {
-    currentUser = user;
-    authReady = true;
+async function cancelRide(orderId){
+  try{
+    const ref=db.ref("orders/"+orderId);
+    const result=await ref.transaction(order=>{
+      if(!order)return;
+      if(order.customerUid!==currentUser.uid)return;
+      if(order.status!=="pending")return;
+      order.status="cancelled";
+      order.updatedAt=firebase.database.ServerValue.TIMESTAMP;
+      return order;
+    });
 
-    if (!user) {
-        $("logoutBtn").style.display = "none";
-        $("navLogin").style.display = "inline-block";
-        showMessage("Booking ke liye login karein.", "info");
-        return;
+    if(!result.committed){
+      notify(t("cancelError"),"error");
+      return;
     }
 
-    if (!user.emailVerified) {
-        showMessage("پہلے ای میل کی تصدیق کریں۔", "error");
-        auth.signOut().finally(() => {
-            window.location.replace("login.html");
-        });
-        return;
-    }
+    await db.ref("rideQueue/"+orderId).update({
+      status:"cancelled",
+      updatedAt:firebase.database.ServerValue.TIMESTAMP
+    });
 
-    $("logoutBtn").style.display = "inline-block";
-    $("navLogin").style.display = "none";
-    hideMessage();
-});
-
-function setActiveSelection(step) {
-    selectionStep = step;
-    $("mapHint").innerText = step === "pickup"
-        ? "💡 نقشے پر نیا پک اپ مقام منتخب کریں"
-        : "💡 نقشے پر نیا ڈراپ آف مقام منتخب کریں";
+    notify(t("cancelledMsg"),"success");
+    renderRides();
+  }catch(error){
+    console.error(error);
+    notify(t("cancelError"),"error");
+  }
 }
 
-const map = L.map("map").setView([31.5204, 74.3587], 13);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "&copy; OpenStreetMap contributors"
-}).addTo(map);
-mapReady = true;
+$("bookingForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  if(bookingBusy)return;
 
-map.on("click", function(e) {
-    if (selectionStep === "pickup") {
-        pickupCoord = e.latlng;
-        $("pickup").value = "Lat: " + pickupCoord.lat.toFixed(4) +
-            ", Lng: " + pickupCoord.lng.toFixed(4);
-        selectionStep = "dropoff";
-        $("mapHint").innerText = "💡 اب نقشے پر کلک کر کے ڈراپ آف مقام منتخب کریں";
+  if(!currentUser){
+    notify(t("needLogin"),"error");
+    return;
+  }
+  if(!currentUser.emailVerified){
+    notify(t("verify"),"error");
+    return;
+  }
 
-        if (routingControl) {
-            map.removeControl(routingControl);
-            routingControl = null;
-        }
+  const pickup=$("pickup").value.trim();
+  const dropoff=$("dropoff").value.trim();
+  const phone=$("phone").value.trim();
+  const service=$("service").value;
 
-        dropoffCoord = null;
-        $("dropoff").value = "";
-        $("distance").value = "1";
-        calculateFare();
-        return;
+  if(!pickup||!dropoff){
+    notify(t("pickupRequired"),"error");
+    return;
+  }
+  if(!phone){
+    notify(t("noPhone"),"error");
+    return;
+  }
+
+  bookingBusy=true;
+  $("bookBtn").disabled=true;
+  $("bookBtn").textContent=t("wait");
+
+  try{
+    const profileSnap=await db.ref("users/"+currentUser.uid).once("value");
+    const profile=profileSnap.val();
+
+    if(!profile||profile.uid!==currentUser.uid||profile.role!=="customer"){
+      throw new Error(t("unauthorized"));
     }
 
-    dropoffCoord = e.latlng;
-    $("dropoff").value = "Lat: " + dropoffCoord.lat.toFixed(4) +
-        ", Lng: " + dropoffCoord.lng.toFixed(4);
-    selectionStep = "pickup";
-    $("mapHint").innerText = "💡 دونوں مقامات منتخب ہو گئے۔ مزید تبدیلی کے لیے مقام پر کلک کریں۔";
+    /*
+      This is a provisional fare estimate, not a live distance calculation.
+      A production fare must be calculated and validated by a trusted backend.
+    */
+    const fareEstimate=service==="bike"?150:service==="car"?350:200;
 
-    if (pickupCoord && dropoffCoord) {
-        if (routingControl) map.removeControl(routingControl);
+    const orderRef=db.ref("orders").push();
+    const orderId=orderRef.key;
+    const timestamp=firebase.database.ServerValue.TIMESTAMP;
 
-        routingControl = L.Routing.control({
-            waypoints: [
-                L.latLng(pickupCoord.lat, pickupCoord.lng),
-                L.latLng(dropoffCoord.lat, dropoffCoord.lng)
-            ],
-            routeWhileDragging: false,
-            addWaypoints: false,
-            createMarker: function(i, wp) {
-                return L.marker(wp.latLng, {
-                    icon: L.icon({
-                        iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-" +
-                            (i === 0 ? "green" : "red") + ".png",
-                        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41]
-                    })
-                });
-            }
-        }).addTo(map);
-
-        routingControl.on("routesfound", function(event) {
-            const summary = event.routes[0].summary;
-            $("distance").value = (summary.totalDistance / 1000).toFixed(1);
-            calculateFare();
-        });
-
-        routingControl.on("routingerror", function() {
-            showMessage("Route calculate nahi ho saka. Dobara locations select karein.", "error");
-        });
-    }
-});
-
-function calculateFare() {
-    const service = $("serviceType").value;
-    const distance = parseFloat($("distance").value) || 1;
-    let baseFare = 30;
-    let perKmRate = 15;
-
-    if (service.includes("Rickshaw")) {
-        baseFare = 50; perKmRate = 30;
-    } else if (service.includes("Car Mini")) {
-        baseFare = 80; perKmRate = 45;
-    } else if (service.includes("Car Sedan")) {
-        baseFare = 100; perKmRate = 60;
-    } else if (service.includes("Parcel")) {
-        baseFare = 40; perKmRate = 18;
-    } else if (service.includes("Buy")) {
-        baseFare = 50; perKmRate = 20;
-    }
-
-    $("estimatedFare").innerText =
-        "Rs. " + Math.round(baseFare + distance * perKmRate);
-}
-
-function getCurrentVerifiedUser() {
-    const user = auth.currentUser;
-
-    if (!authReady || !user || !user.emailVerified) {
-        return null;
-    }
-
-    return user;
-}
-
-function stopOrderListeners() {
-    if (currentOrderId && orderListener) {
-        db.ref("orders/" + currentOrderId).off("value", orderListener);
-    }
-
-    if (currentOrderId && chatListener) {
-        db.ref("chats/" + currentOrderId).off("child_added", chatListener);
-    }
-
-    orderListener = null;
-    chatListener = null;
-}
-
-$("bookingForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
-
-    const user = getCurrentVerifiedUser();
-
-    if (!user) {
-        showMessage("Booking se pehle verified account se login karein.", "error");
-        return;
-    }
-
-    if (submitting) return;
-
-    const pickup = $("pickup").value.trim();
-    const dropoff = $("dropoff").value.trim();
-    const phone = $("phone").value.trim();
-    const distance = Number($("distance").value);
-    const fareText = $("estimatedFare").innerText;
-    const fare = Number(fareText.replace(/[^\d.]/g, ""));
-
-    if (!pickup || !dropoff || !pickupCoord || !dropoffCoord) {
-        showMessage("نقشے سے پک اپ اور ڈراپ آف دونوں مقامات منتخب کریں۔", "error");
-        return;
-    }
-
-    if (!phone || phone.length < 7 || phone.length > 20) {
-        showMessage("درست موبائل نمبر درج کریں۔", "error");
-        return;
-    }
-
-    if (!Number.isFinite(distance) || distance <= 0 || distance > 200) {
-        showMessage("فاصلہ درست نہیں۔ دوبارہ مقامات منتخب کریں۔", "error");
-        return;
-    }
-
-    if (!Number.isFinite(fare) || fare <= 0) {
-        showMessage("کرایہ calculate nahi ho saka.", "error");
-        return;
-    }
-
-    submitting = true;
-    $("btnSubmit").disabled = true;
-    $("btnSubmit").textContent = "Booking bheji ja rahi hai...";
-
-    try {
-        stopOrderListeners();
-        currentOrderId = null;
-
-        const newOrderRef = db.ref("orders").push();
-
-        const orderData = {
-            customerUid: user.uid,
-            customerEmail: user.email || "",
-            service: $("serviceType").value,
-            pickup: pickup,
-            dropoff: dropoff,
-            distance: distance.toFixed(1) + " کلومیٹر",
-            phone: phone,
-            fare: fareText,
-            offeredFare: fareText,
-            status: "pending",
-            timestamp: new Date().toISOString(),
-            createdAt: firebase.database.ServerValue.TIMESTAMP
-        };
-
-        await newOrderRef.set(orderData);
-
-        currentOrderId = newOrderRef.key;
-        $("bookingForm").style.display = "none";
-
-        showMessage("آپ کی بکنگ ڈرائیورز کو بھیج دی گئی ہے۔", "success");
-        listenToOrderUpdates(currentOrderId);
-
-    } catch (error) {
-        console.error("Booking failed:", error);
-        showMessage(
-            "Booking save nahi hui. Firebase Rules ya internet connection check karein. " +
-            error.message,
-            "error"
-        );
-    } finally {
-        submitting = false;
-        $("btnSubmit").disabled = false;
-        $("btnSubmit").textContent = "بکنگ کنفرم کریں";
-    }
-});
-
-function listenToOrderUpdates(orderId) {
-    stopOrderListeners();
-
-    orderListener = snapshot => {
-        const order = snapshot.val();
-        if (!order) return;
-
-        // Client-side check is useful, but database Rules must enforce ownership.
-        const user = getCurrentVerifiedUser();
-        if (!user || order.customerUid !== user.uid) {
-            showMessage("Is booking ko access karne ki ijazat nahi hai.", "error");
-            stopOrderListeners();
-            return;
-        }
-
-        const notifBox = $("statusNotification");
-        const biddingBox = $("biddingBox");
-
-        if (order.status === "driver_counter_offer") {
-            currentDriverFare = order.offeredFare;
-            biddingBox.style.display = "block";
-            $("bidText").innerText =
-                "🚕 ڈرائیور (" + (order.driverName || "Driver") +
-                ") کی آفر: " + order.offeredFare;
-        }
-
-        if (order.status === "confirmed_by_driver") {
-            biddingBox.style.display = "none";
-            notifBox.style.display = "block";
-            notifBox.style.background = "#10b981";
-            notifBox.innerText = "🎉 رائیڈ کنفرم! ڈرائیور آ رہا ہے۔ کرایہ: " + order.fare;
-            $("chatSection").style.display = "block";
-        }
-
-        if (order.status === "arrived") {
-            notifBox.style.display = "block";
-            notifBox.innerText = "🎉 ڈرائیور آپ کی لوکیشن پر پہنچ گیا ہے!";
-        }
-
-        if (order.status === "in_progress") {
-            notifBox.style.display = "block";
-            notifBox.innerText = "🚀 سفر شروع ہو چکا ہے!";
-        }
-
-        if (order.driverLocation &&
-            Number.isFinite(Number(order.driverLocation.lat)) &&
-            Number.isFinite(Number(order.driverLocation.lng))) {
-
-            if (driverLiveMarker) map.removeLayer(driverLiveMarker);
-
-            driverLiveMarker = L.marker([
-                Number(order.driverLocation.lat),
-                Number(order.driverLocation.lng)
-            ]).addTo(map).bindPopup("🚗 ڈرائیور کی لائیو لوکیشن");
-        }
+    const order={
+      id:orderId,
+      customerUid:currentUser.uid,
+      customerEmail:currentUser.email,
+      customerName:profile.name||"",
+      customerPhone:phone,
+      pickup:pickup,
+      dropoff:dropoff,
+      service:service,
+      fare:fareEstimate,
+      status:"pending",
+      driverUid:null,
+      createdAt:Date.now(),
+      updatedAt:timestamp
     };
 
-    db.ref("orders/" + orderId).on("value", orderListener, error => {
-        console.error("Order listener error:", error);
-        showMessage("Booking update load nahi hui: " + error.message, "error");
-    });
-
-    chatListener = snapshot => {
-        const msg = snapshot.val();
-        if (!msg || !["customer", "driver"].includes(msg.sender)) return;
-
-        const chatMsgs = $("chatMsgs");
-        const msgDiv = document.createElement("div");
-        msgDiv.className = "chat-msg " + msg.sender;
-        msgDiv.textContent =
-            (msg.sender === "customer" ? "آپ: " : "ڈرائیور: ") +
-            String(msg.text || "");
-
-        chatMsgs.appendChild(msgDiv);
-        chatMsgs.scrollTop = chatMsgs.scrollHeight;
+    /*
+      Queue contains only basic ride details. Do not put customer phone/email
+      into rideQueue. Access still depends on correctly configured RTDB rules.
+    */
+    const updates={};
+    updates["orders/"+orderId]=order;
+    updates["rideQueue/"+orderId]={
+      orderId:orderId,
+      pickup:pickup,
+      dropoff:dropoff,
+      service:service,
+      fare:fareEstimate,
+      status:"pending",
+      createdAt:Date.now()
     };
 
-    db.ref("chats/" + orderId).on("child_added", chatListener, error => {
-        console.error("Chat listener error:", error);
-        showMessage("Chat load nahi hui: " + error.message, "error");
+    await db.ref().update(updates);
+
+    $("bookingForm").reset();
+    notify(t("booked"),"success");
+    renderRides();
+
+  }catch(error){
+    console.error(error);
+    notify(error.message||t("bookError"),"error");
+  }finally{
+    bookingBusy=false;
+    $("bookBtn").disabled=false;
+    $("bookBtn").textContent=t("book");
+  }
+});
+
+function openChat(orderId){
+  if(chatRef)chatRef.off();
+  activeChatOrder=orderId;
+  $("chatCard").classList.remove("hidden");
+  $("chatMessages").replaceChildren();
+
+  chatRef=db.ref("chats/"+orderId+"/messages");
+  chatRef.limitToLast(100).on("value",snap=>{
+    const box=$("chatMessages");
+    box.replaceChildren();
+
+    snap.forEach(child=>{
+      const msg=child.val()||{};
+      const p=document.createElement("div");
+      p.className="chatMessage";
+
+      const name=document.createElement("strong");
+      name.textContent=msg.senderUid===currentUser.uid
+        ?(lang==="ur"?"Aap":"You")
+        :(msg.senderName||t("driver"));
+
+      const body=document.createElement("div");
+      body.textContent=safeText(msg.text);
+
+      p.append(name,body);
+      box.appendChild(p);
     });
+
+    box.scrollTop=box.scrollHeight;
+  },error=>{
+    console.error(error);
+    notify(t("chatError"),"error");
+  });
+
+  $("chatCard").scrollIntoView({behavior:"smooth"});
 }
 
-async function acceptDriverOffer() {
-    const user = getCurrentVerifiedUser();
+$("chatForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const text=$("chatInput").value.trim();
+  if(!text){
+    notify(t("messageRequired"),"error");
+    return;
+  }
+  if(!activeChatOrder)return;
 
-    if (!user || !currentOrderId) {
-        showMessage("Pehle login karein aur apni booking kholen.", "error");
-        return;
+  try{
+    const orderSnap=await db.ref("orders/"+activeChatOrder).once("value");
+    const order=orderSnap.val();
+
+    if(!order||order.customerUid!==currentUser.uid){
+      throw new Error(t("chatError"));
     }
 
-    const fare = Number(String(currentDriverFare).replace(/[^\d.]/g, ""));
+    const msgRef=db.ref("chats/"+activeChatOrder+"/messages").push();
+    await msgRef.set({
+      senderUid:currentUser.uid,
+      senderName:"Customer",
+      text:text,
+      createdAt:firebase.database.ServerValue.TIMESTAMP
+    });
 
-    if (!Number.isFinite(fare) || fare <= 0) {
-        showMessage("Driver ki offer valid nahi hai.", "error");
-        return;
+    $("chatInput").value="";
+  }catch(error){
+    console.error(error);
+    notify(t("sendError"),"error");
+  }
+});
+
+$("logoutBtn").onclick=async()=>{
+  if(chatRef)chatRef.off();
+  await auth.signOut();
+  location.replace("login.html");
+};
+
+auth.onAuthStateChanged(async user=>{
+  if(!user){
+    location.replace("login.html");
+    return;
+  }
+
+  currentUser=user;
+
+  try{
+    await user.reload();
+    currentUser=auth.currentUser;
+
+    if(!currentUser.emailVerified){
+      notify(t("verify"),"error");
+      return;
     }
 
-    try {
-        await db.ref("orders/" + currentOrderId).update({
-            fare: "Rs. " + fare,
-            status: "accepted_by_customer"
-        });
+    const profileSnap=await db.ref("users/"+currentUser.uid).once("value");
+    const profile=profileSnap.val();
 
-        $("biddingBox").style.display = "none";
-        showMessage("Driver ki offer accept ho gayi.", "success");
-    } catch (error) {
-        showMessage("Offer accept nahi hui: " + error.message, "error");
-    }
-}
-
-async function sendCustomerCounterOffer() {
-    const user = getCurrentVerifiedUser();
-    const input = Number($("custReOfferInput").value);
-
-    if (!user || !currentOrderId) {
-        showMessage("Pehle login karein aur apni booking kholen.", "error");
-        return;
+    if(!profile||profile.role!=="customer"){
+      notify(t("unauthorized"),"error");
+      return;
     }
 
-    if (!Number.isFinite(input) || input <= 0 || input > 100000) {
-        showMessage("1 se 100000 rupay ke darmiyan valid offer dein.", "error");
-        return;
-    }
+    renderRides();
+    applyLanguage();
+  }catch(error){
+    console.error(error);
+    notify(t("profile"),"error");
+  }
+});
 
-    try {
-        await db.ref("orders/" + currentOrderId).update({
-            offeredFare: "Rs. " + input,
-            status: "customer_counter_offer"
-        });
-
-        $("biddingBox").style.display = "none";
-        $("custReOfferInput").value = "";
-        showMessage("Aapki nayi offer bhej di gayi.", "success");
-    } catch (error) {
-        showMessage("Offer send nahi hui: " + error.message, "error");
-    }
-}
-
-async function sendChatMessage() {
-    const user = getCurrentVerifiedUser();
-    const input = $("chatText");
-    const message = input.value.trim();
-
-    if (!user || !currentOrderId) {
-        showMessage("Chat ke liye apni active booking zaroori hai.", "error");
-        return;
-    }
-
-    if (!message || message.length > 500) {
-        showMessage("Message 1 se 500 characters ka hona chahiye.", "error");
-        return;
-    }
-
-    try {
-        await db.ref("chats/" + currentOrderId).push({
-            sender: "customer",
-            senderUid: user.uid,
-            text: message,
-            time: new Date().toISOString()
-        });
-
-        input.value = "";
-    } catch (error) {
-        showMessage("Message send nahi hua: " + error.message, "error");
-    }
-}
-
-/* Basic language toggle retained */
-function toggleLanguage() {
-    pageLanguage = pageLanguage === "ur" ? "en" : "ur";
-    $("htmlTag").lang = pageLanguage;
-    $("htmlTag").dir = pageLanguage === "ur" ? "rtl" : "ltr";
-    $("langBtn").textContent = pageLanguage === "ur" ? "English" : "اردو";
-
-    if (pageLanguage === "en") {
-        $("heroTitle").textContent = "Safe and Fast Ride Service";
-        $("heroSubtitle").textContent = "Choose locations on the map to calculate route and fare";
-        $("formTitle").textContent = "Quick Booking Form";
-        $("lblService").textContent = "Select service:";
-        $("lblPickup").textContent = "Pickup location:";
-        $("lblDropoff").textContent = "Dropoff location:";
-        $("lblDistance").textContent = "Estimated distance (km):";
-        $("lblTotalFare").textContent = "Estimated total fare:";
-        $("lblPhone").textContent = "Your mobile number:";
-        $("btnSubmit").textContent = "Confirm Booking";
-        $("mapHint").textContent = "First map click selects pickup; second selects dropoff.";
-    } else {
-        $("heroTitle").textContent = "محفوظ اور تیز ترین رائیڈ سروس";
-        $("heroSubtitle").textContent = "نقشے پر مقام چنیں اور خودکار روٹ اور کرایہ حاصل کریں";
-        $("formTitle").textContent = "فوری بکنگ فارم";
-        $("lblService").textContent = "سروس کی قسم منتخب کریں:";
-        $("lblPickup").textContent = "پک اپ لوکیشن (Pickup Location):";
-        $("lblDropoff").textContent = "ڈراپ آف لوکیشن (Dropoff Location):";
-        $("lblDistance").textContent = "تخمینہ شدہ فاصلہ (کلومیٹر):";
-        $("lblTotalFare").textContent = "کل متوقع کرایہ:";
-        $("lblPhone").textContent = "آپ کا موبائل نمبر:";
-        $("btnSubmit").textContent = "بکنگ کنفرم کریں";
-        $("mapHint").textContent = "💡 نقشے پر پہلا کلک پک اپ اور دوسرا کلک ڈراپ آف سیٹ کرے گا";
-    }
-}
+applyLanguage();
 </script>
 </body>
     </html>
