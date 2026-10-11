@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zrides - لاگ ان یا سائن اپ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .auth-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-card h2 {
+            color: #10b981;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .btn {
+            width: 100%;
+            background-color: #10b981;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #059669;
+        }
+
+        .switch-text {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .switch-text a {
+            color: #10b981;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <h2 id="formTitle">Zrides میں لاگ ان کریں</h2>
+        
+        <form id="authForm">
+            <div class="form-group" id="nameGroup" style="display: none;">
+                <label>آپ کا نام (Full Name):</label>
+                <input type="text" id="fullName" placeholder="علی خان">
+            </div>
+
+            <div class="form-group">
+                <label>موبائل نمبر (Mobile Number):</label>
+                <input type="tel" id="userPhone" placeholder="03001234567" required>
+            </div>
+
+            <div class="form-group">
+                <label>پاس ورڈ (Password):</label>
+                <input type="password" id="userPassword" placeholder="******" required>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">لاگ ان کریں</button>
+        </form>
+
+        <div class="switch-text">
+            <span id="switchText">اکاؤنٹ نہیں ہے؟</span> <a href="#" id="switchBtn" onclick="toggleAuthMode()">سائن اپ (نیا اکاؤنٹ بنائیں)</a>
+        </div>
+
+        <a href="index.html" class="back-link">← ہوم پیج پر واپس جائیں</a>
+    </div>
+
+    <script>
+        var isLoginMode = true;
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            var title = document.getElementById('formTitle');
+            var nameGroup = document.getElementById('nameGroup');
+            var submitBtn = document.getElementById('submitBtn');
+            var switchText = document.getElementById('switchText');
+            var switchBtn = document.getElementById('switchBtn');
+
+            if (isLoginMode) {
+                title.innerText = "Zrides میں لاگ ان کریں";
+                nameGroup.style.display = "none";
+                submitBtn.innerText = "لاگ ان کریں";
+                switchText.innerText = "اکاؤنٹ نہیں ہے؟";
+                switchBtn.innerText = "سائن اپ (نیا اکاؤنٹ بنائیں)";
+            } else {
+                title.innerText = "Zrides پر سائن اپ کریں";
+                nameGroup.style.display = "block";
+                submitBtn.innerText = "اکاؤنٹ بنائیں";
+                switchText.innerText = "پہلے سے اکاؤنٹ ہے؟";
+                switchBtn.innerText = "لاگ ان کریں";
+            }
+        }
+
+        document.getElementById('authForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var phone = document.getElementById('userPhone').value;
+            
+            if (isLoginMode) {
+                alert("مبارک ہو! آپ کامیابی سے لاگ ان ہو گئے ہیں۔");
+                localStorage.setItem('zr_user', phone);
+                window.location.href = "index.html";
+            } else {
+                var name = document.getElementById('fullName').value;
+                alert("مبارک ہو " + name + "! آپ کا اکاؤنٹ کامیابی سے بن گیا ہے۔ اب آپ لاگ ان کر سکتے ہیں۔");
+                toggleAuthMode();
+            }
+        });
+    </script>
+</body>
+</html>
