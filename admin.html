@@ -7,67 +7,237 @@
 <title>Zrides | Admin Dashboard</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f4f6;color:#111827}
-header{background:#111827;color:white;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.logo{font-size:25px;font-weight:bold;color:#4ade80}
-header select{width:auto;padding:10px}
-button,select{cursor:pointer}
-button{padding:11px 14px;border:0;border-radius:8px;background:#16a34a;color:white;font-weight:bold}
-button:disabled{opacity:.6;cursor:not-allowed}
-input,select{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:8px;font-size:15px;background:white;color:#111827}
-label{display:block;font-size:14px;font-weight:bold;margin-bottom:7px}
-main{max-width:1150px;margin:24px auto;padding:0 15px}
-.card{background:white;padding:20px;border-radius:14px;margin-bottom:18px;box-shadow:0 4px 18px #0001}
-.message{display:none;padding:12px;border-radius:8px;margin-bottom:15px;overflow-wrap:anywhere}
-.success{display:block;background:#dcfce7;color:#166534}
-.error{display:block;background:#fee2e2;color:#991b1b}
-.info{display:block;background:#dbeafe;color:#1e40af}
-.muted{color:#6b7280;font-size:14px;line-height:1.6}
-.item{border:1px solid #e5e7eb;border-radius:10px;padding:14px;margin:12px 0;overflow-wrap:anywhere}
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.row>*{flex:1;min-width:0}
-.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px;margin:16px 0}
-.field{min-width:0}
-.section-title{margin-top:25px;padding-bottom:8px;border-bottom:1px solid #e5e7eb}
-.vehicle-card{border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin-top:16px}
-.save-button{width:100%;margin-top:15px;font-size:16px;padding:14px}
-.reject{background:#dc2626}
-.secondary{background:#374151}
-.hidden{display:none!important}
-.badge{display:inline-block;background:#dcfce7;color:#166534;border-radius:20px;padding:5px 10px;font-size:12px;font-weight:bold}
-@media(max-width:500px){.card{padding:15px}.logo{font-size:21px}.settings-grid{grid-template-columns:1fr}}
+:root {
+  --primary:#16a34a;
+  --dark:#111827;
+  --background:#f3f4f6;
+  --border:#e5e7eb;
+  --muted:#6b7280;
+  --danger:#dc2626;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--background);
+  color:var(--dark);
+}
+header {
+  background:var(--dark);
+  color:white;
+  padding:15px 5%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.logo {
+  color:#4ade80;
+  font-size:25px;
+  font-weight:bold;
+}
+main {
+  max-width:1200px;
+  margin:24px auto;
+  padding:0 15px;
+}
+.card {
+  background:white;
+  padding:20px;
+  border-radius:14px;
+  margin-bottom:18px;
+  box-shadow:0 4px 18px #0000000d;
+}
+h1,h2,h3 { line-height:1.35; }
+h2 { margin-top:0; }
+button,select,input { font:inherit; }
+button {
+  border:0;
+  border-radius:8px;
+  padding:11px 14px;
+  background:var(--primary);
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+button:disabled { opacity:.6; cursor:not-allowed; }
+input,select {
+  width:100%;
+  padding:11px;
+  border:1px solid #d1d5db;
+  border-radius:8px;
+  background:white;
+  color:var(--dark);
+}
+label {
+  display:block;
+  font-weight:bold;
+  font-size:14px;
+  margin-bottom:7px;
+}
+.field { min-width:0; }
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:15px;
+  margin:16px 0;
+}
+.vehicle-card {
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+  margin:15px 0;
+}
+.section-title {
+  margin-top:28px;
+  padding-bottom:9px;
+  border-bottom:1px solid var(--border);
+}
+.muted {
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.65;
+}
+.row {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.row button { flex:1; }
+.danger { background:var(--danger); }
+.secondary { background:#374151; }
+.message {
+  display:none;
+  padding:13px;
+  border-radius:8px;
+  margin:12px 0;
+  overflow-wrap:anywhere;
+}
+.message.success { display:block; background:#dcfce7; color:#166534; }
+.message.error { display:block; background:#fee2e2; color:#991b1b; }
+.message.info { display:block; background:#dbeafe; color:#1e40af; }
+.item {
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:15px;
+  margin:12px 0;
+  overflow-wrap:anywhere;
+}
+.item p { line-height:1.5; }
+.badge {
+  display:inline-block;
+  padding:5px 10px;
+  border-radius:20px;
+  background:#dcfce7;
+  color:#166534;
+  font-size:12px;
+  font-weight:bold;
+}
+.badge.pending { background:#fef3c7; color:#92400e; }
+.badge.rejected { background:#fee2e2; color:#991b1b; }
+.stats {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;
+}
+.stat {
+  background:#f9fafb;
+  border:1px solid var(--border);
+  padding:16px;
+  border-radius:10px;
+}
+.stat strong {
+  display:block;
+  font-size:24px;
+  margin-top:8px;
+}
+.save-button {
+  width:100%;
+  padding:15px;
+  margin-top:15px;
+  font-size:16px;
+}
+.hidden { display:none !important; }
+.preview {
+  background:#ecfdf5;
+  border:1px solid #bbf7d0;
+  padding:16px;
+  border-radius:10px;
+  line-height:1.8;
+  margin-top:15px;
+}
+@media(max-width:500px) {
+  .card { padding:15px; }
+  .logo { font-size:21px; }
+  .grid { grid-template-columns:1fr; }
+}
 </style>
 </head>
 
 <body>
+
 <header>
   <div class="logo">Zrides Admin</div>
-  <div class="row" style="flex:0;align-items:center;margin:0">
-    <select id="language" aria-label="Language">
+  <div class="row" style="margin:0;align-items:center">
+    <select id="language" aria-label="Language" style="width:auto">
       <option value="en">English</option>
       <option value="ur">اردو</option>
     </select>
-    <button id="logoutBtn">Logout</button>
+    <button id="logoutBtn" type="button">Logout</button>
   </div>
 </header>
 
 <main>
-  <div class="card">
-    <h2 id="heading">Admin Dashboard</h2>
-    <p id="intro" class="muted">Manage fares, commissions, driver applications and ride requests.</p>
-    <div id="message" class="message" role="status" aria-live="polite"></div>
-  </div>
 
-  <!-- FARE AND COMMISSION SETTINGS -->
   <section class="card">
-    <h2 id="fareSettingsHeading">Fare & Commission Settings</h2>
-    <p class="muted" id="fareSettingsIntro">
-      Configure petrol prices, vehicle costs, rider profit and platform commission.
-      Values are starter examples. Adjust them to your actual operating costs.
+    <h1 id="pageTitle">Admin Dashboard</h1>
+    <p class="muted" id="pageIntro">
+      Manage vehicle fares, petrol prices, platform commission, driver applications and rides.
+    </p>
+    <div id="message" class="message" role="status" aria-live="polite"></div>
+  </section>
+
+  <!-- DASHBOARD SUMMARY -->
+
+  <section class="card">
+    <h2>Dashboard Overview</h2>
+    <div class="stats">
+      <div class="stat">
+        <span>Driver Applications</span>
+        <strong id="driverCount">0</strong>
+      </div>
+      <div class="stat">
+        <span>Total Rides</span>
+        <strong id="rideCount">0</strong>
+      </div>
+      <div class="stat">
+        <span>Completed Rides</span>
+        <strong id="completedCount">0</strong>
+      </div>
+      <div class="stat">
+        <span>Recorded Platform Commission</span>
+        <strong id="commissionTotal">Rs 0</strong>
+      </div>
+    </div>
+    <p class="muted">
+      Commission total is calculated from commission values already stored in ride records.
+      It is not a verified accounting ledger.
+    </p>
+  </section>
+
+  <!-- FARE SETTINGS -->
+
+  <section class="card">
+    <h2>Fare & Commission Settings</h2>
+
+    <p class="muted">
+      Change petrol price, vehicle operating costs, rider profit, customer fare and platform
+      commission. The values below are starter examples; review them before using them for real rides.
     </p>
 
-    <div class="settings-grid">
+    <div class="grid">
       <div class="field">
         <label for="petrolPrice">Petrol Price (Rs/Litre)</label>
         <input id="petrolPrice" type="number" min="0" max="100000" step="0.01" value="400">
@@ -76,13 +246,13 @@ main{max-width:1150px;margin:24px auto;padding:0 15px}
       <div class="field">
         <label for="fareMode">Fare Calculation Mode</label>
         <select id="fareMode">
-          <option value="automatic">Automatic (cost-based settings)</option>
-          <option value="manual">Manual (minimum + per km)</option>
+          <option value="automatic">Automatic — operating cost based</option>
+          <option value="manual">Manual — minimum fare + per km</option>
         </select>
       </div>
 
       <div class="field">
-        <label for="commissionMode">Commission Mode</label>
+        <label for="commissionMode">Commission Calculation Mode</label>
         <select id="commissionMode">
           <option value="distance">Distance-based commission</option>
           <option value="percentage">Flat percentage commission</option>
@@ -95,564 +265,871 @@ main{max-width:1150px;margin:24px auto;padding:0 15px}
       </div>
     </div>
 
-    <p class="muted">
-      Automatic mode ke liye petrol cost, maintenance aur rider profit settings save hongi.
-      Actual customer fare calculate karne ke liye customer page ko bhi update karna hoga.
-    </p>
+    <!-- BIKE -->
 
     <h3 class="section-title">Bike Settings</h3>
     <div class="vehicle-card">
-      <div class="settings-grid">
+      <div class="grid">
         <div class="field">
           <label for="bikeFuelAverage">Fuel Average (km/litre)</label>
           <input id="bikeFuelAverage" type="number" min="0.1" max="200" step="0.1" value="40">
         </div>
         <div class="field">
           <label for="bikeMaintenance">Maintenance (Rs/km)</label>
-          <input id="bikeMaintenance" type="number" min="0" max="100000" step="0.1" value="5">
+          <input id="bikeMaintenance" type="number" min="0" step="0.1" value="5">
         </div>
         <div class="field">
           <label for="bikeProfit">Rider Profit (Rs/km)</label>
-          <input id="bikeProfit" type="number" min="0" max="100000" step="0.1" value="10">
+          <input id="bikeProfit" type="number" min="0" step="0.1" value="10">
         </div>
         <div class="field">
           <label for="bikeMinimumFare">Minimum Fare (Rs)</label>
-          <input id="bikeMinimumFare" type="number" min="0" max="1000000" step="1" value="60">
+          <input id="bikeMinimumFare" type="number" min="0" step="1" value="60">
         </div>
         <div class="field">
           <label for="bikePerKmFare">Manual Fare (Rs/km)</label>
-          <input id="bikePerKmFare" type="number" min="0" max="100000" step="1" value="20">
+          <input id="bikePerKmFare" type="number" min="0" step="1" value="20">
         </div>
       </div>
     </div>
 
+    <!-- RICKSHAW -->
+
     <h3 class="section-title">Rickshaw Settings</h3>
     <div class="vehicle-card">
-      <div class="settings-grid">
+      <div class="grid">
         <div class="field">
           <label for="rickshawFuelAverage">Fuel Average (km/litre)</label>
           <input id="rickshawFuelAverage" type="number" min="0.1" max="200" step="0.1" value="25">
         </div>
         <div class="field">
           <label for="rickshawMaintenance">Maintenance (Rs/km)</label>
-          <input id="rickshawMaintenance" type="number" min="0" max="100000" step="0.1" value="8">
+          <input id="rickshawMaintenance" type="number" min="0" step="0.1" value="8">
         </div>
         <div class="field">
           <label for="rickshawProfit">Rider Profit (Rs/km)</label>
-          <input id="rickshawProfit" type="number" min="0" max="100000" step="0.1" value="15">
+          <input id="rickshawProfit" type="number" min="0" step="0.1" value="15">
         </div>
         <div class="field">
           <label for="rickshawMinimumFare">Minimum Fare (Rs)</label>
-          <input id="rickshawMinimumFare" type="number" min="0" max="1000000" step="1" value="90">
+          <input id="rickshawMinimumFare" type="number" min="0" step="1" value="90">
         </div>
         <div class="field">
           <label for="rickshawPerKmFare">Manual Fare (Rs/km)</label>
-          <input id="rickshawPerKmFare" type="number" min="0" max="100000" step="1" value="30">
+          <input id="rickshawPerKmFare" type="number" min="0" step="1" value="30">
         </div>
       </div>
     </div>
 
+    <!-- CAR -->
+
     <h3 class="section-title">Car Settings</h3>
     <div class="vehicle-card">
-      <div class="settings-grid">
+      <div class="grid">
         <div class="field">
           <label for="carFuelAverage">Fuel Average (km/litre)</label>
           <input id="carFuelAverage" type="number" min="0.1" max="200" step="0.1" value="12">
         </div>
         <div class="field">
           <label for="carMaintenance">Maintenance (Rs/km)</label>
-          <input id="carMaintenance" type="number" min="0" max="100000" step="0.1" value="12">
+          <input id="carMaintenance" type="number" min="0" step="0.1" value="12">
         </div>
         <div class="field">
           <label for="carProfit">Rider Profit (Rs/km)</label>
-          <input id="carProfit" type="number" min="0" max="100000" step="0.1" value="25">
+          <input id="carProfit" type="number" min="0" step="0.1" value="25">
         </div>
         <div class="field">
           <label for="carMinimumFare">Minimum Fare (Rs)</label>
-          <input id="carMinimumFare" type="number" min="0" max="1000000" step="1" value="150">
+          <input id="carMinimumFare" type="number" min="0" step="1" value="150">
         </div>
         <div class="field">
           <label for="carPerKmFare">Manual Fare (Rs/km)</label>
-          <input id="carPerKmFare" type="number" min="0" max="100000" step="1" value="50">
+          <input id="carPerKmFare" type="number" min="0" step="1" value="50">
         </div>
       </div>
     </div>
 
-    <h3 class="section-title">Distance-based Commission Slabs</h3>
-    <p class="muted">Commission is a percentage of the ride fare. These are initial example rates.</p>
+    <!-- COMMISSION SLABS -->
 
-    <div class="settings-grid">
+    <h3 class="section-title">Distance-Based Commission</h3>
+    <p class="muted">
+      Commission is a percentage of the total fare. The matching distance band determines the rate.
+    </p>
+
+    <div class="grid">
       <div class="field">
         <label for="commission1to10">1–10 km (%)</label>
         <input id="commission1to10" type="number" min="0" max="100" step="0.1" value="5">
       </div>
       <div class="field">
-        <label for="commission11to15">11–15 km (%)</label>
+        <label for="commission11to15">Over 10–15 km (%)</label>
         <input id="commission11to15" type="number" min="0" max="100" step="0.1" value="5.5">
       </div>
       <div class="field">
-        <label for="commission16to20">16–20 km (%)</label>
+        <label for="commission16to20">Over 15–20 km (%)</label>
         <input id="commission16to20" type="number" min="0" max="100" step="0.1" value="6">
       </div>
       <div class="field">
-        <label for="commission21to30">21–30 km (%)</label>
+        <label for="commission21to30">Over 20–30 km (%)</label>
         <input id="commission21to30" type="number" min="0" max="100" step="0.1" value="7">
       </div>
       <div class="field">
-        <label for="commissionAbove30">Above 30 km (%)</label>
+        <label for="commissionAbove30">Over 30 km (%)</label>
         <input id="commissionAbove30" type="number" min="0" max="100" step="0.1" value="7">
       </div>
     </div>
 
-    <div class="row">
-      <button id="saveFareSettingsBtn" class="save-button">Save Fare & Commission Settings</button>
+    <button id="saveSettingsBtn" class="save-button" type="button">
+      Save Fare & Commission Settings
+    </button>
+    <p id="settingsStatus" class="muted">Loading saved settings...</p>
+  </section>
+
+  <!-- FARE PREVIEW -->
+
+  <section class="card">
+    <h2>Fare & Commission Calculator</h2>
+    <p class="muted">
+      This preview uses the current values in the form. It does not create a booking or deduct commission.
+    </p>
+
+    <div class="grid">
+      <div class="field">
+        <label for="previewVehicle">Vehicle</label>
+        <select id="previewVehicle">
+          <option value="bike">Bike</option>
+          <option value="rickshaw">Rickshaw</option>
+          <option value="car">Car</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="previewDistance">Distance (km)</label>
+        <input id="previewDistance" type="number" min="0.1" max="1000" step="0.1" value="7">
+      </div>
     </div>
-    <p class="muted" id="settingsStatus">Settings have not been loaded yet.</p>
+
+    <button id="calculatePreviewBtn" type="button">Calculate Estimate</button>
+
+    <div id="farePreview" class="preview" aria-live="polite">
+      Enter a distance and calculate an estimate.
+    </div>
   </section>
 
   <!-- DRIVER APPLICATIONS -->
-  <div class="card">
-    <h2 id="driversHeading">Driver Applications</h2>
-    <div id="drivers"><p class="muted">Loading drivers...</p></div>
-  </div>
 
-  <!-- RIDE ORDERS -->
-  <div class="card">
-    <h2 id="ordersHeading">Ride Orders</h2>
-    <div id="orders"><p class="muted">Loading orders...</p></div>
-  </div>
-  </main>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <section class="card">
+    <h2>Driver Applications</h2>
+    <p class="muted">Review applications and approve or reject drivers.</p>
+    <div id="drivers">Loading driver applications...</div>
+  </section>
+
+  <!-- ORDERS -->
+
+  <section class="card">
+    <h2>Ride Orders</h2>
+    <p class="muted">
+      View recorded bookings, ride status, fare and commission information.
+    </p>
+    <div id="orders">Loading ride orders...</div>
+  </section>
+
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
 <script>
 "use strict";
 
-const firebaseConfig={
-  apiKey:"AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
-  authDomain:"zrides-9f2da.firebaseapp.com",
-  databaseURL:"https://zrides-9f2da-default-rtdb.firebaseio.com",
-  projectId:"zrides-9f2da",
-  storageBucket:"zrides-9f2da.firebasestorage.app",
-  messagingSenderId:"93898388224",
-  appId:"1:93898388224:web:2e4f78e5b31dec26f839e5"
+/* -------------------------------------------------------
+   FIREBASE CONFIGURATION
+------------------------------------------------------- */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
+  authDomain: "zrides-9f2da.firebaseapp.com",
+  databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
+  projectId: "zrides-9f2da",
+  storageBucket: "zrides-9f2da.firebasestorage.app",
+  messagingSenderId: "93898388224",
+  appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
 };
 
-const ADMIN_UID="cmmo7x7k0CY8lkcev4Rq92t84wU2";
+/*
+  Existing administrator UID.
+  Keep this matching your actual Firebase admin account.
+*/
+const ADMIN_UID = "cmmo7x7k0CY8lkcev4Rq92t84wU2";
 
-if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
-const auth=firebase.auth();
-const db=firebase.database();
-const $=id=>document.getElementById(id);
+const auth = firebase.auth();
+const db = firebase.database();
+const $ = id => document.getElementById(id);
 
-const DEFAULT_FARE_SETTINGS={
-  version:1,
-  currency:"PKR",
-  petrolPricePerLitre:400,
-  fareMode:"automatic",
-  commissionMode:"distance",
-  flatCommission:5,
-  vehicles:{
-    bike:{
-      fuelAverageKmPerLitre:40,
-      maintenancePerKm:5,
-      riderProfitPerKm:10,
-      minimumFare:60,
-      perKmFare:20
+/* -------------------------------------------------------
+   DEFAULT SETTINGS
+------------------------------------------------------- */
+
+const DEFAULT_SETTINGS = {
+  version: 2,
+  currency: "PKR",
+  petrolPricePerLitre: 400,
+  fareMode: "automatic",
+  commissionMode: "distance",
+  flatCommission: 5,
+
+  vehicles: {
+    bike: {
+      fuelAverageKmPerLitre: 40,
+      maintenancePerKm: 5,
+      riderProfitPerKm: 10,
+      minimumFare: 60,
+      perKmFare: 20
     },
-    rickshaw:{
-      fuelAverageKmPerLitre:25,
-      maintenancePerKm:8,
-      riderProfitPerKm:15,
-      minimumFare:90,
-      perKmFare:30
+
+    rickshaw: {
+      fuelAverageKmPerLitre: 25,
+      maintenancePerKm: 8,
+      riderProfitPerKm: 15,
+      minimumFare: 90,
+      perKmFare: 30
     },
-    car:{
-      fuelAverageKmPerLitre:12,
-      maintenancePerKm:12,
-      riderProfitPerKm:25,
-      minimumFare:150,
-      perKmFare:50
+
+    car: {
+      fuelAverageKmPerLitre: 12,
+      maintenancePerKm: 12,
+      riderProfitPerKm: 25,
+      minimumFare: 150,
+      perKmFare: 50
     }
   },
-  commissionSlabs:{
-    "1to10":5,
-    "11to15":5.5,
-    "16to20":6,
-    "21to30":7,
-    above30:7
+
+  commissionSlabs: {
+    "1to10": 5,
+    "11to15": 5.5,
+    "16to20": 6,
+    "21to30": 7,
+    above30: 7
   }
 };
 
-const words={
-en:{
-  heading:"Admin Dashboard",
-  intro:"Manage fares, commissions, driver applications and ride requests.",
-  drivers:"Driver Applications",
-  orders:"Ride Orders",
-  logout:"Logout",
-  loadingDrivers:"Loading drivers...",
-  loadingOrders:"Loading orders...",
-  noDrivers:"No driver applications found.",
-  noOrders:"No ride orders found.",
-  approve:"Approve",
-  reject:"Reject",
-  pending:"Pending",
-  approved:"Approved",
-  rejected:"Rejected",
-  driver:"Driver",
-  name:"Name",
-  email:"Email",
-  phone:"Phone",
-  vehicle:"Vehicle",
-  plate:"Registration",
-  pickup:"Pickup",
-  dropoff:"Destination",
-  customer:"Customer",
-  fare:"Fare",
-  status:"Status",
-  approveSuccess:"Driver approved.",
-  rejectSuccess:"Driver rejected.",
-  updateError:"Unable to update driver status.",
-  authError:"You are not authorized to access this page.",
-  verifyError:"Verify the admin email before continuing.",
-  loadError:"Unable to load data. Check database permissions.",
-  accepted:"Accepted",
-  arrived:"Driver Arrived",
-  started:"Started",
-  completed:"Completed",
-  cancelled:"Cancelled",
-  unknown:"Unknown"
-},
-ur:{
-  heading:"Admin Dashboard",
-  intro:"Fare, commission, driver applications aur rides manage karein.",
-  drivers:"Driver Applications",
-  orders:"Ride Orders",
-  logout:"Logout",
-  loadingDrivers:"Drivers load ho rahe hain...",
-  loadingOrders:"Orders load ho rahe hain...",
-  noDrivers:"Koi driver application nahi mili.",
-  noOrders:"Koi ride order nahi mila.",
-  approve:"Approve Karein",
-  reject:"Reject Karein",
-  pending:"Pending",
-  approved:"Approved",
-  rejected:"Rejected",
-  driver:"Driver",
-  name:"Naam",
-  email:"Email",
-  phone:"Phone",
-  vehicle:"Vehicle",
-  plate:"Registration",
-  pickup:"Pickup",
-  dropoff:"Manzil",
-  customer:"Customer",
-  fare:"Kiraya",
-  status:"Status",
-  approveSuccess:"Driver approve ho gaya.",
-  rejectSuccess:"Driver reject ho gaya.",
-  updateError:"Driver status update nahi ho saka.",
-  authError:"Aapko is page ka access nahi hai.",
-  verifyError:"Admin email verify karein.",
-  loadError:"Data load nahi hua. Database permissions check karein.",
-  accepted:"Accept ho gayi",
-  arrived:"Driver pohanch gaya",
-  started:"Shuru",
-  completed:"Mukammal",
-  cancelled:"Cancel",
-  unknown:"Maloom nahi"
+/* -------------------------------------------------------
+   APPLICATION STATE
+------------------------------------------------------- */
+
+let language = localStorage.getItem("zridesLanguage") || "en";
+
+if (!["en", "ur"].includes(language)) {
+  language = "en";
 }
+
+let driversData = {};
+let ordersData = {};
+
+let driversRef = null;
+let ordersRef = null;
+
+let authGeneration = 0;
+let adminReady = false;
+
+/* -------------------------------------------------------
+   LANGUAGE
+------------------------------------------------------- */
+
+const translations = {
+  en: {
+    pageTitle: "Admin Dashboard",
+    pageIntro: "Manage fares, commissions, driver applications and rides.",
+    logout: "Logout",
+    loading: "Loading...",
+    noDrivers: "No driver applications found.",
+    noOrders: "No ride orders found.",
+    approve: "Approve",
+    reject: "Reject",
+    name: "Name",
+    email: "Email",
+    phone: "Phone",
+    vehicle: "Vehicle",
+    plate: "Registration",
+    status: "Status",
+    customer: "Customer",
+    driver: "Driver",
+    pickup: "Pickup",
+    dropoff: "Destination",
+    distance: "Distance",
+    fare: "Fare",
+    commission: "Platform commission",
+    riderEarning: "Recorded rider earning",
+    approveSuccess: "Driver approved successfully.",
+    rejectSuccess: "Driver rejected.",
+    updateFailed: "Unable to update driver.",
+    unauthorized: "You are not authorized to access this page.",
+    verifyEmail: "Please verify the administrator email.",
+    loadFailed: "Unable to load data. Check Firebase permissions.",
+    settingsSaved: "Fare settings saved successfully.",
+    settingsFailed: "Unable to save settings.",
+    estimate: "Estimated customer fare",
+    rate: "Commission rate",
+    profit: "Rider profit setting",
+    petrol: "Fuel cost",
+    maintenance: "Maintenance cost",
+    net: "Estimated rider amount after commission",
+    invalidDistance: "Enter a valid distance greater than zero.",
+    pending: "Pending",
+    approved: "Approved",
+    rejected: "Rejected",
+    accepted: "Accepted",
+    arrived: "Driver arrived",
+    started: "Started",
+    completed: "Completed",
+    cancelled: "Cancelled",
+    unknown: "Unknown"
+  },
+
+  ur: {
+    pageTitle: "Zrides Admin Dashboard",
+    pageIntro: "Fare, commission, drivers aur rides manage karein.",
+    logout: "Logout",
+    loading: "Load ho raha hai...",
+    noDrivers: "Koi driver application nahi mili.",
+    noOrders: "Koi ride order nahi mila.",
+    approve: "Approve karein",
+    reject: "Reject karein",
+    name: "Naam",
+    email: "Email",
+    phone: "Phone",
+    vehicle: "Vehicle",
+    plate: "Registration",
+    status: "Status",
+    customer: "Customer",
+    driver: "Driver",
+    pickup: "Pickup",
+    dropoff: "Manzil",
+    distance: "Fasla",
+    fare: "Kiraya",
+    commission: "Platform commission",
+    riderEarning: "Recorded rider earning",
+    approveSuccess: "Driver approve ho gaya.",
+    rejectSuccess: "Driver reject ho gaya.",
+    updateFailed: "Driver update nahi ho saka.",
+    unauthorized: "Aapko is page ka access nahi hai.",
+    verifyEmail: "Admin email verify karein.",
+    loadFailed: "Data load nahi hua. Firebase permissions check karein.",
+    settingsSaved: "Fare settings save ho gayi hain.",
+    settingsFailed: "Settings save nahi ho sakin.",
+    estimate: "Andazati customer fare",
+    rate: "Commission rate",
+    profit: "Rider profit setting",
+    petrol: "Fuel cost",
+    maintenance: "Maintenance cost",
+    net: "Commission ke baad andazati rider amount",
+    invalidDistance: "Durust fasla darj karein.",
+    pending: "Pending",
+    approved: "Approved",
+    rejected: "Rejected",
+    accepted: "Accepted",
+    arrived: "Driver pohanch gaya",
+    started: "Ride shuru",
+    completed: "Mukammal",
+    cancelled: "Cancel",
+    unknown: "Maloom nahi"
+  }
 };
 
-let lang=localStorage.getItem("zridesLanguage")||"en";
-if(!words[lang])lang="en";
-
-let driversRef=null;
-let ordersRef=null;
-let fareSettingsRef=null;
-let driverData={};
-let orderData={};
-let currentFareSettings=null;
-
-function t(key){
-  return words[lang][key]||words.en[key]||key;
+function tr(key) {
+  return translations[language][key] ||
+    translations.en[key] ||
+    key;
 }
 
-function notify(text,type="info"){
-  $("message").textContent=text;
-  $("message").className="message "+type;
+function notify(message, type = "info") {
+  const box = $("message");
+  box.textContent = message;
+  box.className = "message " + type;
 }
 
-function el(tag,text){
-  const node=document.createElement(tag);
-  node.textContent=String(text??"");
+function formatMoney(value) {
+  const n = Number(value);
+
+  if (!Number.isFinite(n)) return "Rs 0";
+
+  return "Rs " + Math.round(n).toLocaleString("en-PK");
+}
+
+function safeText(value) {
+  if (value === null || value === undefined || value === "") {
+    return "—";
+  }
+
+  return String(value);
+}
+
+function makeElement(tag, text) {
+  const node = document.createElement(tag);
+  node.textContent = safeText(text);
   return node;
 }
 
-function showStatus(status){
-  return t(status||"pending");
-}
+function applyLanguage() {
+  document.documentElement.lang = language;
+  document.documentElement.dir = language === "ur" ? "rtl" : "ltr";
 
-function applyLanguage(){
-  document.documentElement.lang=lang;
-  document.documentElement.dir=lang==="ur"?"rtl":"ltr";
-  $("language").value=lang;
-  $("heading").textContent=t("heading");
-  $("intro").textContent=t("intro");
-  $("driversHeading").textContent=t("drivers");
-  $("ordersHeading").textContent=t("orders");
-  $("logoutBtn").textContent=t("logout");
+  $("language").value = language;
+  $("pageTitle").textContent = tr("pageTitle");
+  $("pageIntro").textContent = tr("pageIntro");
+  $("logoutBtn").textContent = tr("logout");
+
   renderDrivers();
   renderOrders();
 }
 
-$("language").onchange=e=>{
-  lang=e.target.value;
-  localStorage.setItem("zridesLanguage",lang);
+$("language").addEventListener("change", event => {
+  language = event.target.value;
+  localStorage.setItem("zridesLanguage", language);
   applyLanguage();
-};
+});
 
-function readNumber(id){
-  const input=$(id);
-  const value=input.value.trim();
+/* -------------------------------------------------------
+   FORM VALIDATION
+------------------------------------------------------- */
 
-  if(value==="")throw new Error(input.labels[0].textContent+" is required.");
+function readNumber(id) {
+  const input = $(id);
+  const value = input.value.trim();
 
-  const number=Number(value);
+  if (value === "") {
+    throw new Error(input.labels[0].textContent + " is required.");
+  }
 
-  if(!Number.isFinite(number)||number<0){
-    throw new Error("Enter a valid non-negative number for "+input.labels[0].textContent+".");
+  const number = Number(value);
+
+  if (!Number.isFinite(number) || number < 0) {
+    throw new Error(
+      "Enter a valid non-negative number for " +
+      input.labels[0].textContent + "."
+    );
   }
 
   return number;
 }
 
-function readPositiveNumber(id){
-  const value=readNumber(id);
-  if(value<=0){
-    throw new Error($(id).labels[0].textContent+" must be greater than zero.");
+function readPositiveNumber(id) {
+  const value = readNumber(id);
+
+  if (value <= 0) {
+    throw new Error(
+      $(id).labels[0].textContent + " must be greater than zero."
+    );
   }
+
   return value;
 }
 
-function readPercent(id){
-  const value=readNumber(id);
-  if(value>100){
-    throw new Error($(id).labels[0].textContent+" cannot exceed 100%.");
+function readPercent(id) {
+  const value = readNumber(id);
+
+  if (value > 100) {
+    throw new Error(
+      $(id).labels[0].textContent + " cannot exceed 100%."
+    );
   }
+
   return value;
 }
 
-function readFareSettingsFromForm(){
-  const settings={
-    version:1,
-    currency:"PKR",
-    petrolPricePerLitre:readNumber("petrolPrice"),
-    fareMode:$("fareMode").value,
-    commissionMode:$("commissionMode").value,
-    flatCommission:readPercent("flatCommission"),
-    vehicles:{
-      bike:{
-        fuelAverageKmPerLitre:readPositiveNumber("bikeFuelAverage"),
-        maintenancePerKm:readNumber("bikeMaintenance"),
-        riderProfitPerKm:readNumber("bikeProfit"),
-        minimumFare:readNumber("bikeMinimumFare"),
-        perKmFare:readNumber("bikePerKmFare")
+/* -------------------------------------------------------
+   SETTINGS: READ FORM
+------------------------------------------------------- */
+
+function readSettingsForm() {
+  const settings = {
+    version: 2,
+    currency: "PKR",
+
+    petrolPricePerLitre: readNumber("petrolPrice"),
+    fareMode: $("fareMode").value,
+    commissionMode: $("commissionMode").value,
+    flatCommission: readPercent("flatCommission"),
+
+    vehicles: {
+      bike: {
+        fuelAverageKmPerLitre: readPositiveNumber("bikeFuelAverage"),
+        maintenancePerKm: readNumber("bikeMaintenance"),
+        riderProfitPerKm: readNumber("bikeProfit"),
+        minimumFare: readNumber("bikeMinimumFare"),
+        perKmFare: readNumber("bikePerKmFare")
       },
-      rickshaw:{
-        fuelAverageKmPerLitre:readPositiveNumber("rickshawFuelAverage"),
-        maintenancePerKm:readNumber("rickshawMaintenance"),
-        riderProfitPerKm:readNumber("rickshawProfit"),
-        minimumFare:readNumber("rickshawMinimumFare"),
-        perKmFare:readNumber("rickshawPerKmFare")
+
+      rickshaw: {
+        fuelAverageKmPerLitre: readPositiveNumber("rickshawFuelAverage"),
+        maintenancePerKm: readNumber("rickshawMaintenance"),
+        riderProfitPerKm: readNumber("rickshawProfit"),
+        minimumFare: readNumber("rickshawMinimumFare"),
+        perKmFare: readNumber("rickshawPerKmFare")
       },
-      car:{
-        fuelAverageKmPerLitre:readPositiveNumber("carFuelAverage"),
-        maintenancePerKm:readNumber("carMaintenance"),
-        riderProfitPerKm:readNumber("carProfit"),
-        minimumFare:readNumber("carMinimumFare"),
-        perKmFare:readNumber("carPerKmFare")
+
+      car: {
+        fuelAverageKmPerLitre: readPositiveNumber("carFuelAverage"),
+        maintenancePerKm: readNumber("carMaintenance"),
+        riderProfitPerKm: readNumber("carProfit"),
+        minimumFare: readNumber("carMinimumFare"),
+        perKmFare: readNumber("carPerKmFare")
       }
     },
-    commissionSlabs:{
-      "1to10":readPercent("commission1to10"),
-      "11to15":readPercent("commission11to15"),
-      "16to20":readPercent("commission16to20"),
-      "21to30":readPercent("commission21to30"),
-      above30:readPercent("commissionAbove30")
+
+    commissionSlabs: {
+      "1to10": readPercent("commission1to10"),
+      "11to15": readPercent("commission11to15"),
+      "16to20": readPercent("commission16to20"),
+      "21to30": readPercent("commission21to30"),
+      above30: readPercent("commissionAbove30")
     }
   };
 
-  if(!["automatic","manual"].includes(settings.fareMode)){
-    throw new Error("Invalid fare mode.");
+  if (!["automatic", "manual"].includes(settings.fareMode)) {
+    throw new Error("Invalid fare calculation mode.");
   }
 
-  if(!["distance","percentage"].includes(settings.commissionMode)){
+  if (!["distance", "percentage"].includes(settings.commissionMode)) {
     throw new Error("Invalid commission mode.");
   }
 
   return settings;
 }
 
-function fillFareSettings(settings){
-  const s=settings||DEFAULT_FARE_SETTINGS;
-  const vehicles=s.vehicles||DEFAULT_FARE_SETTINGS.vehicles;
-  const slabs=s.commissionSlabs||DEFAULT_FARE_SETTINGS.commissionSlabs;
+/* -------------------------------------------------------
+   SETTINGS: POPULATE FORM
+------------------------------------------------------- */
 
-  $("petrolPrice").value=s.petrolPricePerLitre??400;
-  $("fareMode").value=s.fareMode||"automatic";
-  $("commissionMode").value=s.commissionMode||"distance";
-  $("flatCommission").value=s.flatCommission??5;
+function fillSettings(saved) {
+  const settings = saved || DEFAULT_SETTINGS;
+  const vehicles = settings.vehicles || DEFAULT_SETTINGS.vehicles;
+  const slabs = settings.commissionSlabs || DEFAULT_SETTINGS.commissionSlabs;
 
-  const bike=vehicles.bike||DEFAULT_FARE_SETTINGS.vehicles.bike;
-  const rickshaw=vehicles.rickshaw||DEFAULT_FARE_SETTINGS.vehicles.rickshaw;
-  const car=vehicles.car||DEFAULT_FARE_SETTINGS.vehicles.car;
+  $("petrolPrice").value = settings.petrolPricePerLitre ?? 400;
+  $("fareMode").value = settings.fareMode || "automatic";
+  $("commissionMode").value = settings.commissionMode || "distance";
+  $("flatCommission").value = settings.flatCommission ?? 5;
 
-  $("bikeFuelAverage").value=bike.fuelAverageKmPerLitre??40;
-  $("bikeMaintenance").value=bike.maintenancePerKm??5;
-  $("bikeProfit").value=bike.riderProfitPerKm??10;
-  $("bikeMinimumFare").value=bike.minimumFare??60;
-  $("bikePerKmFare").value=bike.perKmFare??20;
+  for (const type of ["bike", "rickshaw", "car"]) {
+    const vehicle = vehicles[type] || DEFAULT_SETTINGS.vehicles[type];
 
-  $("rickshawFuelAverage").value=rickshaw.fuelAverageKmPerLitre??25;
-  $("rickshawMaintenance").value=rickshaw.maintenancePerKm??8;
-  $("rickshawProfit").value=rickshaw.riderProfitPerKm??15;
-  $("rickshawMinimumFare").value=rickshaw.minimumFare??90;
-  $("rickshawPerKmFare").value=rickshaw.perKmFare??30;
+    $(type + "FuelAverage").value = vehicle.fuelAverageKmPerLitre;
+    $(type + "Maintenance").value = vehicle.maintenancePerKm;
+    $(type + "Profit").value = vehicle.riderProfitPerKm;
+    $(type + "MinimumFare").value = vehicle.minimumFare;
+    $(type + "PerKmFare").value = vehicle.perKmFare;
+  }
 
-  $("carFuelAverage").value=car.fuelAverageKmPerLitre??12;
-  $("carMaintenance").value=car.maintenancePerKm??12;
-  $("carProfit").value=car.riderProfitPerKm??25;
-  $("carMinimumFare").value=car.minimumFare??150;
-  $("carPerKmFare").value=car.perKmFare??50;
-
-  $("commission1to10").value=slabs["1to10"]??5;
-  $("commission11to15").value=slabs["11to15"]??5.5;
-  $("commission16to20").value=slabs["16to20"]??6;
-  $("commission21to30").value=slabs["21to30"]??7;
-  $("commissionAbove30").value=slabs.above30??7;
+  $("commission1to10").value = slabs["1to10"] ?? 5;
+  $("commission11to15").value = slabs["11to15"] ?? 5.5;
+  $("commission16to20").value = slabs["16to20"] ?? 6;
+  $("commission21to30").value = slabs["21to30"] ?? 7;
+  $("commissionAbove30").value = slabs.above30 ?? 7;
 }
 
-async function loadFareSettings(){
-  $("settingsStatus").textContent="Loading settings...";
+/* -------------------------------------------------------
+   SETTINGS: LOAD AND SAVE
+------------------------------------------------------- */
 
-  try{
-    const snapshot=await db.ref("settings/fare").once("value");
-    const saved=snapshot.val();
+async function loadSettings() {
+  $("settingsStatus").textContent = "Loading settings...";
 
-    if(saved){
-      currentFareSettings=saved;
-      fillFareSettings(saved);
-      $("settingsStatus").textContent="Saved settings loaded from Firebase.";
-    }else{
-      currentFareSettings=DEFAULT_FARE_SETTINGS;
-      fillFareSettings(DEFAULT_FARE_SETTINGS);
-      $("settingsStatus").textContent="Starter values loaded. Save them to store in Firebase.";
-    }
-  }catch(error){
-    console.error("Fare settings load error:",error);
-    $("settingsStatus").textContent="Could not load settings. Check Firebase Database Rules.";
-    notify("Fare settings could not be loaded. Check database permissions.","error");
+  try {
+    const snapshot = await db.ref("settings/fare").once("value");
+    fillSettings(snapshot.val());
+
+    $("settingsStatus").textContent = snapshot.exists()
+      ? "Saved Firebase settings loaded."
+      : "Starter settings loaded. Save to store them in Firebase.";
+  } catch (error) {
+    console.error("Settings load failed:", error);
+
+    $("settingsStatus").textContent =
+      "Could not load settings. Check Firebase permissions.";
+
+    notify(tr("loadFailed"), "error");
   }
 }
 
-async function saveFareSettings(){
-  const button=$("saveFareSettingsBtn");
-  button.disabled=true;
+async function saveSettings() {
+  const button = $("saveSettingsBtn");
+  button.disabled = true;
 
-  try{
-    if(!auth.currentUser||auth.currentUser.uid!==ADMIN_UID){
-      throw new Error("Only the authorized admin can save these settings.");
+  try {
+    if (!auth.currentUser ||
+        auth.currentUser.uid !== ADMIN_UID ||
+        !adminReady) {
+      throw new Error(tr("unauthorized"));
     }
 
-    const settings=readFareSettingsFromForm();
+    const settings = readSettingsForm();
 
-    settings.updatedAt=firebase.database.ServerValue.TIMESTAMP;
-    settings.updatedBy=auth.currentUser.uid;
+    settings.updatedAt = firebase.database.ServerValue.TIMESTAMP;
+    settings.updatedBy = auth.currentUser.uid;
 
     await db.ref("settings/fare").set(settings);
 
-    currentFareSettings=readFareSettingsFromForm();
-    $("settingsStatus").textContent=
-      "Settings saved successfully at "+new Date().toLocaleString();
+    notify(tr("settingsSaved"), "success");
 
-    notify("Fare and commission settings saved.","success");
-  }catch(error){
-    console.error("Fare settings save error:",error);
-    notify(error.message||"Could not save settings. Check database permissions.","error");
-    $("settingsStatus").textContent="Save failed. Review the error message and Firebase Rules.";
-  }finally{
-    button.disabled=false;
+    $("settingsStatus").textContent =
+      "Settings saved at " + new Date().toLocaleString();
+
+    calculatePreview();
+  } catch (error) {
+    console.error("Settings save failed:", error);
+    notify(error.message || tr("settingsFailed"), "error");
+    $("settingsStatus").textContent = tr("settingsFailed");
+  } finally {
+    button.disabled = false;
   }
 }
 
-$("saveFareSettingsBtn").addEventListener("click",saveFareSettings);
-  async function setDriverApproval(uid,status){
-  if(!["approved","rejected"].includes(status))return;
+$("saveSettingsBtn").addEventListener("click", saveSettings);
 
-  try{
-    if(!auth.currentUser||auth.currentUser.uid!==ADMIN_UID){
-      throw new Error("Unauthorized");
+/* -------------------------------------------------------
+   FARE AND COMMISSION CALCULATION
+------------------------------------------------------- */
+
+/*
+  Automatic mode:
+  Per-km cost = petrol cost per km + maintenance + configured rider profit.
+  The minimum fare is a floor.
+
+  Manual mode:
+  Fare = maximum of minimum fare and per-km fare multiplied by distance.
+
+  These are frontend preview calculations. Production bookings must use
+  trusted server-side calculations and store an immutable ride fare snapshot.
+*/
+
+function calculateFare(settings, vehicleType, distance) {
+  const vehicle = settings.vehicles[vehicleType];
+
+  if (!vehicle) {
+    throw new Error("Unknown vehicle type.");
+  }
+
+  if (!Number.isFinite(distance) || distance <= 0) {
+    throw new Error(tr("invalidDistance"));
+  }
+
+  let fare;
+
+  if (settings.fareMode === "manual") {
+    fare = Math.max(
+      vehicle.minimumFare,
+      vehicle.perKmFare * distance
+    );
+  } else {
+    const fuelCostPerKm =
+      settings.petrolPricePerLitre /
+      vehicle.fuelAverageKmPerLitre;
+
+    const totalCostPerKm =
+      fuelCostPerKm +
+      vehicle.maintenancePerKm +
+      vehicle.riderProfitPerKm;
+
+    fare = Math.max(
+      vehicle.minimumFare,
+      totalCostPerKm * distance
+    );
+  }
+
+  return Math.round(fare);
+}
+
+function commissionRate(settings, distance) {
+  if (settings.commissionMode === "percentage") {
+    return settings.flatCommission;
+  }
+
+  if (distance <= 10) {
+    return settings.commissionSlabs["1to10"];
+  }
+
+  if (distance <= 15) {
+    return settings.commissionSlabs["11to15"];
+  }
+
+  if (distance <= 20) {
+    return settings.commissionSlabs["16to20"];
+  }
+
+  if (distance <= 30) {
+    return settings.commissionSlabs["21to30"];
+  }
+
+  return settings.commissionSlabs.above30;
+}
+
+function calculatePreview() {
+  try {
+    const settings = readSettingsForm();
+    const vehicleType = $("previewVehicle").value;
+    const distance = Number($("previewDistance").value);
+
+    if (!Number.isFinite(distance) || distance <= 0) {
+      throw new Error(tr("invalidDistance"));
     }
 
-    const result=await db.ref("drivers/"+uid).transaction(driver=>{
-      if(!driver||driver.uid!==uid)return;
-      driver.approvalStatus=status;
-      driver.updatedAt=firebase.database.ServerValue.TIMESTAMP;
-      return driver;
-    });
+    const vehicle = settings.vehicles[vehicleType];
 
-    if(!result.committed){
-      notify(t("updateError"),"error");
-      return;
+    const fare = calculateFare(settings, vehicleType, distance);
+    const rate = commissionRate(settings, distance);
+    const commission = Math.round(fare * rate / 100);
+    const riderAmount = fare - commission;
+
+    const fuelCost =
+      settings.petrolPricePerLitre /
+      vehicle.fuelAverageKmPerLitre *
+      distance;
+
+    const maintenanceCost = vehicle.maintenancePerKm * distance;
+
+    const box = $("farePreview");
+    box.replaceChildren();
+
+    const lines = [
+      [tr("vehicle"), vehicleType.toUpperCase()],
+      [tr("distance"), distance + " km"],
+      [tr("estimate"), formatMoney(fare)],
+      [tr("rate"), rate + "%"],
+      [tr("commission"), formatMoney(commission)],
+      [tr("net"), formatMoney(riderAmount)],
+      [tr("petrol"), formatMoney(fuelCost)],
+      [tr("maintenance"), formatMoney(maintenanceCost)],
+      [tr("profit"), formatMoney(vehicle.riderProfitPerKm * distance)]
+    ];
+
+    for (const [label, value] of lines) {
+      const row = document.createElement("div");
+      const strong = document.createElement("strong");
+
+      strong.textContent = label + ": ";
+      row.appendChild(strong);
+      row.appendChild(document.createTextNode(value));
+
+      box.appendChild(row);
     }
 
-    notify(t(status==="approved"?"approveSuccess":"rejectSuccess"),"success");
-  }catch(error){
-    console.error(error);
-    notify(t("updateError"),"error");
+    const note = makeElement(
+      "p",
+      "Preview only. Actual booking totals and earnings must be calculated and verified by a trusted backend."
+    );
+
+    note.className = "muted";
+    box.appendChild(note);
+  } catch (error) {
+    $("farePreview").textContent = error.message;
   }
 }
 
-function renderDrivers(){
-  const box=$("drivers");
-  box.replaceChildren();
+$("calculatePreviewBtn").addEventListener("click", calculatePreview);
+$("previewVehicle").addEventListener("change", calculatePreview);
+$("previewDistance").addEventListener("input", calculatePreview);
 
-  const list=Object.entries(driverData);
+/* -------------------------------------------------------
+   DRIVER APPLICATIONS
+------------------------------------------------------- */
 
-  if(!list.length){
-    box.appendChild(el("p",t("noDrivers")));
+async function setDriverApproval(uid, status) {
+  if (!["approved", "rejected"].includes(status)) return;
+
+  if (!adminReady ||
+      !auth.currentUser ||
+      auth.currentUser.uid !== ADMIN_UID) {
+    notify(tr("unauthorized"), "error");
     return;
   }
 
-  list.forEach(([uid,d])=>{
-    const card=document.createElement("div");
-    card.className="item";
+  try {
+    const result = await db.ref("drivers/" + uid).transaction(driver => {
+      if (!driver || driver.uid !== uid) return;
 
-    card.appendChild(el("h3",d.name||t("unknown")));
-    card.appendChild(el("p",t("email")+": "+(d.email||"—")));
-    card.appendChild(el("p",t("phone")+": "+(d.phone||"—")));
-    card.appendChild(el("p",t("vehicle")+": "+(d.vehicle||t("unknown"))));
-    card.appendChild(el("p",t("plate")+": "+(d.plate||"—")));
-    card.appendChild(el("p",t("status")+": "+showStatus(d.approvalStatus)));
+      driver.approvalStatus = status;
+      driver.updatedAt = firebase.database.ServerValue.TIMESTAMP;
 
-    const row=document.createElement("div");
-    row.className="row";
+      return driver;
+    });
 
-    if(d.approvalStatus!=="approved"){
-      const approve=el("button",t("approve"));
-      approve.onclick=()=>setDriverApproval(uid,"approved");
-      row.appendChild(approve);
+    if (!result.committed) {
+      notify(tr("updateFailed"), "error");
+      return;
     }
 
-    if(d.approvalStatus!=="rejected"){
-      const reject=el("button",t("reject"));
-      reject.className="reject";
-      reject.onclick=()=>setDriverApproval(uid,"rejected");
-      row.appendChild(reject);
+    notify(
+      tr(status === "approved" ? "approveSuccess" : "rejectSuccess"),
+      "success"
+    );
+  } catch (error) {
+    console.error("Driver approval failed:", error);
+    notify(tr("updateFailed"), "error");
+  }
+}
+
+function renderDrivers() {
+  const box = $("drivers");
+  box.replaceChildren();
+
+  const entries = Object.entries(driversData);
+
+  $("driverCount").textContent = entries.length;
+
+  if (!entries.length) {
+    box.appendChild(makeElement("p", tr("noDrivers")));
+    return;
+  }
+
+  entries.forEach(([uid, driver]) => {
+    const card = document.createElement("div");
+    card.className = "item";
+
+    card.appendChild(makeElement("h3", driver.name || tr("unknown")));
+    card.appendChild(makeElement("p", tr("email") + ": " + safeText(driver.email)));
+    card.appendChild(makeElement("p", tr("phone") + ": " + safeText(driver.phone)));
+    card.appendChild(makeElement("p", tr("vehicle") + ": " + safeText(driver.vehicle)));
+    card.appendChild(makeElement("p", tr("plate") + ": " + safeText(driver.plate)));
+
+    const status = driver.approvalStatus || "pending";
+    const badge = makeElement("span", tr(status));
+    badge.className = "badge " +
+      (status === "rejected" ? "rejected" :
+       status === "approved" ? "" : "pending");
+
+    const statusRow = document.createElement("p");
+    statusRow.appendChild(makeElement("strong", tr("status") + ": "));
+    statusRow.appendChild(badge);
+    card.appendChild(statusRow);
+
+    const row = document.createElement("div");
+    row.className = "row";
+
+    if (status !== "approved") {
+      const approveButton = makeElement("button", tr("approve"));
+
+      approveButton.addEventListener("click", () => {
+        setDriverApproval(uid, "approved");
+      });
+
+      row.appendChild(approveButton);
+    }
+
+    if (status !== "rejected") {
+      const rejectButton = makeElement("button", tr("reject"));
+      rejectButton.className = "danger";
+
+      rejectButton.addEventListener("click", () => {
+        setDriverApproval(uid, "rejected");
+      });
+
+      row.appendChild(rejectButton);
     }
 
     card.appendChild(row);
@@ -660,100 +1137,232 @@ function renderDrivers(){
   });
 }
 
-function renderOrders(){
-  const box=$("orders");
+/* -------------------------------------------------------
+   RIDE ORDERS
+------------------------------------------------------- */
+
+function getStoredCommission(order) {
+  const possibleValues = [
+    order.platformCommission,
+    order.commissionAmount,
+    order.commission
+  ];
+
+  for (const value of possibleValues) {
+    if (typeof value === "number" && Number.isFinite(value)) {
+      return value;
+    }
+  }
+
+  return null;
+}
+
+function renderOrders() {
+  const box = $("orders");
   box.replaceChildren();
 
-  const list=Object.entries(orderData)
-    .map(([id,o])=>({id,...o}))
-    .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  const orders = Object.entries(ordersData)
+    .map(([id, order]) => ({ id, ...order }))
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
-  if(!list.length){
-    box.appendChild(el("p",t("noOrders")));
+  $("rideCount").textContent = orders.length;
+
+  const completed = orders.filter(order =>
+    String(order.status || "").toLowerCase() === "completed"
+  );
+
+  $("completedCount").textContent = completed.length;
+
+  const commissionTotal = orders.reduce((total, order) => {
+    const commission = getStoredCommission(order);
+    return total + (commission === null ? 0 : commission);
+  }, 0);
+
+  $("commissionTotal").textContent = formatMoney(commissionTotal);
+
+  if (!orders.length) {
+    box.appendChild(makeElement("p", tr("noOrders")));
     return;
   }
 
-  list.forEach(o=>{
-    const card=document.createElement("div");
-    card.className="item";
+  orders.forEach(order => {
+    const card = document.createElement("div");
+    card.className = "item";
 
-    card.appendChild(el("h3",(o.pickup||"—")+" → "+(o.dropoff||"—")));
-    card.appendChild(el("p",t("customer")+": "+(o.customerName||o.customerEmail||"—")));
-    card.appendChild(el("p",t("phone")+": "+(o.customerPhone||"—")));
-    card.appendChild(el("p",t("fare")+": Rs "+(o.fare??"—")));
-    card.appendChild(el("p",t("status")+": "+showStatus(o.status)));
-    card.appendChild(el("p",t("driver")+": "+(o.driverName||"—")));
+    card.appendChild(makeElement(
+      "h3",
+      safeText(order.pickup) + " → " + safeText(order.dropoff)
+    ));
+
+    card.appendChild(makeElement(
+      "p",
+      tr("customer") + ": " +
+      safeText(order.customerName || order.customerEmail || order.customerUid)
+    ));
+
+    card.appendChild(makeElement(
+      "p",
+      tr("driver") + ": " +
+      safeText(order.driverName || order.driverUid)
+    ));
+
+    card.appendChild(makeElement(
+      "p",
+      tr("distance") + ": " +
+      safeText(order.distance ?? order.distanceKm) + " km"
+    ));
+
+    card.appendChild(makeElement(
+      "p",
+      tr("fare") + ": " +
+      formatMoney(order.finalFare ?? order.fare ?? order.estimatedFare)
+    ));
+
+    const commission = getStoredCommission(order);
+
+    card.appendChild(makeElement(
+      "p",
+      tr("commission") + ": " +
+      (commission === null ? "Not recorded" : formatMoney(commission))
+    ));
+
+    const riderEarning =
+      order.riderNetEarning ??
+      order.driverEarning ??
+      order.driverNetFare;
+
+    card.appendChild(makeElement(
+      "p",
+      tr("riderEarning") + ": " +
+      (typeof riderEarning === "number"
+        ? formatMoney(riderEarning)
+        : "Not recorded")
+    ));
+
+    card.appendChild(makeElement(
+      "p",
+      tr("status") + ": " + safeText(order.status)
+    ));
+
+    card.appendChild(makeElement("p", "Ride ID: " + order.id));
 
     box.appendChild(card);
   });
 }
 
-async function startAdmin(user){
-  if(user.uid!==ADMIN_UID){
-    notify(t("authError"),"error");
+/* -------------------------------------------------------
+   ADMIN AUTHENTICATION
+------------------------------------------------------- */
+
+async function startAdmin(user, generation) {
+  adminReady = false;
+
+  if (!user || user.uid !== ADMIN_UID) {
+    notify(tr("unauthorized"), "error");
     await auth.signOut();
     return;
   }
 
   await user.reload();
-  user=auth.currentUser;
 
-  if(!user||!user.emailVerified){
-    notify(t("verifyError"),"error");
+  if (generation !== authGeneration) return;
+
+  user = auth.currentUser;
+
+  if (!user || user.uid !== ADMIN_UID) {
+    notify(tr("unauthorized"), "error");
     return;
   }
 
-  const profileSnap=await db.ref("users/"+user.uid).once("value");
-  const profile=profileSnap.val();
-
-  if(!profile||profile.uid!==user.uid||profile.role!=="admin"){
-    notify(t("authError"),"error");
+  if (!user.emailVerified) {
+    notify(tr("verifyEmail"), "error");
     return;
   }
 
-  driversRef=db.ref("drivers");
-  driversRef.on("value",snap=>{
-    driverData=snap.val()||{};
+  const profileSnapshot = await db.ref("users/" + user.uid).once("value");
+
+  if (generation !== authGeneration) return;
+
+  const profile = profileSnapshot.val();
+
+  if (!profile ||
+      profile.uid !== user.uid ||
+      profile.role !== "admin") {
+    notify(tr("unauthorized"), "error");
+    return;
+  }
+
+  adminReady = true;
+
+  if (driversRef) driversRef.off();
+  if (ordersRef) ordersRef.off();
+
+  driversRef = db.ref("drivers");
+
+  driversRef.on("value", snapshot => {
+    driversData = snapshot.val() || {};
     renderDrivers();
-  },error=>{
-    console.error(error);
-    notify(t("loadError"),"error");
+  }, error => {
+    console.error("Drivers listener failed:", error);
+    notify(tr("loadFailed"), "error");
   });
 
-  ordersRef=db.ref("orders");
-  ordersRef.on("value",snap=>{
-    orderData=snap.val()||{};
+  ordersRef = db.ref("orders");
+
+  ordersRef.on("value", snapshot => {
+    ordersData = snapshot.val() || {};
     renderOrders();
-  },error=>{
-    console.error(error);
-    notify(t("loadError"),"error");
+  }, error => {
+    console.error("Orders listener failed:", error);
+    notify(tr("loadFailed"), "error");
   });
 
-  await loadFareSettings();
+  await loadSettings();
+
+  if (generation !== authGeneration) return;
+
+  calculatePreview();
 }
 
-$("logoutBtn").onclick=async()=>{
-  if(driversRef)driversRef.off();
-  if(ordersRef)ordersRef.off();
-  if(fareSettingsRef)fareSettingsRef.off();
+/* -------------------------------------------------------
+   LOGOUT AND INITIALIZATION
+------------------------------------------------------- */
 
-  await auth.signOut();
-  location.replace("login.html");
-};
+$("logoutBtn").addEventListener("click", async () => {
+  adminReady = false;
+  authGeneration++;
 
-auth.onAuthStateChanged(user=>{
-  if(!user){
+  if (driversRef) driversRef.off();
+  if (ordersRef) ordersRef.off();
+
+  try {
+    await auth.signOut();
+  } finally {
+    location.replace("login.html");
+  }
+});
+
+auth.onAuthStateChanged(user => {
+  const generation = ++authGeneration;
+
+  if (!user) {
+    adminReady = false;
     location.replace("login.html");
     return;
   }
 
-  startAdmin(user).catch(error=>{
-    console.error(error);
-    notify(t("authError"),"error");
+  startAdmin(user, generation).catch(error => {
+    console.error("Admin initialization failed:", error);
+
+    if (generation === authGeneration) {
+      adminReady = false;
+      notify(tr("loadFailed"), "error");
+    }
   });
 });
 
 applyLanguage();
 </script>
+
 </body>
-</html>
+  </html>
