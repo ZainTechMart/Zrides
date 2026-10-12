@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111827">
 <title>Zrides | Admin Dashboard</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f3f4f6;color:#111827}
@@ -12,21 +13,33 @@ header{background:#111827;color:white;padding:15px 5%;display:flex;justify-conte
 .logo{font-size:25px;font-weight:bold;color:#4ade80}
 header select{width:auto;padding:10px}
 button,select{cursor:pointer}
-button{padding:10px 13px;border:0;border-radius:8px;background:#16a34a;color:white;font-weight:bold}
-main{max-width:1100px;margin:24px auto;padding:0 15px}
+button{padding:11px 14px;border:0;border-radius:8px;background:#16a34a;color:white;font-weight:bold}
+button:disabled{opacity:.6;cursor:not-allowed}
+input,select{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:8px;font-size:15px;background:white;color:#111827}
+label{display:block;font-size:14px;font-weight:bold;margin-bottom:7px}
+main{max-width:1150px;margin:24px auto;padding:0 15px}
 .card{background:white;padding:20px;border-radius:14px;margin-bottom:18px;box-shadow:0 4px 18px #0001}
 .message{display:none;padding:12px;border-radius:8px;margin-bottom:15px;overflow-wrap:anywhere}
 .success{display:block;background:#dcfce7;color:#166534}
 .error{display:block;background:#fee2e2;color:#991b1b}
 .info{display:block;background:#dbeafe;color:#1e40af}
-.muted{color:#6b7280;font-size:14px;line-height:1.5}
+.muted{color:#6b7280;font-size:14px;line-height:1.6}
 .item{border:1px solid #e5e7eb;border-radius:10px;padding:14px;margin:12px 0;overflow-wrap:anywhere}
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.row>*{flex:1}
+.row>*{flex:1;min-width:0}
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px;margin:16px 0}
+.field{min-width:0}
+.section-title{margin-top:25px;padding-bottom:8px;border-bottom:1px solid #e5e7eb}
+.vehicle-card{border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin-top:16px}
+.save-button{width:100%;margin-top:15px;font-size:16px;padding:14px}
 .reject{background:#dc2626}
+.secondary{background:#374151}
 .hidden{display:none!important}
+.badge{display:inline-block;background:#dcfce7;color:#166534;border-radius:20px;padding:5px 10px;font-size:12px;font-weight:bold}
+@media(max-width:500px){.card{padding:15px}.logo{font-size:21px}.settings-grid{grid-template-columns:1fr}}
 </style>
 </head>
+
 <body>
 <header>
   <div class="logo">Zrides Admin</div>
@@ -42,24 +55,177 @@ main{max-width:1100px;margin:24px auto;padding:0 15px}
 <main>
   <div class="card">
     <h2 id="heading">Admin Dashboard</h2>
-    <p id="intro" class="muted">Manage driver applications and ride requests.</p>
+    <p id="intro" class="muted">Manage fares, commissions, driver applications and ride requests.</p>
     <div id="message" class="message" role="status" aria-live="polite"></div>
   </div>
 
+  <!-- FARE AND COMMISSION SETTINGS -->
+  <section class="card">
+    <h2 id="fareSettingsHeading">Fare & Commission Settings</h2>
+    <p class="muted" id="fareSettingsIntro">
+      Configure petrol prices, vehicle costs, rider profit and platform commission.
+      Values are starter examples. Adjust them to your actual operating costs.
+    </p>
+
+    <div class="settings-grid">
+      <div class="field">
+        <label for="petrolPrice">Petrol Price (Rs/Litre)</label>
+        <input id="petrolPrice" type="number" min="0" max="100000" step="0.01" value="400">
+      </div>
+
+      <div class="field">
+        <label for="fareMode">Fare Calculation Mode</label>
+        <select id="fareMode">
+          <option value="automatic">Automatic (cost-based settings)</option>
+          <option value="manual">Manual (minimum + per km)</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="commissionMode">Commission Mode</label>
+        <select id="commissionMode">
+          <option value="distance">Distance-based commission</option>
+          <option value="percentage">Flat percentage commission</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="flatCommission">Flat Commission (%)</label>
+        <input id="flatCommission" type="number" min="0" max="100" step="0.1" value="5">
+      </div>
+    </div>
+
+    <p class="muted">
+      Automatic mode ke liye petrol cost, maintenance aur rider profit settings save hongi.
+      Actual customer fare calculate karne ke liye customer page ko bhi update karna hoga.
+    </p>
+
+    <h3 class="section-title">Bike Settings</h3>
+    <div class="vehicle-card">
+      <div class="settings-grid">
+        <div class="field">
+          <label for="bikeFuelAverage">Fuel Average (km/litre)</label>
+          <input id="bikeFuelAverage" type="number" min="0.1" max="200" step="0.1" value="40">
+        </div>
+        <div class="field">
+          <label for="bikeMaintenance">Maintenance (Rs/km)</label>
+          <input id="bikeMaintenance" type="number" min="0" max="100000" step="0.1" value="5">
+        </div>
+        <div class="field">
+          <label for="bikeProfit">Rider Profit (Rs/km)</label>
+          <input id="bikeProfit" type="number" min="0" max="100000" step="0.1" value="10">
+        </div>
+        <div class="field">
+          <label for="bikeMinimumFare">Minimum Fare (Rs)</label>
+          <input id="bikeMinimumFare" type="number" min="0" max="1000000" step="1" value="60">
+        </div>
+        <div class="field">
+          <label for="bikePerKmFare">Manual Fare (Rs/km)</label>
+          <input id="bikePerKmFare" type="number" min="0" max="100000" step="1" value="20">
+        </div>
+      </div>
+    </div>
+
+    <h3 class="section-title">Rickshaw Settings</h3>
+    <div class="vehicle-card">
+      <div class="settings-grid">
+        <div class="field">
+          <label for="rickshawFuelAverage">Fuel Average (km/litre)</label>
+          <input id="rickshawFuelAverage" type="number" min="0.1" max="200" step="0.1" value="25">
+        </div>
+        <div class="field">
+          <label for="rickshawMaintenance">Maintenance (Rs/km)</label>
+          <input id="rickshawMaintenance" type="number" min="0" max="100000" step="0.1" value="8">
+        </div>
+        <div class="field">
+          <label for="rickshawProfit">Rider Profit (Rs/km)</label>
+          <input id="rickshawProfit" type="number" min="0" max="100000" step="0.1" value="15">
+        </div>
+        <div class="field">
+          <label for="rickshawMinimumFare">Minimum Fare (Rs)</label>
+          <input id="rickshawMinimumFare" type="number" min="0" max="1000000" step="1" value="90">
+        </div>
+        <div class="field">
+          <label for="rickshawPerKmFare">Manual Fare (Rs/km)</label>
+          <input id="rickshawPerKmFare" type="number" min="0" max="100000" step="1" value="30">
+        </div>
+      </div>
+    </div>
+
+    <h3 class="section-title">Car Settings</h3>
+    <div class="vehicle-card">
+      <div class="settings-grid">
+        <div class="field">
+          <label for="carFuelAverage">Fuel Average (km/litre)</label>
+          <input id="carFuelAverage" type="number" min="0.1" max="200" step="0.1" value="12">
+        </div>
+        <div class="field">
+          <label for="carMaintenance">Maintenance (Rs/km)</label>
+          <input id="carMaintenance" type="number" min="0" max="100000" step="0.1" value="12">
+        </div>
+        <div class="field">
+          <label for="carProfit">Rider Profit (Rs/km)</label>
+          <input id="carProfit" type="number" min="0" max="100000" step="0.1" value="25">
+        </div>
+        <div class="field">
+          <label for="carMinimumFare">Minimum Fare (Rs)</label>
+          <input id="carMinimumFare" type="number" min="0" max="1000000" step="1" value="150">
+        </div>
+        <div class="field">
+          <label for="carPerKmFare">Manual Fare (Rs/km)</label>
+          <input id="carPerKmFare" type="number" min="0" max="100000" step="1" value="50">
+        </div>
+      </div>
+    </div>
+
+    <h3 class="section-title">Distance-based Commission Slabs</h3>
+    <p class="muted">Commission is a percentage of the ride fare. These are initial example rates.</p>
+
+    <div class="settings-grid">
+      <div class="field">
+        <label for="commission1to10">1–10 km (%)</label>
+        <input id="commission1to10" type="number" min="0" max="100" step="0.1" value="5">
+      </div>
+      <div class="field">
+        <label for="commission11to15">11–15 km (%)</label>
+        <input id="commission11to15" type="number" min="0" max="100" step="0.1" value="5.5">
+      </div>
+      <div class="field">
+        <label for="commission16to20">16–20 km (%)</label>
+        <input id="commission16to20" type="number" min="0" max="100" step="0.1" value="6">
+      </div>
+      <div class="field">
+        <label for="commission21to30">21–30 km (%)</label>
+        <input id="commission21to30" type="number" min="0" max="100" step="0.1" value="7">
+      </div>
+      <div class="field">
+        <label for="commissionAbove30">Above 30 km (%)</label>
+        <input id="commissionAbove30" type="number" min="0" max="100" step="0.1" value="7">
+      </div>
+    </div>
+
+    <div class="row">
+      <button id="saveFareSettingsBtn" class="save-button">Save Fare & Commission Settings</button>
+    </div>
+    <p class="muted" id="settingsStatus">Settings have not been loaded yet.</p>
+  </section>
+
+  <!-- DRIVER APPLICATIONS -->
   <div class="card">
     <h2 id="driversHeading">Driver Applications</h2>
     <div id="drivers"><p class="muted">Loading drivers...</p></div>
   </div>
 
+  <!-- RIDE ORDERS -->
   <div class="card">
     <h2 id="ordersHeading">Ride Orders</h2>
     <div id="orders"><p class="muted">Loading orders...</p></div>
   </div>
-</main>
-
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  </main>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
 <script>
 "use strict";
 
@@ -76,244 +242,515 @@ const firebaseConfig={
 const ADMIN_UID="cmmo7x7k0CY8lkcev4Rq92t84wU2";
 
 if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth(),db=firebase.database();
+
+const auth=firebase.auth();
+const db=firebase.database();
 const $=id=>document.getElementById(id);
 
+const DEFAULT_FARE_SETTINGS={
+  version:1,
+  currency:"PKR",
+  petrolPricePerLitre:400,
+  fareMode:"automatic",
+  commissionMode:"distance",
+  flatCommission:5,
+  vehicles:{
+    bike:{
+      fuelAverageKmPerLitre:40,
+      maintenancePerKm:5,
+      riderProfitPerKm:10,
+      minimumFare:60,
+      perKmFare:20
+    },
+    rickshaw:{
+      fuelAverageKmPerLitre:25,
+      maintenancePerKm:8,
+      riderProfitPerKm:15,
+      minimumFare:90,
+      perKmFare:30
+    },
+    car:{
+      fuelAverageKmPerLitre:12,
+      maintenancePerKm:12,
+      riderProfitPerKm:25,
+      minimumFare:150,
+      perKmFare:50
+    }
+  },
+  commissionSlabs:{
+    "1to10":5,
+    "11to15":5.5,
+    "16to20":6,
+    "21to30":7,
+    above30:7
+  }
+};
+
 const words={
- en:{
-  heading:"Admin Dashboard",intro:"Manage driver applications and ride requests.",
-  drivers:"Driver Applications",orders:"Ride Orders",
-  logout:"Logout",loadingDrivers:"Loading drivers...",
-  loadingOrders:"Loading orders...",noDrivers:"No driver applications found.",
-  noOrders:"No ride orders found.",approve:"Approve",reject:"Reject",
-  pending:"Pending",approved:"Approved",rejected:"Rejected",
-  driver:"Driver",name:"Name",email:"Email",phone:"Phone",
-  vehicle:"Vehicle",plate:"Registration",wallet:"Wallet balance",
-  pickup:"Pickup",dropoff:"Destination",customer:"Customer",
-  fare:"Fare",status:"Status",created:"Created",
-  approveSuccess:"Driver approved.",rejectSuccess:"Driver rejected.",
+en:{
+  heading:"Admin Dashboard",
+  intro:"Manage fares, commissions, driver applications and ride requests.",
+  drivers:"Driver Applications",
+  orders:"Ride Orders",
+  logout:"Logout",
+  loadingDrivers:"Loading drivers...",
+  loadingOrders:"Loading orders...",
+  noDrivers:"No driver applications found.",
+  noOrders:"No ride orders found.",
+  approve:"Approve",
+  reject:"Reject",
+  pending:"Pending",
+  approved:"Approved",
+  rejected:"Rejected",
+  driver:"Driver",
+  name:"Name",
+  email:"Email",
+  phone:"Phone",
+  vehicle:"Vehicle",
+  plate:"Registration",
+  pickup:"Pickup",
+  dropoff:"Destination",
+  customer:"Customer",
+  fare:"Fare",
+  status:"Status",
+  approveSuccess:"Driver approved.",
+  rejectSuccess:"Driver rejected.",
   updateError:"Unable to update driver status.",
   authError:"You are not authorized to access this page.",
   verifyError:"Verify the admin email before continuing.",
   loadError:"Unable to load data. Check database permissions.",
-  accepted:"Accepted",arrived:"Driver Arrived",started:"Started",
-  completed:"Completed",cancelled:"Cancelled",unknown:"Unknown"
- },
- ur:{
-  heading:"Admin Dashboard",intro:"Driver applications aur ride requests manage karein.",
-  drivers:"Driver Applications",orders:"Ride Orders",
-  logout:"Logout",loadingDrivers:"Drivers load ho rahe hain...",
-  loadingOrders:"Orders load ho rahe hain...",noDrivers:"Koi driver application nahi.",
-  noOrders:"Koi ride order nahi.",approve:"Approve Karein",reject:"Reject Karein",
-  pending:"Pending",approved:"Approve",rejected:"Reject",
-  driver:"Driver",name:"Naam",email:"Email",phone:"Phone",
-  vehicle:"Vehicle",plate:"Registration",wallet:"Wallet balance",
-  pickup:"Pickup",dropoff:"Manzil",customer:"Customer",
-  fare:"Kiraya",status:"Status",created:"Banaya gaya",
-  approveSuccess:"Driver approve ho gaya.",rejectSuccess:"Driver reject ho gaya.",
+  accepted:"Accepted",
+  arrived:"Driver Arrived",
+  started:"Started",
+  completed:"Completed",
+  cancelled:"Cancelled",
+  unknown:"Unknown"
+},
+ur:{
+  heading:"Admin Dashboard",
+  intro:"Fare, commission, driver applications aur rides manage karein.",
+  drivers:"Driver Applications",
+  orders:"Ride Orders",
+  logout:"Logout",
+  loadingDrivers:"Drivers load ho rahe hain...",
+  loadingOrders:"Orders load ho rahe hain...",
+  noDrivers:"Koi driver application nahi mili.",
+  noOrders:"Koi ride order nahi mila.",
+  approve:"Approve Karein",
+  reject:"Reject Karein",
+  pending:"Pending",
+  approved:"Approved",
+  rejected:"Rejected",
+  driver:"Driver",
+  name:"Naam",
+  email:"Email",
+  phone:"Phone",
+  vehicle:"Vehicle",
+  plate:"Registration",
+  pickup:"Pickup",
+  dropoff:"Manzil",
+  customer:"Customer",
+  fare:"Kiraya",
+  status:"Status",
+  approveSuccess:"Driver approve ho gaya.",
+  rejectSuccess:"Driver reject ho gaya.",
   updateError:"Driver status update nahi ho saka.",
   authError:"Aapko is page ka access nahi hai.",
   verifyError:"Admin email verify karein.",
   loadError:"Data load nahi hua. Database permissions check karein.",
-  accepted:"Accept ho gayi",arrived:"Driver Pohanch Gaya",started:"Shuru",
-  completed:"Mukammal",cancelled:"Cancel",unknown:"Maloom nahi"
- }
+  accepted:"Accept ho gayi",
+  arrived:"Driver pohanch gaya",
+  started:"Shuru",
+  completed:"Mukammal",
+  cancelled:"Cancel",
+  unknown:"Maloom nahi"
+}
 };
 
 let lang=localStorage.getItem("zridesLanguage")||"en";
-let driversRef=null,ordersRef=null;
+if(!words[lang])lang="en";
 
-function t(k){return words[lang][k]||words.en[k]||k;}
+let driversRef=null;
+let ordersRef=null;
+let fareSettingsRef=null;
+let driverData={};
+let orderData={};
+let currentFareSettings=null;
+
+function t(key){
+  return words[lang][key]||words.en[key]||key;
+}
+
 function notify(text,type="info"){
- $("message").textContent=text;
- $("message").className="message "+type;
+  $("message").textContent=text;
+  $("message").className="message "+type;
 }
-function applyLanguage(){
- document.documentElement.lang=lang;
- document.documentElement.dir=lang==="ur"?"rtl":"ltr";
- $("language").value=lang;
- $("heading").textContent=t("heading");
- $("intro").textContent=t("intro");
- $("driversHeading").textContent=t("drivers");
- $("ordersHeading").textContent=t("orders");
- $("logoutBtn").textContent=t("logout");
- renderDrivers();
- renderOrders();
-}
-$("language").onchange=e=>{
- lang=e.target.value;
- localStorage.setItem("zridesLanguage",lang);
- applyLanguage();
-};
 
 function el(tag,text){
- const node=document.createElement(tag);
- node.textContent=String(text??"");
- return node;
+  const node=document.createElement(tag);
+  node.textContent=String(text??"");
+  return node;
 }
 
 function showStatus(status){
- return t(status||"pending");
+  return t(status||"pending");
 }
 
-async function setDriverApproval(uid,status){
- if(!["approved","rejected"].includes(status))return;
+function applyLanguage(){
+  document.documentElement.lang=lang;
+  document.documentElement.dir=lang==="ur"?"rtl":"ltr";
+  $("language").value=lang;
+  $("heading").textContent=t("heading");
+  $("intro").textContent=t("intro");
+  $("driversHeading").textContent=t("drivers");
+  $("ordersHeading").textContent=t("orders");
+  $("logoutBtn").textContent=t("logout");
+  renderDrivers();
+  renderOrders();
+}
 
- try{
-  /*
-    Admin UID and role are checked here. Firebase Database Rules must
-    independently enforce admin-only writes.
-  */
-  const result=await db.ref("drivers/"+uid).transaction(driver=>{
-   if(!driver||driver.uid!==uid)return;
-   driver.approvalStatus=status;
-   driver.updatedAt=firebase.database.ServerValue.TIMESTAMP;
-   return driver;
-  });
+$("language").onchange=e=>{
+  lang=e.target.value;
+  localStorage.setItem("zridesLanguage",lang);
+  applyLanguage();
+};
 
-  if(!result.committed){
-   notify(t("updateError"),"error");
-   return;
+function readNumber(id){
+  const input=$(id);
+  const value=input.value.trim();
+
+  if(value==="")throw new Error(input.labels[0].textContent+" is required.");
+
+  const number=Number(value);
+
+  if(!Number.isFinite(number)||number<0){
+    throw new Error("Enter a valid non-negative number for "+input.labels[0].textContent+".");
   }
 
-  notify(t(status==="approved"?"approveSuccess":"rejectSuccess"),"success");
- }catch(error){
-  console.error(error);
-  notify(t("updateError"),"error");
- }
+  return number;
 }
 
-let driverData={},orderData={};
+function readPositiveNumber(id){
+  const value=readNumber(id);
+  if(value<=0){
+    throw new Error($(id).labels[0].textContent+" must be greater than zero.");
+  }
+  return value;
+}
+
+function readPercent(id){
+  const value=readNumber(id);
+  if(value>100){
+    throw new Error($(id).labels[0].textContent+" cannot exceed 100%.");
+  }
+  return value;
+}
+
+function readFareSettingsFromForm(){
+  const settings={
+    version:1,
+    currency:"PKR",
+    petrolPricePerLitre:readNumber("petrolPrice"),
+    fareMode:$("fareMode").value,
+    commissionMode:$("commissionMode").value,
+    flatCommission:readPercent("flatCommission"),
+    vehicles:{
+      bike:{
+        fuelAverageKmPerLitre:readPositiveNumber("bikeFuelAverage"),
+        maintenancePerKm:readNumber("bikeMaintenance"),
+        riderProfitPerKm:readNumber("bikeProfit"),
+        minimumFare:readNumber("bikeMinimumFare"),
+        perKmFare:readNumber("bikePerKmFare")
+      },
+      rickshaw:{
+        fuelAverageKmPerLitre:readPositiveNumber("rickshawFuelAverage"),
+        maintenancePerKm:readNumber("rickshawMaintenance"),
+        riderProfitPerKm:readNumber("rickshawProfit"),
+        minimumFare:readNumber("rickshawMinimumFare"),
+        perKmFare:readNumber("rickshawPerKmFare")
+      },
+      car:{
+        fuelAverageKmPerLitre:readPositiveNumber("carFuelAverage"),
+        maintenancePerKm:readNumber("carMaintenance"),
+        riderProfitPerKm:readNumber("carProfit"),
+        minimumFare:readNumber("carMinimumFare"),
+        perKmFare:readNumber("carPerKmFare")
+      }
+    },
+    commissionSlabs:{
+      "1to10":readPercent("commission1to10"),
+      "11to15":readPercent("commission11to15"),
+      "16to20":readPercent("commission16to20"),
+      "21to30":readPercent("commission21to30"),
+      above30:readPercent("commissionAbove30")
+    }
+  };
+
+  if(!["automatic","manual"].includes(settings.fareMode)){
+    throw new Error("Invalid fare mode.");
+  }
+
+  if(!["distance","percentage"].includes(settings.commissionMode)){
+    throw new Error("Invalid commission mode.");
+  }
+
+  return settings;
+}
+
+function fillFareSettings(settings){
+  const s=settings||DEFAULT_FARE_SETTINGS;
+  const vehicles=s.vehicles||DEFAULT_FARE_SETTINGS.vehicles;
+  const slabs=s.commissionSlabs||DEFAULT_FARE_SETTINGS.commissionSlabs;
+
+  $("petrolPrice").value=s.petrolPricePerLitre??400;
+  $("fareMode").value=s.fareMode||"automatic";
+  $("commissionMode").value=s.commissionMode||"distance";
+  $("flatCommission").value=s.flatCommission??5;
+
+  const bike=vehicles.bike||DEFAULT_FARE_SETTINGS.vehicles.bike;
+  const rickshaw=vehicles.rickshaw||DEFAULT_FARE_SETTINGS.vehicles.rickshaw;
+  const car=vehicles.car||DEFAULT_FARE_SETTINGS.vehicles.car;
+
+  $("bikeFuelAverage").value=bike.fuelAverageKmPerLitre??40;
+  $("bikeMaintenance").value=bike.maintenancePerKm??5;
+  $("bikeProfit").value=bike.riderProfitPerKm??10;
+  $("bikeMinimumFare").value=bike.minimumFare??60;
+  $("bikePerKmFare").value=bike.perKmFare??20;
+
+  $("rickshawFuelAverage").value=rickshaw.fuelAverageKmPerLitre??25;
+  $("rickshawMaintenance").value=rickshaw.maintenancePerKm??8;
+  $("rickshawProfit").value=rickshaw.riderProfitPerKm??15;
+  $("rickshawMinimumFare").value=rickshaw.minimumFare??90;
+  $("rickshawPerKmFare").value=rickshaw.perKmFare??30;
+
+  $("carFuelAverage").value=car.fuelAverageKmPerLitre??12;
+  $("carMaintenance").value=car.maintenancePerKm??12;
+  $("carProfit").value=car.riderProfitPerKm??25;
+  $("carMinimumFare").value=car.minimumFare??150;
+  $("carPerKmFare").value=car.perKmFare??50;
+
+  $("commission1to10").value=slabs["1to10"]??5;
+  $("commission11to15").value=slabs["11to15"]??5.5;
+  $("commission16to20").value=slabs["16to20"]??6;
+  $("commission21to30").value=slabs["21to30"]??7;
+  $("commissionAbove30").value=slabs.above30??7;
+}
+
+async function loadFareSettings(){
+  $("settingsStatus").textContent="Loading settings...";
+
+  try{
+    const snapshot=await db.ref("settings/fare").once("value");
+    const saved=snapshot.val();
+
+    if(saved){
+      currentFareSettings=saved;
+      fillFareSettings(saved);
+      $("settingsStatus").textContent="Saved settings loaded from Firebase.";
+    }else{
+      currentFareSettings=DEFAULT_FARE_SETTINGS;
+      fillFareSettings(DEFAULT_FARE_SETTINGS);
+      $("settingsStatus").textContent="Starter values loaded. Save them to store in Firebase.";
+    }
+  }catch(error){
+    console.error("Fare settings load error:",error);
+    $("settingsStatus").textContent="Could not load settings. Check Firebase Database Rules.";
+    notify("Fare settings could not be loaded. Check database permissions.","error");
+  }
+}
+
+async function saveFareSettings(){
+  const button=$("saveFareSettingsBtn");
+  button.disabled=true;
+
+  try{
+    if(!auth.currentUser||auth.currentUser.uid!==ADMIN_UID){
+      throw new Error("Only the authorized admin can save these settings.");
+    }
+
+    const settings=readFareSettingsFromForm();
+
+    settings.updatedAt=firebase.database.ServerValue.TIMESTAMP;
+    settings.updatedBy=auth.currentUser.uid;
+
+    await db.ref("settings/fare").set(settings);
+
+    currentFareSettings=readFareSettingsFromForm();
+    $("settingsStatus").textContent=
+      "Settings saved successfully at "+new Date().toLocaleString();
+
+    notify("Fare and commission settings saved.","success");
+  }catch(error){
+    console.error("Fare settings save error:",error);
+    notify(error.message||"Could not save settings. Check database permissions.","error");
+    $("settingsStatus").textContent="Save failed. Review the error message and Firebase Rules.";
+  }finally{
+    button.disabled=false;
+  }
+}
+
+$("saveFareSettingsBtn").addEventListener("click",saveFareSettings);
+  async function setDriverApproval(uid,status){
+  if(!["approved","rejected"].includes(status))return;
+
+  try{
+    if(!auth.currentUser||auth.currentUser.uid!==ADMIN_UID){
+      throw new Error("Unauthorized");
+    }
+
+    const result=await db.ref("drivers/"+uid).transaction(driver=>{
+      if(!driver||driver.uid!==uid)return;
+      driver.approvalStatus=status;
+      driver.updatedAt=firebase.database.ServerValue.TIMESTAMP;
+      return driver;
+    });
+
+    if(!result.committed){
+      notify(t("updateError"),"error");
+      return;
+    }
+
+    notify(t(status==="approved"?"approveSuccess":"rejectSuccess"),"success");
+  }catch(error){
+    console.error(error);
+    notify(t("updateError"),"error");
+  }
+}
 
 function renderDrivers(){
- const box=$("drivers");
- box.replaceChildren();
+  const box=$("drivers");
+  box.replaceChildren();
 
- const list=Object.entries(driverData);
+  const list=Object.entries(driverData);
 
- if(!list.length){
-  box.appendChild(el("p",t("noDrivers")));
-  return;
- }
-
- list.forEach(([uid,d])=>{
-  const card=document.createElement("div");
-  card.className="item";
-
-  card.appendChild(el("h3",d.name||t("unknown")));
-  card.appendChild(el("p",t("email")+": "+(d.email||"—")));
-  card.appendChild(el("p",t("phone")+": "+(d.phone||"—")));
-  card.appendChild(el("p",t("vehicle")+": "+t(d.vehicle||"unknown")));
-  card.appendChild(el("p",t("plate")+": "+(d.plate||"—")));
-  card.appendChild(el("p",t("status")+": "+showStatus(d.approvalStatus)));
-
-  const row=document.createElement("div");
-  row.className="row";
-
-  if(d.approvalStatus!=="approved"){
-   const approve=el("button",t("approve"));
-   approve.onclick=()=>setDriverApproval(uid,"approved");
-   row.appendChild(approve);
+  if(!list.length){
+    box.appendChild(el("p",t("noDrivers")));
+    return;
   }
 
-  if(d.approvalStatus!=="rejected"){
-   const reject=el("button",t("reject"));
-   reject.className="reject";
-   reject.onclick=()=>setDriverApproval(uid,"rejected");
-   row.appendChild(reject);
-  }
+  list.forEach(([uid,d])=>{
+    const card=document.createElement("div");
+    card.className="item";
 
-  card.appendChild(row);
-  box.appendChild(card);
- });
+    card.appendChild(el("h3",d.name||t("unknown")));
+    card.appendChild(el("p",t("email")+": "+(d.email||"—")));
+    card.appendChild(el("p",t("phone")+": "+(d.phone||"—")));
+    card.appendChild(el("p",t("vehicle")+": "+(d.vehicle||t("unknown"))));
+    card.appendChild(el("p",t("plate")+": "+(d.plate||"—")));
+    card.appendChild(el("p",t("status")+": "+showStatus(d.approvalStatus)));
+
+    const row=document.createElement("div");
+    row.className="row";
+
+    if(d.approvalStatus!=="approved"){
+      const approve=el("button",t("approve"));
+      approve.onclick=()=>setDriverApproval(uid,"approved");
+      row.appendChild(approve);
+    }
+
+    if(d.approvalStatus!=="rejected"){
+      const reject=el("button",t("reject"));
+      reject.className="reject";
+      reject.onclick=()=>setDriverApproval(uid,"rejected");
+      row.appendChild(reject);
+    }
+
+    card.appendChild(row);
+    box.appendChild(card);
+  });
 }
 
 function renderOrders(){
- const box=$("orders");
- box.replaceChildren();
+  const box=$("orders");
+  box.replaceChildren();
 
- const list=Object.entries(orderData)
-   .map(([id,o])=>({id,...o}))
-   .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  const list=Object.entries(orderData)
+    .map(([id,o])=>({id,...o}))
+    .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
 
- if(!list.length){
-  box.appendChild(el("p",t("noOrders")));
-  return;
- }
+  if(!list.length){
+    box.appendChild(el("p",t("noOrders")));
+    return;
+  }
 
- list.forEach(o=>{
-  const card=document.createElement("div");
-  card.className="item";
+  list.forEach(o=>{
+    const card=document.createElement("div");
+    card.className="item";
 
-  card.appendChild(el("h3",o.pickup+" → "+o.dropoff));
-  card.appendChild(el("p",t("customer")+": "+(o.customerName||o.customerEmail||"—")));
-  card.appendChild(el("p",t("phone")+": "+(o.customerPhone||"—")));
-  card.appendChild(el("p",t("fare")+": "+(o.fare??"—")));
-  card.appendChild(el("p",t("status")+": "+showStatus(o.status)));
-  card.appendChild(el("p",t("driver")+": "+(o.driverName||"—")));
-  box.appendChild(card);
- });
+    card.appendChild(el("h3",(o.pickup||"—")+" → "+(o.dropoff||"—")));
+    card.appendChild(el("p",t("customer")+": "+(o.customerName||o.customerEmail||"—")));
+    card.appendChild(el("p",t("phone")+": "+(o.customerPhone||"—")));
+    card.appendChild(el("p",t("fare")+": Rs "+(o.fare??"—")));
+    card.appendChild(el("p",t("status")+": "+showStatus(o.status)));
+    card.appendChild(el("p",t("driver")+": "+(o.driverName||"—")));
+
+    box.appendChild(card);
+  });
 }
 
 async function startAdmin(user){
- if(user.uid!==ADMIN_UID){
-  notify(t("authError"),"error");
-  await auth.signOut();
-  return;
- }
+  if(user.uid!==ADMIN_UID){
+    notify(t("authError"),"error");
+    await auth.signOut();
+    return;
+  }
 
- await user.reload();
- user=auth.currentUser;
+  await user.reload();
+  user=auth.currentUser;
 
- if(!user||!user.emailVerified){
-  notify(t("verifyError"),"error");
-  return;
- }
+  if(!user||!user.emailVerified){
+    notify(t("verifyError"),"error");
+    return;
+  }
 
- const profileSnap=await db.ref("users/"+user.uid).once("value");
- const profile=profileSnap.val();
+  const profileSnap=await db.ref("users/"+user.uid).once("value");
+  const profile=profileSnap.val();
 
- if(!profile||profile.uid!==user.uid||profile.role!=="admin"){
-  notify(t("authError"),"error");
-  return;
- }
+  if(!profile||profile.uid!==user.uid||profile.role!=="admin"){
+    notify(t("authError"),"error");
+    return;
+  }
 
- driversRef=db.ref("drivers");
- driversRef.on("value",snap=>{
-  driverData=snap.val()||{};
-  renderDrivers();
- },error=>{
-  console.error(error);
-  notify(t("loadError"),"error");
- });
+  driversRef=db.ref("drivers");
+  driversRef.on("value",snap=>{
+    driverData=snap.val()||{};
+    renderDrivers();
+  },error=>{
+    console.error(error);
+    notify(t("loadError"),"error");
+  });
 
- ordersRef=db.ref("orders");
- ordersRef.on("value",snap=>{
-  orderData=snap.val()||{};
-  renderOrders();
- },error=>{
-  console.error(error);
-  notify(t("loadError"),"error");
- });
+  ordersRef=db.ref("orders");
+  ordersRef.on("value",snap=>{
+    orderData=snap.val()||{};
+    renderOrders();
+  },error=>{
+    console.error(error);
+    notify(t("loadError"),"error");
+  });
+
+  await loadFareSettings();
 }
 
 $("logoutBtn").onclick=async()=>{
- if(driversRef)driversRef.off();
- if(ordersRef)ordersRef.off();
- await auth.signOut();
- location.replace("login.html");
+  if(driversRef)driversRef.off();
+  if(ordersRef)ordersRef.off();
+  if(fareSettingsRef)fareSettingsRef.off();
+
+  await auth.signOut();
+  location.replace("login.html");
 };
 
 auth.onAuthStateChanged(user=>{
- if(!user){
-  location.replace("login.html");
-  return;
- }
+  if(!user){
+    location.replace("login.html");
+    return;
+  }
 
- startAdmin(user).catch(error=>{
-  console.error(error);
-  notify(t("authError"),"error");
- });
+  startAdmin(user).catch(error=>{
+    console.error(error);
+    notify(t("authError"),"error");
+  });
 });
 
 applyLanguage();
