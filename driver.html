@@ -5,562 +5,1389 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111827">
 <title>Zrides | Driver Dashboard</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f4f6;color:#111827}
-header{background:#111827;color:white;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.logo{font-size:25px;font-weight:bold;color:#4ade80}
-select,input{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;font-size:15px;background:white}
-header select{width:auto}
-button{padding:11px 14px;border:0;border-radius:8px;background:#16a34a;color:white;font-weight:bold;cursor:pointer}
-main{max-width:900px;margin:24px auto;padding:0 15px}
-.card{background:white;padding:20px;border-radius:14px;margin-bottom:18px;box-shadow:0 4px 18px #0001}
-.field{margin:14px 0}
-label{display:block;font-weight:bold;margin-bottom:7px}
-.muted{color:#6b7280;font-size:14px;line-height:1.5}
-.message{display:none;padding:12px;border-radius:8px;margin-bottom:15px;overflow-wrap:anywhere}
-.success{display:block;background:#dcfce7;color:#166534}
-.error{display:block;background:#fee2e2;color:#991b1b}
-.info{display:block;background:#dbeafe;color:#1e40af}
-.ride{border:1px solid #e5e7eb;border-radius:10px;padding:14px;margin:12px 0}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-.row>*{flex:1}
-.hidden{display:none!important}
-.chatMessages{height:170px;overflow:auto;background:#f9fafb;border:1px solid #e5e7eb;padding:10px;margin:10px 0}
-.chatMessage{padding:8px;margin:6px 0;background:#e5e7eb;border-radius:8px;overflow-wrap:anywhere}
+:root {
+  --primary:#16a34a;
+  --dark:#111827;
+  --background:#f3f4f6;
+  --border:#e5e7eb;
+  --muted:#6b7280;
+  --danger:#dc2626;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--background);
+  color:var(--dark);
+}
+header {
+  background:var(--dark);
+  color:white;
+  padding:15px 5%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.logo {
+  font-size:25px;
+  font-weight:bold;
+  color:#4ade80;
+}
+header select { width:auto; }
+main {
+  max-width:1000px;
+  margin:24px auto;
+  padding:0 15px;
+}
+.card {
+  background:white;
+  padding:20px;
+  border-radius:14px;
+  margin-bottom:18px;
+  box-shadow:0 4px 18px #0000000d;
+}
+h2 { margin-top:0; }
+button,input,select { font:inherit; }
+button {
+  padding:11px 14px;
+  border:0;
+  border-radius:8px;
+  background:var(--primary);
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+button:disabled { opacity:.6; cursor:not-allowed; }
+input,select {
+  width:100%;
+  padding:12px;
+  border:1px solid #d1d5db;
+  border-radius:8px;
+  background:white;
+  color:var(--dark);
+}
+label {
+  display:block;
+  font-weight:bold;
+  margin-bottom:7px;
+}
+.field { margin:14px 0; }
+.muted {
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.6;
+}
+.message {
+  display:none;
+  padding:12px;
+  border-radius:8px;
+  margin:12px 0;
+  overflow-wrap:anywhere;
+}
+.message.success { display:block; background:#dcfce7; color:#166534; }
+.message.error { display:block; background:#fee2e2; color:#991b1b; }
+.message.info { display:block; background:#dbeafe; color:#1e40af; }
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+}
+.stat {
+  border:1px solid var(--border);
+  background:#f9fafb;
+  border-radius:10px;
+  padding:15px;
+}
+.stat strong {
+  display:block;
+  font-size:24px;
+  margin-top:8px;
+  overflow-wrap:anywhere;
+}
+.ride {
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+  margin:12px 0;
+  overflow-wrap:anywhere;
+}
+.row {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.row > * { flex:1; }
+.secondary { background:#374151; }
+.danger { background:var(--danger); }
+.hidden { display:none !important; }
+.badge {
+  display:inline-block;
+  padding:5px 10px;
+  border-radius:20px;
+  background:#dcfce7;
+  color:#166534;
+  font-size:12px;
+  font-weight:bold;
+}
+.badge.pending { background:#fef3c7; color:#92400e; }
+.badge.rejected { background:#fee2e2; color:#991b1b; }
+.chatMessages {
+  height:220px;
+  overflow:auto;
+  background:#f9fafb;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:10px;
+  margin:10px 0;
+}
+.chatMessage {
+  padding:9px;
+  margin:7px 0;
+  background:#e5e7eb;
+  border-radius:8px;
+  overflow-wrap:anywhere;
+}
+.chatMessage .muted { font-size:12px; }
+[dir="rtl"] { text-align:right; }
+@media(max-width:500px) {
+  .card { padding:15px; }
+  .logo { font-size:21px; }
+  .grid { grid-template-columns:1fr; }
+}
 </style>
 </head>
+
 <body>
+
 <header>
   <div class="logo">Zrides Driver</div>
-  <div class="row" style="flex:0;align-items:center">
+  <div class="row" style="margin:0;align-items:center;flex:0">
     <select id="language" aria-label="Language">
       <option value="en">English</option>
       <option value="ur">اردو</option>
     </select>
-    <button id="logoutBtn">Logout</button>
+    <button id="logoutBtn" type="button">Logout</button>
   </div>
 </header>
 
 <main>
-  <div class="card">
-    <h2 id="heading">Driver Dashboard</h2>
-    <p id="intro" class="muted">Register your vehicle and wait for approval.</p>
-    <div id="message" class="message" role="status" aria-live="polite"></div>
-  </div>
 
-  <div class="card" id="registrationCard">
+  <section class="card">
+    <h2 id="heading">Driver Dashboard</h2>
+    <p id="intro" class="muted">
+      Manage your driver account and rides.
+    </p>
+    <div id="message" class="message" role="status" aria-live="polite"></div>
+  </section>
+
+  <section class="card">
+    <h2 id="earningsHeading">Earnings Overview</h2>
+    <div class="grid">
+      <div class="stat">
+        <span id="completedLabel">Completed rides</span>
+        <strong id="completedCount">0</strong>
+      </div>
+      <div class="stat">
+        <span id="grossLabel">Gross fare</span>
+        <strong id="grossTotal">Rs 0</strong>
+      </div>
+      <div class="stat">
+        <span id="commissionLabel">Recorded commission</span>
+        <strong id="commissionTotal">Rs 0</strong>
+      </div>
+      <div class="stat">
+        <span id="netLabel">Recorded net earnings</span>
+        <strong id="netTotal">Rs 0</strong>
+      </div>
+    </div>
+    <p id="earningsNote" class="muted">
+      Earnings are shown from recorded ride data. This dashboard does not transfer money.
+    </p>
+  </section>
+
+  <section class="card" id="registrationCard">
     <h2 id="registrationHeading">Driver Registration</h2>
+
     <form id="registrationForm">
       <div class="field">
         <label id="nameLabel" for="name">Full Name</label>
-        <input id="name" maxlength="80" required>
+        <input id="name" maxlength="80" autocomplete="name" required>
       </div>
+
       <div class="field">
         <label id="phoneLabel" for="phone">Phone Number</label>
-        <input id="phone" type="tel" maxlength="25" required>
+        <input id="phone" type="tel" maxlength="25"
+               autocomplete="tel" required>
       </div>
+
       <div class="field">
         <label id="vehicleLabel" for="vehicle">Vehicle Type</label>
-        <select id="vehicle">
+        <select id="vehicle" required>
           <option value="bike">Bike</option>
-          <option value="car">Car</option>
           <option value="rickshaw">Rickshaw</option>
+          <option value="car">Car</option>
         </select>
       </div>
+
       <div class="field">
         <label id="plateLabel" for="plate">Vehicle Registration Number</label>
         <input id="plate" maxlength="30" required>
       </div>
-      <button id="registerBtn" type="submit">Submit Registration</button>
-    </form>
-  </div>
 
-  <div class="card">
+      <button id="registerBtn" type="submit">
+        Submit Registration
+      </button>
+    </form>
+  </section>
+
+  <section class="card">
     <h2 id="approvalHeading">Approval Status</h2>
     <p id="approvalStatus" class="muted">Loading status...</p>
-  </div>
+  </section>
 
-  <div class="card">
+  <section class="card">
     <h2 id="queueHeading">Available Rides</h2>
-    <div id="queue"><p class="muted">Loading rides...</p></div>
-  </div>
+    <div id="queue">
+      <p class="muted">Loading rides...</p>
+    </div>
+  </section>
 
-  <div class="card">
+  <section class="card">
     <h2 id="activeHeading">My Assigned Rides</h2>
-    <div id="activeRides"><p class="muted">Loading rides...</p></div>
-  </div>
+    <div id="activeRides">
+      <p class="muted">Loading rides...</p>
+    </div>
+  </section>
 
-  <div class="card hidden" id="chatCard">
+  <section class="card hidden" id="chatCard">
     <h2 id="chatHeading">Ride Chat</h2>
+    <p id="chatRideInfo" class="muted"></p>
     <div id="chatMessages" class="chatMessages"></div>
+
     <form id="chatForm">
       <div class="row">
-        <input id="chatInput" maxlength="1000" required>
+        <input id="chatInput" maxlength="1000"
+               placeholder="Type your message" required>
         <button id="sendBtn" type="submit">Send</button>
       </div>
     </form>
-  </div>
+
+    <button id="closeChatBtn" class="secondary" type="button">
+      Close Chat
+    </button>
+  </section>
+
 </main>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
 <script>
 "use strict";
 
-const firebaseConfig={
-  apiKey:"AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
-  authDomain:"zrides-9f2da.firebaseapp.com",
-  databaseURL:"https://zrides-9f2da-default-rtdb.firebaseio.com",
-  projectId:"zrides-9f2da",
-  storageBucket:"zrides-9f2da.firebasestorage.app",
-  messagingSenderId:"93898388224",
-  appId:"1:93898388224:web:2e4f78e5b31dec26f839e5"
+/* --------------------------------------------------
+   FIREBASE CONFIGURATION
+-------------------------------------------------- */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAeMh8vdyKhSqHFPa0cWsV6M_Tdu7vJKNY",
+  authDomain: "zrides-9f2da.firebaseapp.com",
+  databaseURL: "https://zrides-9f2da-default-rtdb.firebaseio.com",
+  projectId: "zrides-9f2da",
+  storageBucket: "zrides-9f2da.firebasestorage.app",
+  messagingSenderId: "93898388224",
+  appId: "1:93898388224:web:2e4f78e5b31dec26f839e5"
 };
 
-if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth(),db=firebase.database();
-const $=id=>document.getElementById(id);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
-const words={
- en:{
-  heading:"Driver Dashboard",intro:"Register your vehicle and wait for approval.",
-  registration:"Driver Registration",name:"Full Name",phone:"Phone Number",
-  vehicle:"Vehicle Type",plate:"Vehicle Registration Number",
-  register:"Submit Registration",approval:"Approval Status",
-  queue:"Available Rides",active:"My Assigned Rides",chat:"Ride Chat",
-  send:"Send",logout:"Logout",loading:"Loading...",
-  pendingApproval:"Your application is waiting for admin approval.",
-  approved:"Your driver account is approved.",
-  rejected:"Your application was rejected. Contact support.",
-  submit:"Registration submitted. Wait for admin approval.",
-  registerError:"Unable to submit registration.",
-  noRides:"No rides are available right now.",
-  noActive:"You have no assigned rides.",
-  accept:"Accept Ride",pickup:"Pickup",dropoff:"Destination",
-  service:"Vehicle",fare:"Fare",status:"Status",
-  accepted:"Accepted",arrived:"Driver Arrived",started:"Start Ride",
-  complete:"Complete Ride",pending:"Pending",completed:"Completed",
-  cancelled:"Cancelled",acceptedSuccess:"Ride accepted.",
-  acceptError:"Unable to accept this ride. It may have been taken.",
-  updateError:"Unable to update ride status.",
-  chatOpen:"Chat with Customer",chatError:"Unable to load chat.",
-  message:"Type your message",sendError:"Unable to send message.",
-  nameRequired:"Enter your name.",phoneRequired:"Enter your phone number.",
-  plateRequired:"Enter the vehicle registration number.",
-  verify:"Verify your email before using the driver portal.",
-  profileError:"Driver profile could not be verified.",
-  noRegistration:"Complete driver registration first.",
-  queueError:"Unable to load rides. Check database permissions.",
-  unauthorized:"This account is not registered as a driver.",
-  bike:"Bike",car:"Car",rickshaw:"Rickshaw",notAssigned:"Not assigned"
- },
- ur:{
-  heading:"Driver Dashboard",intro:"Vehicle register karein aur admin approval ka intezar karein.",
-  registration:"Driver Registration",name:"Poora Naam",phone:"Phone Number",
-  vehicle:"Vehicle ki Qisam",plate:"Vehicle Registration Number",
-  register:"Registration Jama Karein",approval:"Approval Status",
-  queue:"Available Rides",active:"Meri Assigned Rides",chat:"Ride Chat",
-  send:"Bhejein",logout:"Logout",loading:"Load ho raha hai...",
-  pendingApproval:"Aapki application admin approval ki muntazir hai.",
-  approved:"Aapka driver account approve ho gaya hai.",
-  rejected:"Application reject hui. Support se rabta karein.",
-  submit:"Registration jama ho gayi. Admin approval ka intezar karein.",
-  registerError:"Registration jama nahi ho saki.",
-  noRides:"Filhaal koi ride available nahi.",
-  noActive:"Aapko koi ride assign nahi hui.",
-  accept:"Ride Accept Karein",pickup:"Pickup",dropoff:"Manzil",
-  service:"Vehicle",fare:"Kiraya",status:"Status",
-  accepted:"Accept ho gayi",arrived:"Driver Pohanch Gaya",started:"Ride Shuru Karein",
-  complete:"Ride Mukammal Karein",pending:"Pending",completed:"Mukammal",
-  cancelled:"Cancel",acceptedSuccess:"Ride accept ho gayi.",
-  acceptError:"Ride accept nahi hui. Mumkin hai kisi aur driver ne le li ho.",
-  updateError:"Ride status update nahi ho saka.",
-  chatOpen:"Customer se Chat",chatError:"Chat load nahi hui.",
-  message:"Message likhein",sendError:"Message nahi bheja ja saka.",
-  nameRequired:"Apna naam likhein.",phoneRequired:"Phone number likhein.",
-  plateRequired:"Vehicle registration number likhein.",
-  verify:"Driver portal se pehle email verify karein.",
-  profileError:"Driver profile verify nahi ho saki.",
-  noRegistration:"Pehle driver registration mukammal karein.",
-  queueError:"Rides load nahi hui. Database permissions check karein.",
-  unauthorized:"Yeh account driver ke taur par registered nahi.",
-  bike:"Bike",car:"Car",rickshaw:"Rickshaw",notAssigned:"Abhi assign nahi"
- }
+const auth = firebase.auth();
+const db = firebase.database();
+const $ = id => document.getElementById(id);
+
+/* --------------------------------------------------
+   TRANSLATIONS
+-------------------------------------------------- */
+
+const words = {
+  en: {
+    heading:"Driver Dashboard",
+    intro:"Manage your driver account and rides.",
+    earningsHeading:"Earnings Overview",
+    completedLabel:"Completed rides",
+    grossLabel:"Gross fare",
+    commissionLabel:"Recorded commission",
+    netLabel:"Recorded net earnings",
+    earningsNote:"Earnings are shown from recorded ride data. This dashboard does not transfer money.",
+    registration:"Driver Registration",
+    name:"Full Name",
+    phone:"Phone Number",
+    vehicle:"Vehicle Type",
+    plate:"Vehicle Registration Number",
+    register:"Submit Registration",
+    approval:"Approval Status",
+    queue:"Available Rides",
+    active:"My Assigned Rides",
+    chat:"Ride Chat",
+    send:"Send",
+    closeChat:"Close Chat",
+    logout:"Logout",
+    loading:"Loading...",
+    pendingApproval:"Your application is waiting for admin approval.",
+    approved:"Your driver account is approved.",
+    rejected:"Your application was rejected. Contact support.",
+    submit:"Registration saved. Wait for admin approval.",
+    registerError:"Unable to submit registration.",
+    noRides:"No rides are available right now.",
+    noActive:"You have no assigned rides.",
+    accept:"Accept Ride",
+    pickup:"Pickup",
+    dropoff:"Destination",
+    service:"Vehicle",
+    fare:"Fare",
+    distance:"Distance",
+    status:"Status",
+    accepted:"Accepted",
+    arrived:"Driver Arrived",
+    started:"Start Ride",
+    complete:"Complete Ride",
+    pending:"Pending",
+    completed:"Completed",
+    cancelled:"Cancelled",
+    acceptedSuccess:"Ride accepted.",
+    acceptError:"Unable to accept this ride. It may have been taken.",
+    updateError:"Unable to update ride status.",
+    chatOpen:"Chat with Customer",
+    chatError:"Unable to load chat.",
+    message:"Type your message",
+    sendError:"Unable to send message.",
+    nameRequired:"Enter your name.",
+    phoneRequired:"Enter your phone number.",
+    plateRequired:"Enter the vehicle registration number.",
+    verify:"Verify your email before using the driver portal.",
+    profileError:"Driver profile could not be verified.",
+    noRegistration:"Complete driver registration first.",
+    queueError:"Unable to load rides. Check database permissions.",
+    unauthorized:"This account is not registered as a driver.",
+    bike:"Bike",
+    car:"Car",
+    rickshaw:"Rickshaw",
+    notAssigned:"Not assigned",
+    fareSnapshot:"Fare snapshot",
+    commissionRate:"Commission rate",
+    riderNet:"Rider net amount",
+    noEarning:"Not recorded",
+    saved:"Saved",
+    failed:"Failed",
+    closeChatError:"Unable to close chat."
+  },
+
+  ur: {
+    heading:"Driver Dashboard",
+    intro:"Apna driver account aur rides manage karein.",
+    earningsHeading:"Earnings ka Khulasa",
+    completedLabel:"Mukammal rides",
+    grossLabel:"Kul kiraya",
+    commissionLabel:"Record shuda commission",
+    netLabel:"Record shuda net earning",
+    earningsNote:"Earnings saved ride records se dikhai jati hain. Yeh dashboard paisay transfer nahi karta.",
+    registration:"Driver Registration",
+    name:"Poora Naam",
+    phone:"Phone Number",
+    vehicle:"Vehicle ki Qisam",
+    plate:"Vehicle Registration Number",
+    register:"Registration Jama Karein",
+    approval:"Approval Status",
+    queue:"Available Rides",
+    active:"Meri Assigned Rides",
+    chat:"Ride Chat",
+    send:"Bhejein",
+    closeChat:"Chat Band Karein",
+    logout:"Logout",
+    loading:"Load ho raha hai...",
+    pendingApproval:"Aapki application admin approval ki muntazir hai.",
+    approved:"Aapka driver account approve ho gaya hai.",
+    rejected:"Application reject hui. Support se rabta karein.",
+    submit:"Registration save ho gayi. Admin approval ka intezar karein.",
+    registerError:"Registration jama nahi ho saki.",
+    noRides:"Filhaal koi ride available nahi.",
+    noActive:"Aapko koi ride assign nahi hui.",
+    accept:"Ride Accept Karein",
+    pickup:"Pickup",
+    dropoff:"Manzil",
+    service:"Vehicle",
+    fare:"Kiraya",
+    distance:"Fasla",
+    status:"Status",
+    accepted:"Accept ho gayi",
+    arrived:"Driver Pohanch Gaya",
+    started:"Ride Shuru Karein",
+    complete:"Ride Mukammal Karein",
+    pending:"Pending",
+    completed:"Mukammal",
+    cancelled:"Cancel",
+    acceptedSuccess:"Ride accept ho gayi.",
+    acceptError:"Ride accept nahi hui. Mumkin hai kisi aur driver ne le li ho.",
+    updateError:"Ride status update nahi ho saka.",
+    chatOpen:"Customer se Chat",
+    chatError:"Chat load nahi hui.",
+    message:"Message likhein",
+    sendError:"Message nahi bheja ja saka.",
+    nameRequired:"Apna naam likhein.",
+    phoneRequired:"Phone number likhein.",
+    plateRequired:"Vehicle registration number likhein.",
+    verify:"Driver portal se pehle email verify karein.",
+    profileError:"Driver profile verify nahi ho saki.",
+    noRegistration:"Pehle driver registration mukammal karein.",
+    queueError:"Rides load nahi hui. Database permissions check karein.",
+    unauthorized:"Yeh account driver ke taur par registered nahi.",
+    bike:"Bike",
+    car:"Car",
+    rickshaw:"Rickshaw",
+    notAssigned:"Abhi assign nahi",
+    fareSnapshot:"Fare snapshot",
+    commissionRate:"Commission rate",
+    riderNet:"Rider ka net amount",
+    noEarning:"Record mojood nahi",
+    saved:"Save ho gaya",
+    failed:"Nakaam",
+    closeChatError:"Chat band nahi ho saki."
+  }
 };
 
-let lang=localStorage.getItem("zridesLanguage")||"en";
-let user=null,driver=null,queueRef=null,chatRef=null,activeChatOrder=null;
-let ordersCache={};
+/* --------------------------------------------------
+   APPLICATION STATE
+-------------------------------------------------- */
 
-function t(k){return words[lang][k]||words.en[k]||k;}
-function msg(text,type="info"){
-  $("message").textContent=text;
-  $("message").className="message "+type;
-}
-function applyLanguage(){
-  document.documentElement.lang=lang;
-  document.documentElement.dir=lang==="ur"?"rtl":"ltr";
-  $("language").value=lang;
-  const map={
-   heading:"heading",intro:"intro",registrationHeading:"registration",
-   nameLabel:"name",phoneLabel:"phone",vehicleLabel:"vehicle",
-   plateLabel:"plate",registerBtn:"register",approvalHeading:"approval",
-   queueHeading:"queue",activeHeading:"active",chatHeading:"chat",
-   sendBtn:"send",logoutBtn:"logout"
-  };
-  Object.entries(map).forEach(([id,key])=>$(id).textContent=t(key));
-  [...$("vehicle").options].forEach(o=>o.textContent=t(o.value));
-  $("chatInput").placeholder=t("message");
-  renderQueue();
-  renderActive();
-}
-$("language").onchange=e=>{
- lang=e.target.value;
- localStorage.setItem("zridesLanguage",lang);
- applyLanguage();
-};
+let lang = localStorage.getItem("zridesLanguage") || "en";
 
-function makeText(tag,text){
- const el=document.createElement(tag);
- el.textContent=String(text??"");
- return el;
+if (!["en", "ur"].includes(lang)) lang = "en";
+
+let user = null;
+let driver = null;
+let adminFareSettings = null;
+let ordersCache = {};
+
+let driverRef = null;
+let queueRef = null;
+let activeOrdersRef = null;
+let chatRef = null;
+let activeChatOrder = null;
+
+let authGeneration = 0;
+let portalReady = false;
+let loadingQueue = false;
+
+function t(key) {
+  return words[lang][key] || words.en[key] || key;
 }
 
-function renderQueue(){
- const box=$("queue");
- if(!driver||driver.approvalStatus!=="approved"||!driver.uid){
-  box.replaceChildren(makeText("p",t("pendingApproval")));
-  return;
- }
- box.replaceChildren();
-
- db.ref("rideQueue").orderByChild("status").equalTo("pending").once("value")
- .then(snap=>{
-  box.replaceChildren();
-  let count=0;
-  snap.forEach(child=>{
-   const ride={id:child.key,...child.val()};
-   if(!ride.orderId)return;
-   count++;
-
-   const card=document.createElement("div");
-   card.className="ride";
-   card.appendChild(makeText("h3",ride.pickup+" → "+ride.dropoff));
-   card.appendChild(makeText("p",t("service")+": "+t(ride.service||"bike")));
-   card.appendChild(makeText("p",t("fare")+": "+(ride.fare??"—")));
-
-   const btn=makeText("button",t("accept"));
-   btn.onclick=()=>acceptRide(ride.orderId);
-   card.appendChild(btn);
-   box.appendChild(card);
-  });
-  if(!count)box.appendChild(makeText("p",t("noRides")));
- })
- .catch(error=>{
-  console.error(error);
-  msg(t("queueError"),"error");
- });
+function notify(text, type = "info") {
+  $("message").textContent = text;
+  $("message").className = "message " + type;
 }
 
-async function acceptRide(orderId){
- if(!driver||driver.approvalStatus!=="approved")return;
-
- try{
-  const result=await db.ref("orders/"+orderId).transaction(order=>{
-   if(!order||order.status!=="pending"||order.driverUid)return;
-   order.driverUid=user.uid;
-   order.driverName=driver.name;
-   order.status="accepted";
-   order.updatedAt=firebase.database.ServerValue.TIMESTAMP;
-   return order;
-  });
-
-  if(!result.committed){
-   msg(t("acceptError"),"error");
-   return;
-  }
-
-  await db.ref("rideQueue/"+orderId).update({
-   status:"accepted",
-   driverUid:user.uid,
-   updatedAt:firebase.database.ServerValue.TIMESTAMP
-  });
-
-  msg(t("acceptedSuccess"),"success");
-  loadActive();
-  renderQueue();
- }catch(error){
-  console.error(error);
-  msg(t("acceptError"),"error");
- }
+function makeText(tag, text) {
+  const el = document.createElement(tag);
+  el.textContent = String(text ?? "");
+  return el;
 }
 
-function loadActive(){
- if(!user)return;
+function money(value) {
+  const number = Number(value);
 
- db.ref("orders").orderByChild("driverUid").equalTo(user.uid).on("value",snap=>{
-  ordersCache={};
-  snap.forEach(child=>ordersCache[child.key]={id:child.key,...child.val()});
-  renderActive();
- },error=>{
-  console.error(error);
-  msg(t("queueError"),"error");
- });
+  if (!Number.isFinite(number)) return "Rs 0";
+
+  return "Rs " + Math.round(number).toLocaleString("en-PK");
 }
 
-function renderActive(){
- const box=$("activeRides");
- if(!driver){box.replaceChildren(makeText("p",t("loading")));return;}
- box.replaceChildren();
-
- const list=Object.values(ordersCache);
- if(!list.length){
-  box.appendChild(makeText("p",t("noActive")));
-  return;
- }
-
- list.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-
- list.forEach(ride=>{
-  const card=document.createElement("div");
-  card.className="ride";
-  card.appendChild(makeText("h3",ride.pickup+" → "+ride.dropoff));
-  card.appendChild(makeText("p",t("status")+": "+ride.status));
-  card.appendChild(makeText("p",t("fare")+": "+(ride.fare??"—")));
-
-  const row=document.createElement("div");
-  row.className="row";
-
-  if(ride.status==="accepted"){
-   const arrived=makeText("button",t("arrived"));
-   arrived.onclick=()=>updateStatus(ride.id,"arrived");
-   row.appendChild(arrived);
-  }
-
-  if(ride.status==="arrived"){
-   const start=makeText("button",t("started"));
-   start.onclick=()=>updateStatus(ride.id,"started");
-   row.appendChild(start);
-  }
-
-  if(ride.status==="started"){
-   const complete=makeText("button",t("complete"));
-   complete.onclick=()=>updateStatus(ride.id,"completed");
-   row.appendChild(complete);
-  }
-
-  if(!["completed","cancelled"].includes(ride.status)){
-   const chat=makeText("button",t("chatOpen"));
-   chat.onclick=()=>openChat(ride.id);
-   row.appendChild(chat);
-  }
-
-  card.appendChild(row);
-  box.appendChild(card);
- });
+function cleanNumber(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
 }
 
-async function updateStatus(orderId,newStatus){
- const allowed={accepted:"arrived",arrived:"started",started:"completed"};
-
- try{
-  const result=await db.ref("orders/"+orderId).transaction(order=>{
-   if(!order||order.driverUid!==user.uid)return;
-   if(allowed[order.status]!==newStatus)return;
-   order.status=newStatus;
-   order.updatedAt=firebase.database.ServerValue.TIMESTAMP;
-   return order;
-  });
-
-  if(!result.committed){
-   msg(t("updateError"),"error");
-   return;
-  }
-
-  await db.ref("rideQueue/"+orderId).update({
-   status:newStatus,
-   updatedAt:firebase.database.ServerValue.TIMESTAMP
-  });
-
-  loadActive();
-  renderQueue();
- }catch(error){
-  console.error(error);
-  msg(t("updateError"),"error");
- }
+function getRideFare(ride) {
+  return cleanNumber(
+    ride.finalFare ??
+    ride.fare ??
+    ride.estimatedFare
+  );
 }
 
-function openChat(orderId){
- if(chatRef)chatRef.off();
- activeChatOrder=orderId;
- $("chatCard").classList.remove("hidden");
-
- chatRef=db.ref("chats/"+orderId+"/messages").limitToLast(100);
- chatRef.on("value",snap=>{
-  const box=$("chatMessages");
-  box.replaceChildren();
-  snap.forEach(child=>{
-   const item=child.val()||{};
-   const div=document.createElement("div");
-   div.className="chatMessage";
-   div.appendChild(makeText("strong",
-    item.senderUid===user.uid?"You":(item.senderName||"Customer")));
-   div.appendChild(makeText("div",item.text||""));
-   box.appendChild(div);
-  });
-  box.scrollTop=box.scrollHeight;
- },error=>{
-  console.error(error);
-  msg(t("chatError"),"error");
- });
+function getRideCommission(ride) {
+  return cleanNumber(
+    ride.commissionAmount ??
+    ride.platformCommission
+  );
 }
 
-$("chatForm").onsubmit=async e=>{
- e.preventDefault();
- const text=$("chatInput").value.trim();
- if(!text||!activeChatOrder)return;
+function getRideNet(ride) {
+  return cleanNumber(
+    ride.riderNetEarning ??
+    ride.driverEarning ??
+    ride.driverNetFare
+  );
+}
 
- try{
-  const snap=await db.ref("orders/"+activeChatOrder).once("value");
-  const order=snap.val();
-  if(!order||order.driverUid!==user.uid)throw new Error("Not assigned");
+/* --------------------------------------------------
+   LANGUAGE
+-------------------------------------------------- */
 
-  await db.ref("chats/"+activeChatOrder+"/messages").push().set({
-   senderUid:user.uid,
-   senderName:driver.name||"Driver",
-   text:text,
-   createdAt:firebase.database.ServerValue.TIMESTAMP
-  });
-  $("chatInput").value="";
- }catch(error){
-  console.error(error);
-  msg(t("sendError"),"error");
- }
-};
+function applyLanguage() {
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
+  $("language").value = lang;
 
-$("registrationForm").onsubmit=async e=>{
- e.preventDefault();
- if(!user||!user.emailVerified){
-  msg(t("verify"),"error");
-  return;
- }
-
- const name=$("name").value.trim();
- const phone=$("phone").value.trim();
- const vehicle=$("vehicle").value;
- const plate=$("plate").value.trim();
-
- if(name.length<2){msg(t("nameRequired"),"error");return;}
- if(!phone){msg(t("phoneRequired"),"error");return;}
- if(!plate){msg(t("plateRequired"),"error");return;}
-
- $("registerBtn").disabled=true;
-
- try{
-  const profileSnap=await db.ref("users/"+user.uid).once("value");
-  const profile=profileSnap.val();
-
-  if(!profile||profile.uid!==user.uid||profile.role!=="driver"){
-   throw new Error(t("unauthorized"));
-  }
-
-  const driverRef=db.ref("drivers/"+user.uid);
-  const existing=await driverRef.once("value");
-  const old=existing.val()||{};
-
-  const data={
-   uid:user.uid,
-   name:name,
-   email:user.email,
-   phone:phone,
-   vehicle:vehicle,
-   plate:plate,
-   approvalStatus:old.approvalStatus==="approved"?"approved":
-                  old.approvalStatus==="rejected"?"rejected":"pending",
-   walletBalance:Number(old.walletBalance)||0,
-   createdAt:old.createdAt||Date.now(),
-   updatedAt:firebase.database.ServerValue.TIMESTAMP
+  const mapping = {
+    heading:"heading",
+    intro:"intro",
+    earningsHeading:"earningsHeading",
+    completedLabel:"completedLabel",
+    grossLabel:"grossLabel",
+    commissionLabel:"commissionLabel",
+    netLabel:"netLabel",
+    earningsNote:"earningsNote",
+    registrationHeading:"registration",
+    nameLabel:"name",
+    phoneLabel:"phone",
+    vehicleLabel:"vehicle",
+    plateLabel:"plate",
+    registerBtn:"register",
+    approvalHeading:"approval",
+    queueHeading:"queue",
+    activeHeading:"active",
+    chatHeading:"chat",
+    sendBtn:"send",
+    logoutBtn:"logout",
+    closeChatBtn:"closeChat"
   };
 
-  await driverRef.set(data);
-  driver=data;
-  $("registrationCard").classList.add("hidden");
-  $("approvalStatus").textContent=
-    driver.approvalStatus==="approved"?t("approved"):
-    driver.approvalStatus==="rejected"?t("rejected"):t("pendingApproval");
-  msg(t("submit"),"success");
+  Object.entries(mapping).forEach(([id, key]) => {
+    $(id).textContent = t(key);
+  });
+
+  [...$("vehicle").options].forEach(option => {
+    option.textContent = t(option.value);
+  });
+
+  $("chatInput").placeholder = t("message");
+
   renderQueue();
-  loadActive();
+  renderActive();
+  updateEarnings();
+}
 
- }catch(error){
-  console.error(error);
-  msg(error.message||t("registerError"),"error");
- }finally{
-  $("registerBtn").disabled=false;
- }
-};
+$("language").addEventListener("change", event => {
+  lang = event.target.value;
+  localStorage.setItem("zridesLanguage", lang);
+  applyLanguage();
+});
 
-$("logoutBtn").onclick=async()=>{
- if(queueRef)queueRef.off();
- if(chatRef)chatRef.off();
- await auth.signOut();
- location.replace("login.html");
-};
+/* --------------------------------------------------
+   SETTINGS AND COMMISSION CALCULATION
+-------------------------------------------------- */
 
-auth.onAuthStateChanged(async current=>{
- if(!current){location.replace("login.html");return;}
- user=current;
+function defaultCommissionSettings() {
+  return {
+    commissionMode:"distance",
+    flatCommission:5,
+    commissionSlabs:{
+      "1to10":5,
+      "11to15":5.5,
+      "16to20":6,
+      "21to30":7,
+      above30:7
+    }
+  };
+}
 
- try{
-  await current.reload();
-  user=auth.currentUser;
+async function loadFareSettings() {
+  try {
+    const snapshot = await db.ref("settings/fare").once("value");
+    adminFareSettings = snapshot.val() || null;
+  } catch (error) {
+    console.error("Fare settings could not be loaded:", error);
+    adminFareSettings = null;
+  }
+}
 
-  if(!user.emailVerified){
-   msg(t("verify"),"error");
-   return;
+function commissionRate(settings, distance) {
+  const fallback = defaultCommissionSettings();
+  const config = settings || fallback;
+  const slabs = config.commissionSlabs || fallback.commissionSlabs;
+
+  if (config.commissionMode === "percentage") {
+    const rate = Number(config.flatCommission);
+    return Number.isFinite(rate) && rate >= 0 && rate <= 100
+      ? rate
+      : fallback.flatCommission;
   }
 
-  const profileSnap=await db.ref("users/"+user.uid).once("value");
-  const profile=profileSnap.val();
+  if (distance <= 10) return Number(slabs["1to10"] ?? 5);
+  if (distance <= 15) return Number(slabs["11to15"] ?? 5.5);
+  if (distance <= 20) return Number(slabs["16to20"] ?? 6);
+  if (distance <= 30) return Number(slabs["21to30"] ?? 7);
 
-  if(!profile||profile.uid!==user.uid||profile.role!=="driver"){
-   msg(t("unauthorized"),"error");
-   return;
+  return Number(slabs.above30 ?? 7);
+}
+
+function calculateRideFinancials(order, settings) {
+  const fare = getRideFare(order);
+
+  if (fare === null || fare < 0) {
+    throw new Error("Ride fare is missing or invalid.");
   }
 
-  const driverRef=db.ref("drivers/"+user.uid);
-  driverRef.on("value",snap=>{
-   driver=snap.val();
+  const distance = Number(order.distanceKm ?? order.distance);
 
-   if(!driver){
-    $("registrationCard").classList.remove("hidden");
-    $("approvalStatus").textContent=t("noRegistration");
-    $("queue").replaceChildren(makeText("p",t("noRegistration")));
+  if (!Number.isFinite(distance) || distance <= 0) {
+    throw new Error("Ride distance is missing or invalid.");
+  }
+
+  const rate = commissionRate(settings, distance);
+
+  if (!Number.isFinite(rate) || rate < 0 || rate > 100) {
+    throw new Error("Invalid commission rate.");
+  }
+
+  const commission = Math.round(fare * rate) / 100;
+  const roundedCommission = Math.round(commission);
+  const riderNet = Math.max(0, fare - roundedCommission);
+
+  return {
+    fare:Math.round(fare),
+    distanceKm:distance,
+    commissionRate:rate,
+    commissionAmount:roundedCommission,
+    riderNetEarning:riderNet,
+    fareSettingsVersion:settings?.version ?? null,
+    fareSettingsUpdatedAt:settings?.updatedAt ?? null
+  };
+}
+
+/*
+  This client-side calculation is informational only.
+  A trusted backend must recalculate and validate financial values before
+  accepting the ride or crediting an earning.
+*/
+
+/* --------------------------------------------------
+   QUEUE LISTENER
+-------------------------------------------------- */
+
+function startQueueListener() {
+  if (queueRef) queueRef.off();
+
+  queueRef = db.ref("rideQueue")
+    .orderByChild("status")
+    .equalTo("pending");
+
+  queueRef.on("value", snapshot => {
+    renderQueueSnapshot(snapshot);
+  }, error => {
+    console.error("Ride queue listener error:", error);
+    notify(t("queueError"), "error");
+  });
+}
+
+function renderQueueSnapshot(snapshot) {
+  const box = $("queue");
+  box.replaceChildren();
+
+  if (!driver || driver.approvalStatus !== "approved" || !portalReady) {
+    box.appendChild(makeText("p", t("pendingApproval")));
     return;
-   }
+  }
 
-   $("registrationCard").classList.add("hidden");
+  let count = 0;
 
-   $("approvalStatus").textContent=
-    driver.approvalStatus==="approved"?t("approved"):
-    driver.approvalStatus==="rejected"?t("rejected"):t("pendingApproval");
+  snapshot.forEach(child => {
+    const ride = {id:child.key, ...child.val()};
 
-   renderQueue();
-  },error=>{
-   console.error(error);
-   msg(t("profileError"),"error");
+    if (!ride.orderId) ride.orderId = child.key;
+
+    if (!ride.orderId) return;
+
+    count++;
+
+    const card = document.createElement("div");
+    card.className = "ride";
+
+    card.appendChild(makeText(
+      "h3",
+      String(ride.pickup || "Pickup") + " → " +
+      String(ride.dropoff || "Destination")
+    ));
+
+    card.appendChild(makeText(
+      "p",
+      t("service") + ": " + t(ride.service || ride.vehicle || "bike")
+    ));
+
+    card.appendChild(makeText(
+      "p",
+      t("distance") + ": " +
+      String(ride.distanceKm ?? ride.distance ?? "—") + " km"
+    ));
+
+    card.appendChild(makeText(
+      "p",
+      t("fare") + ": " + money(
+        ride.finalFare ?? ride.fare ?? ride.estimatedFare ?? 0
+      )
+    ));
+
+    const button = makeText("button", t("accept"));
+    button.addEventListener("click", () => acceptRide(ride.orderId));
+
+    card.appendChild(button);
+    box.appendChild(card);
   });
 
-  loadActive();
- }catch(error){
-  console.error(error);
-  msg(t("profileError"),"error");
- }
+  if (!count) {
+    box.appendChild(makeText("p", t("noRides")));
+  }
+}
+
+function renderQueue() {
+  if (!portalReady || !driver || driver.approvalStatus !== "approved") {
+    $("queue").replaceChildren(makeText("p", t("pendingApproval")));
+    return;
+  }
+
+  if (!queueRef) startQueueListener();
+}
+
+/* --------------------------------------------------
+   ACCEPT RIDE
+-------------------------------------------------- */
+
+async function acceptRide(orderId) {
+  if (!portalReady || !user || !driver ||
+      driver.approvalStatus !== "approved") {
+    notify(t("unauthorized"), "error");
+    return;
+  }
+
+  if (loadingQueue) return;
+  loadingQueue = true;
+
+  try {
+    /*
+      Load current settings immediately before acceptance.
+      This is not a substitute for server-side validation.
+    */
+    await loadFareSettings();
+
+    const orderRef = db.ref("orders/" + orderId);
+    const orderSnapshot = await orderRef.once("value");
+    const order = orderSnapshot.val();
+
+    if (!order || order.status !== "pending" || order.driverUid) {
+      throw new Error(t("acceptError"));
+    }
+
+    const financials = calculateRideFinancials(order, adminFareSettings);
+
+    const result = await orderRef.transaction(current => {
+      if (!current ||
+          current.status !== "pending" ||
+          current.driverUid) {
+        return;
+      }
+
+      current.driverUid = user.uid;
+      current.driverName = driver.name;
+      current.status = "accepted";
+      current.updatedAt = firebase.database.ServerValue.TIMESTAMP;
+
+      /*
+        Store the fare and commission snapshot on the ride.
+        A backend must independently validate these values.
+      */
+      current.fareSnapshot = {
+        fare:financials.fare,
+        distanceKm:financials.distanceKm,
+        commissionRate:financials.commissionRate,
+        commissionAmount:financials.commissionAmount,
+        riderNetEarning:financials.riderNetEarning,
+        settingsVersion:financials.fareSettingsVersion,
+        settingsUpdatedAt:financials.fareSettingsUpdatedAt,
+        capturedAt:firebase.database.ServerValue.TIMESTAMP
+      };
+
+      current.finalFare = financials.fare;
+      current.commissionRate = financials.commissionRate;
+      current.commissionAmount = financials.commissionAmount;
+      current.platformCommission = financials.commissionAmount;
+      current.riderNetEarning = financials.riderNetEarning;
+
+      return current;
+    });
+
+    if (!result.committed) {
+      throw new Error(t("acceptError"));
+    }
+
+    /*
+      Update queue after the order transaction succeeds.
+      The backend should keep both paths consistent in production.
+    */
+    await db.ref("rideQueue/" + orderId).update({
+      status:"accepted",
+      driverUid:user.uid,
+      updatedAt:firebase.database.ServerValue.TIMESTAMP
+    });
+
+    notify(t("acceptedSuccess"), "success");
+  } catch (error) {
+    console.error("Ride acceptance failed:", error);
+    notify(error.message || t("acceptError"), "error");
+  } finally {
+    loadingQueue = false;
+  }
+}
+
+/* --------------------------------------------------
+   ASSIGNED RIDES
+-------------------------------------------------- */
+
+function startActiveListener() {
+  if (activeOrdersRef) activeOrdersRef.off();
+
+  activeOrdersRef = db.ref("orders")
+    .orderByChild("driverUid")
+    .equalTo(user.uid);
+
+  activeOrdersRef.on("value", snapshot => {
+    ordersCache = {};
+
+    snapshot.forEach(child => {
+      ordersCache[child.key] = {
+        id:child.key,
+        ...child.val()
+      };
+    });
+
+    renderActive();
+    updateEarnings();
+  }, error => {
+    console.error("Assigned ride listener failed:", error);
+    notify(t("queueError"), "error");
+  });
+}
+
+function renderActive() {
+  const box = $("activeRides");
+  box.replaceChildren();
+
+  if (!driver) {
+    box.appendChild(makeText("p", t("loading")));
+    return;
+  }
+
+  const list = Object.values(ordersCache)
+    .sort((a,b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
+
+  if (!list.length) {
+    box.appendChild(makeText("p", t("noActive")));
+    return;
+  }
+
+  list.forEach(ride => {
+    const card = document.createElement("div");
+    card.className = "ride";
+
+    card.appendChild(makeText(
+      "h3",
+      String(ride.pickup || "Pickup") + " → " +
+      String(ride.dropoff || "Destination")
+    ));
+
+    card.appendChild(makeText(
+      "p",
+      t("status") + ": " + t(ride.status || "pending")
+    ));
+
+    card.appendChild(makeText(
+      "p",
+      t("fare") + ": " + money(
+        ride.finalFare ?? ride.fare ?? ride.estimatedFare ?? 0
+      )
+    ));
+
+    card.appendChild(makeText(
+      "p",
+      t("commissionRate") + ": " +
+      (ride.commissionRate == null ? "—" : ride.commissionRate + "%")
+    ));
+
+    card.appendChild(makeText(
+      "p",
+      t("commissionLabel") + ": " +
+      (getRideCommission(ride) == null
+        ? t("noEarning")
+        : money(getRideCommission(ride)))
+    ));
+
+    card.appendChild(makeText(
+      "p",
+      t("riderNet") + ": " +
+      (getRideNet(ride) == null
+        ? t("noEarning")
+        : money(getRideNet(ride)))
+    ));
+
+    const row = document.createElement("div");
+    row.className = "row";
+
+    if (ride.status === "accepted") {
+      const arrived = makeText("button", t("arrived"));
+      arrived.addEventListener("click", () => updateStatus(ride.id, "arrived"));
+      row.appendChild(arrived);
+    }
+
+    if (ride.status === "arrived") {
+      const start = makeText("button", t("started"));
+      start.addEventListener("click", () => updateStatus(ride.id, "started"));
+      row.appendChild(start);
+    }
+
+    if (ride.status === "started") {
+      const complete = makeText("button", t("complete"));
+      complete.addEventListener("click", () => updateStatus(ride.id, "completed"));
+      row.appendChild(complete);
+    }
+
+    if (!["completed", "cancelled"].includes(ride.status)) {
+      const chat = makeText("button", t("chatOpen"));
+      chat.className = "secondary";
+      chat.addEventListener("click", () => openChat(ride.id));
+      row.appendChild(chat);
+    }
+
+    card.appendChild(row);
+    box.appendChild(card);
+  });
+}
+
+/* --------------------------------------------------
+   RIDE STATUS
+-------------------------------------------------- */
+
+async function updateStatus(orderId, newStatus) {
+  if (!portalReady || !user) return;
+
+  const allowed = {
+    accepted:"arrived",
+    arrived:"started",
+    started:"completed"
+  };
+
+  try {
+    const ref = db.ref("orders/" + orderId);
+
+    const result = await ref.transaction(order => {
+      if (!order || order.driverUid !== user.uid) return;
+      if (allowed[order.status] !== newStatus) return;
+
+      order.status = newStatus;
+      order.updatedAt = firebase.database.ServerValue.TIMESTAMP;
+
+      if (newStatus === "completed") {
+        order.completedAt = firebase.database.ServerValue.TIMESTAMP;
+      }
+
+      return order;
+    });
+
+    if (!result.committed) {
+      throw new Error(t("updateError"));
+    }
+
+    await db.ref("rideQueue/" + orderId).update({
+      status:newStatus,
+      updatedAt:firebase.database.ServerValue.TIMESTAMP
+    });
+
+    notify(t(newStatus), "success");
+  } catch (error) {
+    console.error("Ride status update failed:", error);
+    notify(error.message || t("updateError"), "error");
+  }
+}
+
+/* --------------------------------------------------
+   EARNINGS SUMMARY
+-------------------------------------------------- */
+
+function updateEarnings() {
+  const rides = Object.values(ordersCache);
+
+  const completed = rides.filter(ride => ride.status === "completed");
+
+  let gross = 0;
+  let commission = 0;
+  let net = 0;
+
+  completed.forEach(ride => {
+    const fare = getRideFare(ride);
+    const fee = getRideCommission(ride);
+    const earning = getRideNet(ride);
+
+    if (fare !== null) gross += fare;
+    if (fee !== null) commission += fee;
+    if (earning !== null) net += earning;
+  });
+
+  $("completedCount").textContent = String(completed.length);
+  $("grossTotal").textContent = money(gross);
+  $("commissionTotal").textContent = money(commission);
+  $("netTotal").textContent = money(net);
+}
+
+/* --------------------------------------------------
+   CUSTOMER CHAT
+-------------------------------------------------- */
+
+function openChat(orderId) {
+  const ride = ordersCache[orderId];
+
+  if (!ride || ride.driverUid !== user.uid ||
+      ["completed", "cancelled"].includes(ride.status)) {
+    notify(t("chatError"), "error");
+    return;
+  }
+
+  if (chatRef) chatRef.off();
+
+  activeChatOrder = orderId;
+  $("chatCard").classList.remove("hidden");
+  $("chatRideInfo").textContent =
+    String(ride.pickup || "") + " → " + String(ride.dropoff || "");
+
+  chatRef = db.ref("chats/" + orderId + "/messages").limitToLast(100);
+
+  chatRef.on("value", snapshot => {
+    const box = $("chatMessages");
+    box.replaceChildren();
+
+    snapshot.forEach(child => {
+      const item = child.val() || {};
+      const message = document.createElement("div");
+      message.className = "chatMessage";
+
+      message.appendChild(makeText(
+        "strong",
+        item.senderUid === user.uid
+          ? "You"
+          : (item.senderName || "Customer")
+      ));
+
+      message.appendChild(makeText("div", item.text || ""));
+
+      if (item.createdAt) {
+        message.appendChild(makeText(
+          "div",
+          new Date(item.createdAt).toLocaleString()
+        ));
+      }
+
+      box.appendChild(message);
+    });
+
+    box.scrollTop = box.scrollHeight;
+  }, error => {
+    console.error("Chat listener failed:", error);
+    notify(t("chatError"), "error");
+  });
+}
+
+$("chatForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const text = $("chatInput").value.trim();
+
+  if (!text || !activeChatOrder || !user || !driver) return;
+
+  try {
+    const snapshot = await db.ref("orders/" + activeChatOrder).once("value");
+    const ride = snapshot.val();
+
+    if (!ride ||
+        ride.driverUid !== user.uid ||
+        ["completed", "cancelled"].includes(ride.status)) {
+      throw new Error(t("sendError"));
+    }
+
+    await db.ref("chats/" + activeChatOrder + "/messages").push().set({
+      senderUid:user.uid,
+      senderName:driver.name || "Driver",
+      text:text,
+      createdAt:firebase.database.ServerValue.TIMESTAMP
+    });
+
+    $("chatInput").value = "";
+  } catch (error) {
+    console.error("Chat send failed:", error);
+    notify(error.message || t("sendError"), "error");
+  }
+});
+
+$("closeChatBtn").addEventListener("click", () => {
+  if (chatRef) chatRef.off();
+
+  chatRef = null;
+  activeChatOrder = null;
+  $("chatCard").classList.add("hidden");
+});
+
+/* --------------------------------------------------
+   DRIVER REGISTRATION
+-------------------------------------------------- */
+
+$("registrationForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (!user || !user.emailVerified || !portalReady) {
+    notify(t("verify"), "error");
+    return;
+  }
+
+  const name = $("name").value.trim();
+  const phone = $("phone").value.trim();
+  const vehicle = $("vehicle").value;
+  const plate = $("plate").value.trim();
+
+  if (name.length < 2) {
+    notify(t("nameRequired"), "error");
+    return;
+  }
+
+  if (!phone) {
+    notify(t("phoneRequired"), "error");
+    return;
+  }
+
+  if (!plate) {
+    notify(t("plateRequired"), "error");
+    return;
+  }
+
+  const button = $("registerBtn");
+  button.disabled = true;
+
+  try {
+    const profileSnapshot = await db.ref("users/" + user.uid).once("value");
+    const profile = profileSnapshot.val();
+
+    if (!profile ||
+        profile.uid !== user.uid ||
+        profile.role !== "driver") {
+      throw new Error(t("unauthorized"));
+    }
+
+    const ref = db.ref("drivers/" + user.uid);
+    const existingSnapshot = await ref.once("value");
+    const existing = existingSnapshot.val() || {};
+
+    /*
+      Preserve the existing approval state.
+      Changes to sensitive driver identity data should require admin review.
+    */
+    const identityChanged =
+      existing.name !== name ||
+      existing.phone !== phone ||
+      existing.vehicle !== vehicle ||
+      existing.plate !== plate;
+
+    let approvalStatus = existing.approvalStatus || "pending";
+
+    if (identityChanged && existing.approvalStatus === "approved") {
+      approvalStatus = "pending";
+    }
+
+    const record = {
+      ...existing,
+      uid:user.uid,
+      name,
+      email:user.email,
+      phone,
+      vehicle,
+      plate,
+      approvalStatus,
+      createdAt:existing.createdAt || Date.now(),
+      updatedAt:firebase.database.ServerValue.TIMESTAMP
+    };
+
+    await ref.set(record);
+
+    driver = record;
+    $("registrationCard").classList.add("hidden");
+
+    renderApprovalStatus();
+    renderQueue();
+
+    notify(t("submit"), "success");
+  } catch (error) {
+    console.error("Driver registration failed:", error);
+    notify(error.message || t("registerError"), "error");
+  } finally {
+    button.disabled = false;
+  }
+});
+
+function renderApprovalStatus() {
+  if (!driver) {
+    $("approvalStatus").textContent = t("noRegistration");
+    return;
+  }
+
+  const status = driver.approvalStatus || "pending";
+
+  const messages = {
+    approved:t("approved"),
+    rejected:t("rejected"),
+    pending:t("pendingApproval")
+  };
+
+  $("approvalStatus").textContent = messages[status] || t("pendingApproval");
+}
+
+/* --------------------------------------------------
+   CLEANUP AND LOGOUT
+-------------------------------------------------- */
+
+function detachListeners() {
+  if (driverRef) driverRef.off();
+  if (queueRef) queueRef.off();
+  if (activeOrdersRef) activeOrdersRef.off();
+  if (chatRef) chatRef.off();
+
+  driverRef = null;
+  queueRef = null;
+  activeOrdersRef = null;
+  chatRef = null;
+
+  ordersCache = {};
+  activeChatOrder = null;
+}
+
+$("logoutBtn").addEventListener("click", async () => {
+  portalReady = false;
+  authGeneration++;
+  detachListeners();
+
+  try {
+    await auth.signOut();
+  } finally {
+    location.replace("login.html");
+  }
+});
+
+/* --------------------------------------------------
+   AUTHENTICATION AND PROFILE VALIDATION
+-------------------------------------------------- */
+
+auth.onAuthStateChanged(async currentUser => {
+  const generation = ++authGeneration;
+
+  portalReady = false;
+  user = currentUser;
+  driver = null;
+  ordersCache = {};
+
+  detachListeners();
+
+  if (!currentUser) {
+    location.replace("login.html");
+    return;
+  }
+
+  try {
+    await currentUser.reload();
+
+    if (generation !== authGeneration) return;
+
+    user = auth.currentUser;
+
+    if (!user || !user.emailVerified) {
+      notify(t("verify"), "error");
+      return;
+    }
+
+    const profileSnapshot = await db.ref("users/" + user.uid).once("value");
+
+    if (generation !== authGeneration) return;
+
+    const profile = profileSnapshot.val();
+
+    if (!profile ||
+        profile.uid !== user.uid ||
+        profile.role !== "driver") {
+      notify(t("unauthorized"), "error");
+      return;
+    }
+
+    portalReady = true;
+
+    driverRef = db.ref("drivers/" + user.uid);
+
+    driverRef.on("value", snapshot => {
+      if (generation !== authGeneration) return;
+
+      driver = snapshot.val();
+
+      if (!driver) {
+        $("registrationCard").classList.remove("hidden");
+        $("approvalStatus").textContent = t("noRegistration");
+
+        $("queue").replaceChildren(makeText("p", t("noRegistration")));
+        return;
+      }
+
+      $("registrationCard").classList.add("hidden");
+      renderApprovalStatus();
+
+      if (driver.approvalStatus === "approved") {
+        if (!queueRef) startQueueListener();
+      } else {
+        if (queueRef) queueRef.off();
+        queueRef = null;
+
+        $("queue").replaceChildren(
+          makeText("p", t("pendingApproval"))
+        );
+      }
+
+      renderActive();
+    }, error => {
+      console.error("Driver profile listener failed:", error);
+      notify(t("profileError"), "error");
+    });
+
+    startActiveListener();
+    await loadFareSettings();
+
+    if (generation !== authGeneration) return;
+
+  } catch (error) {
+    console.error("Driver portal initialization failed:", error);
+    portalReady = false;
+    notify(t("profileError"), "error");
+  }
 });
 
 applyLanguage();
 </script>
+
 </body>
-    </html>
+        </html>
